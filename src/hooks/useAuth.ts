@@ -3,16 +3,14 @@ import {createClient} from "@/utils/supabase/client";
 export const useAuth = () => {
     const supabase = createClient();
 
-    const signInWithEmailAndPassword = async (email: string, password: string) => {
+    const signInWithEmailAndPassword = async (data: {email: string, password: string}) => {
+        const {error} = await supabase.auth.signInWithPassword(data)
 
-        await supabase.auth.signInWithPassword(
-            {
-                email: email,
-                password: password
-            }
-        )
+        if (error) {
+            throw error;
+        }
 
-        return null
+        return null;
     }
 
     const signOut = async () => {
@@ -21,7 +19,7 @@ export const useAuth = () => {
 
     return {
         user: null,
-        signInWithEmailAndPassword: async () => {},
+        signInWithEmailAndPassword,
         signOut,
     }
 }
