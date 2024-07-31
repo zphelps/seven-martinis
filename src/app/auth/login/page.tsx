@@ -1,24 +1,59 @@
 "use client"
+
 import Link from "next/link";
 import {useAuth} from "@/hooks/useAuth";
-import {MouseEventHandler} from "react";
+import {useState} from "react";
 import {useToast} from "@/components/ui/use-toast";
+import { z } from "zod"
+import {zodResolver} from "@hookform/resolvers/zod";
+import {useForm} from "react-hook-form";
+import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
+import {Button} from "@/components/ui/button";
+import {Input} from "@/components/ui/input";
+import { ReloadIcon } from "@radix-ui/react-icons"
+import {useRouter} from "next/navigation";
+import {useSearchParams} from "next/navigation";
+import {config} from "@/config";
+
+const loginFormSchema = z.object({
+    email: z.string().email("Must provide valid email"),
+    password: z.string().min(8, "Password must be at least 8 characters.")
+})
 
 export default function SignIn() {
 
-    const auth = useAuth();
+    const {signInWithGoogle, signInWithEmailAndPassword} = useAuth();
     const { toast } = useToast()
+    const [loading, setLoading] = useState(false);
+    const searchParams = useSearchParams();
+    const router = useRouter();
 
-    const handleSignInWithPassword= async (formData: FormData) => {
+    const form = useForm<z.infer<typeof loginFormSchema>>({
+        resolver: zodResolver(loginFormSchema),
+        defaultValues: {
+            email: "",
+            password: "",
+        },
+    })
+
+
+    async function onSubmit(values: z.infer<typeof loginFormSchema>) {
         try {
+            setLoading(true);
             const data = {
-                email: formData.get('email') as string,
-                password: formData.get('password') as string,
+                email: values.email,
+                password: values.password,
             }
-            console.log(formData)
-            console.log(data)
-            await auth.signInWithEmailAndPassword(data);
+
+            await signInWithEmailAndPassword(data);
+
+            const returnTo = searchParams.get('returnTo');
+
+            router.replace(returnTo || config.auth.defaultAuthenticatedUrl)
+
+            setLoading(false)
         } catch (error) {
+            setLoading(false)
             console.log(error)
             toast({
                 variant: "destructive",
@@ -40,46 +75,55 @@ export default function SignIn() {
 
                     {/* Form */}
                     <div className="max-w-sm mx-auto">
-                        <form>
-                          <div className="flex flex-wrap -mx-3 mb-4">
-                            <div className="w-full px-3">
-                              <label className="block text-gray-800 text-sm font-medium mb-1" htmlFor="email">Email</label>
-                              <input id="email" type="email" className="p-3 rounded form-input w-full text-gray-800" placeholder="Enter your email address" required />
-                            </div>
-                          </div>
-                          <div className="flex flex-wrap -mx-3 mb-4">
-                            <div className="w-full px-3">
-                              <div className="flex justify-between">
-                                <label className="block text-gray-800 text-sm font-medium mb-1" htmlFor="password">Password</label>
-                                <Link href="/reset-password" className="text-sm font-medium text-blue-600 hover:underline">Having trouble signing in?</Link>
-                              </div>
-                              <input id="password" type="password" className="p-3 rounded form-input w-full text-gray-800" placeholder="Enter your password" required />
-                            </div>
-                          </div>
-                          <div className="flex flex-wrap -mx-3 mb-4">
-                            <div className="w-full px-3">
-                              <div className="flex justify-between">
-                                <label className="flex items-center">
-                                  <input type="checkbox" className="form-checkbox" />
-                                  <span className="text-gray-600 ml-2">Keep me signed in</span>
-                                </label>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="flex flex-wrap -mx-3 mt-6">
-                            <div className="w-full px-3">
-                              <button
-                                  formAction={handleSignInWithPassword}
-                                  className="p-3 rounded btn text-white bg-blue-600 hover:bg-blue-700 w-full"
-                              >
-                                  Sign in
-                              </button>
-                            </div>
-                          </div>
-                        </form>
+                        <Form {...form}>
+                            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
+                                <FormField
+                                    control={form.control}
+                                    name="email"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Email</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    placeholder="Email"
+                                                    {...field}
+                                                    className={"py-5 rounded form-input w-full text-gray-800"}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="password"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Password</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    type={'password'}
+                                                    className={"py-5 rounded form-input w-full text-gray-800"}
+                                                    placeholder="Password"
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <Button type="submit"
+                                        className={"p-3 rounded btn text-white bg-blue-600 hover:bg-blue-700 w-full"}
+                                        disabled={loading}
+                                >
+                                    {loading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin"/>}
+                                    Submit
+                                </Button>
+                            </form>
+                        </Form>
                         <div className="flex items-center my-6">
                           <div className="border-t border-gray-300 grow mr-3" aria-hidden="true"></div>
-                          <div className="text-gray-600 italic">Or</div>
+                          <div className="text-gray-600 italic text-sm">Or</div>
                           <div className="border-t border-gray-300 grow ml-3" aria-hidden="true"></div>
                         </div>
                         <div className="flex flex-wrap -mx-3 mb-3">
@@ -95,9 +139,9 @@ export default function SignIn() {
                         <div className="flex flex-wrap -mx-3">
                             <div className="w-full px-3">
                                 <button
-                                    // onClick={async () => {
-                                    //     // await auth.signInWithGoogle();
-                                    // }}
+                                    onClick={async () => {
+                                        await signInWithGoogle();
+                                    }}
                                     className="btn px-3 text-white bg-grey-50 hover:bg-grey-200 w-full relative flex items-center">
                                     <div style={{width: "30px"}}>
                                         <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"
