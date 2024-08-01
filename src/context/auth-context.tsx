@@ -2,7 +2,7 @@
 import type {FC, ReactNode} from "react";
 import {createContext, useCallback, useEffect, useReducer} from "react";
 import PropTypes from "prop-types";
-import {AuthChangeEvent, AuthError, AuthTokenResponse, Session, User} from "@supabase/supabase-js";
+import {AuthChangeEvent, Session, User} from "@supabase/supabase-js";
 import {createClient} from "@/utils/supabase/client";
 import {useSearchParams} from "next/navigation";
 import {config} from "@/config";
