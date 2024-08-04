@@ -1,17 +1,26 @@
 "use client"
-import Image from "next/image";
-import {Button} from "@/components/ui/button";
 import {useAuth} from "@/hooks/useAuth";
-import {api} from "@/lib/api";
 import Header from "@/components/marketing/header";
+import Hero from "@/components/marketing/hero";
+import Pricing from "@/components/marketing/pricing";
+import Footer from "@/components/marketing/footer";
+import FAQ from "@/components/marketing/faq";
+import Testimonials from "@/components/marketing/testimonials";
+import Features from "@/components/marketing/features";
 
 export default function Home() {
 
   const auth = useAuth();
 
   return (
-    <section>
+    <section className={'container'}>
         <Header/>
+        <Hero/>
+        <Features/>
+        <Pricing/>
+        <Testimonials/>
+        {/*<FAQ/>*/}
+        <Footer/>
     </section>
   );
 }

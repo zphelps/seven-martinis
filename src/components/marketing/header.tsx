@@ -1,55 +1,3 @@
-// import { useState, useEffect } from 'react'
-// import {useRouter} from "next/navigation";
-// import {RocketIcon} from "lucide-react";
-// import {useAuth} from "@/hooks/useAuth";
-// import Link from "next/link";
-// import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
-//
-// export default function Header() {
-//
-//   const [top, setTop] = useState<boolean>(true)
-//
-//   const {isInitialized, isAuthenticated, signInWithGoogle} = useAuth();
-//
-//   return (
-//     <header
-//         className={'p-4 flex items-center justify-between'}
-//     >
-//       <div
-//           className={'flex space-x-4'}
-//       >
-//         <RocketIcon size={36} />
-//         <p className={'font-bold text-2xl'}>
-//           NextLaunch
-//         </p>
-//       </div>
-//
-//       <nav
-//           className={'flex space-x-8'}
-//       >
-//         <Link href={'/'}>
-//           Home
-//         </Link>
-//         <Link href={'/'}>
-//           Docs
-//         </Link>
-//         <Link href={'/'}>
-//           Demo
-//         </Link>
-//         <Link href={'/'}>
-//           Pricing
-//         </Link>
-//       </nav>
-//
-//     {/* Profile Avatar */}
-//       <Avatar>
-//         <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-//         <AvatarFallback>CN</AvatarFallback>
-//       </Avatar>
-//     </header>
-//   )
-// }
-
 import {useState} from 'react';
 import {useRouter} from 'next/navigation';
 import {CreditCard, LogOut, RocketIcon} from 'lucide-react';
@@ -65,10 +13,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 const navigation = [
-    {name: 'Home', href: '/'},
     {name: 'Docs', href: '/'},
-    {name: 'Demo', href: '/'},
-    {name: 'Pricing', href: '/'},
+    {name: 'Features', href: '#features_section'},
+    {name: 'Pricing', href: '#pricing_section'},
+    {name: 'Testimonials', href: '#testimonials_section'},
 ];
 
 export default function Header() {
@@ -85,7 +33,7 @@ export default function Header() {
             <div className="flex items-center space-x-4 sm:hidden">
                 <button
                     onClick={() => setMenuOpen(!menuOpen)}
-                    className="text-gray-500 focus:outline-none"
+                    className="text-gray-200 focus:outline-none"
                 >
                     {/* Mobile menu button icon */}
                     {menuOpen ? (
@@ -122,12 +70,36 @@ export default function Header() {
                 </button>
             </div>
 
-            <nav className="hidden sm:flex space-x-8">
+            <nav className="hidden sm:flex space-x-10 items-center">
                 {navigation.map((item) => (
-                    <Link key={item.name} href={item.href}>
+                    <a key={item.name} href={item.href}>
                         {item.name}
-                    </Link>
+                    </a>
                 ))}
+                {/* Profile Avatar Dropdown */}
+                {/*<DropdownMenu>*/}
+                {/*    <DropdownMenuTrigger>*/}
+                {/*        <Avatar className={'hidden sm:flex'}>*/}
+                {/*            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn"/>*/}
+                {/*            <AvatarFallback>CN</AvatarFallback>*/}
+                {/*        </Avatar>*/}
+                {/*    </DropdownMenuTrigger>*/}
+                {/*    <DropdownMenuContent side={'bottom'} align={'end'}>*/}
+                {/*        <DropdownMenuLabel>Account</DropdownMenuLabel>*/}
+                {/*        <DropdownMenuSeparator/>*/}
+                {/*        <DropdownMenuItem>*/}
+                {/*            <CreditCard size={18} className={'mr-4'}/>*/}
+                {/*            Billing*/}
+                {/*        </DropdownMenuItem>*/}
+                {/*        <DropdownMenuItem*/}
+                {/*        >*/}
+                {/*            <LogOut size={18} className={'mr-4 text-red-500'}/>*/}
+                {/*            <p className={'text-red-500 font-medium'}>*/}
+                {/*                Log Out*/}
+                {/*            </p>*/}
+                {/*        </DropdownMenuItem>*/}
+                {/*    </DropdownMenuContent>*/}
+                {/*</DropdownMenu>*/}
             </nav>
 
             {/* Mobile Menu */}
@@ -142,30 +114,6 @@ export default function Header() {
                     </nav>
                 </div>
             )}
-            {/* Profile Avatar Dropdown */}
-            <DropdownMenu>
-                <DropdownMenuTrigger>
-                    <Avatar className={'hidden sm:flex'}>
-                        <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn"/>
-                        <AvatarFallback>CN</AvatarFallback>
-                    </Avatar>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent side={'bottom'} align={'end'}>
-                    <DropdownMenuLabel>Account</DropdownMenuLabel>
-                    <DropdownMenuSeparator/>
-                    <DropdownMenuItem>
-                        <CreditCard size={18} className={'mr-4'}/>
-                        Billing
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                    >
-                        <LogOut size={18} className={'mr-4 text-red-500'}/>
-                        <p className={'text-red-500 font-medium'}>
-                            Log Out
-                        </p>
-                    </DropdownMenuItem>
-                </DropdownMenuContent>
-            </DropdownMenu>
 
 
         </header>
