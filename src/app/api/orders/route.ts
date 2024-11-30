@@ -23,8 +23,6 @@ export async function GET(request: NextRequest) {
                 )
             `);
 
-        console.log(orders);
-
         if (error) {
             console.log(error);
             return NextResponse.json({

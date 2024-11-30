@@ -8,7 +8,7 @@ interface OrderCardProps {
 export default function OrderCard({ order }: OrderCardProps) {
     return (
         <OrderDialog order={order}>
-            <div key={order.id} className="p-4 w-[350px] bg-white rounded shadow">
+            <div key={order.id} className="p-4 mt-2 w-[350px] bg-white rounded shadow">
                 <p className="font-bold">{order.customer_name}</p>
                 {order.items.map((item: any) => (
                     <p key={item.id}>
