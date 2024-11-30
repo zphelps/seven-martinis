@@ -1,92 +1,136 @@
 "use client"
-import { useState } from "react";
+import React from "react";
 import { useAuth } from "@/hooks/useAuth";
-import { useTasks } from "@/features/tasks/hooks/use-tasks";
 import UserAvatarButton from "@/components/user-avatar-button";
+import { useOrders } from "@/features/orders/hooks/use-orders";
+import { Board } from "@caldwell619/react-kanban";
+import "@caldwell619/react-kanban/dist/styles.css";
+import { Order } from "@/types/order";
 import { toast } from "@/components/ui/use-toast";
-import AddTaskDialog from "@/features/tasks/components/add-task-dialog";
-import { api } from "@/lib/api";
-import TasksList from "@/features/tasks/components/tasks-list";
-import { Button } from "@/components/ui/button";
-import TasksListSkeleton from "@/features/tasks/components/tasks-list-skeleton";
+import OrderCard from "@/features/orders/components/order-card";
 
 export default function Dashboard() {
     const { user } = useAuth();
-    const [uid, setUid] = useState(user?.id!);
-    const { tasks, loading, error } = useTasks({ uid });
+    const { orders, loading, error } = useOrders();
 
-    async function toggleComplete(taskId: string, completed: boolean) {
+    if (loading) return <p>Loading orders...</p>;
+    if (error)
+        return (
+            <p>
+                Error fetching orders
+            </p>
+        );
+
+    // Prepare the board data
+    const board = {
+        columns: [
+            {
+                id: 1,
+                title: "🍺 Ordered",
+                value: "ordered",
+                cards: orders
+                    .filter((order: Order) => order.status === "ordered")
+                // .map((order: Order) => ({ id: order.id, ...order })),
+            },
+            {
+                id: 2,
+                title: "⏳ Preparing",
+                value: "preparing",
+                cards: orders
+                    .filter((order: Order) => order.status === "preparing")
+                // .map((order: Order) => ({ id: order.id, ...order })),
+            },
+            {
+                id: 3,
+                title: "✅ Ready",
+                value: "ready",
+                cards: orders
+                    .filter((order: Order) => order.status === "ready")
+                // .map((order: Order) => ({ id: order.id, ...order })),
+            },
+        ],
+    };
+
+    async function handleCardDragEnd(board: any, card: any, source: any, destination: any) {
+        console.log(board, card, source, destination);
+
+        const newStatus = board.columns[destination.toColumnId - 1].value;
+
+        console.log(newStatus);
+
         try {
-            const response = await api.put(`/tasks/${taskId}`, { completed });
-            const { success, error, data } = response as any;
+            const response = await fetch(`/api/orders/${card.id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ status: newStatus }),
+            });
 
-            if (success) {
+            const result = await response.json();
+
+            if (response.ok) {
+                // Show success toast
                 toast({
-                    title: `Task marked as ${data.completed ? "completed" : "incomplete"}`,
-                    duration: 1000,
-                    variant: "default",
+                    title: "Order status updated successfully",
                 });
             } else {
-                throw new Error(error);
+                // Show error toast
+                toast({
+                    title: `Error updating order status: ${result.error}`,
+                });
             }
-        } catch (e: any) {
+        } catch (error: any) {
+            // Show error toast
             toast({
-                title: "Error",
-                variant: "destructive",
-                description: e.message,
-                duration: 3000,
+                title: `Error updating order status: ${error.message}`,
             });
         }
     }
 
-    async function onDelete(taskId: string) {
-        try {
-            const response = await api.delete(`/tasks/${taskId}`);
-            const { success, error } = response as any;
-
-            if (success) {
-                toast({
-                    title: "Task deleted successfully",
-                    duration: 1000,
-                    variant: "default",
-                });
-            } else {
-                toast({
-                    title: "Error",
-                    variant: "destructive",
-                    description: error,
-                    duration: 3000,
-                });
-            }
-        } catch (e: any) {
-            toast({
-                title: "Error",
-                variant: "destructive",
-                description: e.message,
-                duration: 3000,
-            });
-        }
-    }
+    // function OrderCard({ card }: { card: any }) {
+    //     return (
+    //         <div key={card.id} className="p-4 w-[350px] bg-white rounded shadow">
+    //             <p className="font-bold">{card.customer_name}</p>
+    //             {card.items.map((item: any) => (
+    //                 <p key={item.id}>
+    //                     {item.quantity}x {item.name}
+    //                 </p>
+    //             ))}
+    //         </div>
+    //     );
+    // }
 
     return (
         <div className="container mx-auto my-10 space-y-4">
             <div className="flex items-center justify-between">
-                <div>
-                    <p className={'font-bold text-4xl'}>
-                        Good Morning! 🌤️
-                    </p>
+                <div className="space-y-2">
+                    <p className="font-bold text-4xl">🍸 Seven Martinis</p>
                     <p className="text-gray-400 text-xl">
-                        Here are your tasks for today
+                        Here are your current orders
                     </p>
                 </div>
                 <div className="flex items-center gap-2">
-                    <AddTaskDialog userId={user?.id!} />
                     <UserAvatarButton />
                 </div>
             </div>
-            {loading && <TasksListSkeleton />}
-            {error && <div>Error: {error}</div>}
-            {!loading && <TasksList tasks={tasks} onDelete={onDelete} toggleComplete={toggleComplete} />}
+            {/* Kanban Board */}
+            <Board
+                initialBoard={board}
+                disableColumnDrag
+                renderColumnHeader={(column) => {
+                    return (
+                        <p className="w-[350px] text-lg font-bold mb-2">
+                            {column.title}
+                        </p>
+                    );
+                }}
+                // @ts-ignore
+                onCardDragEnd={handleCardDragEnd}
+                renderCard={(card) => {
+                    return <OrderCard order={card} />;
+                }}
+            />
         </div>
     );
 }
