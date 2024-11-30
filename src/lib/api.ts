@@ -1,5 +1,5 @@
 import xior from "xior";
-import {toast} from "@/components/ui/use-toast";
+import { toast } from "@/components/ui/use-toast";
 
 export const api = xior.create({
     baseURL: "/api",

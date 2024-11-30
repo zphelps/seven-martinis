@@ -1,67 +1,92 @@
 "use client"
-import {Button} from "@/components/ui/button";
-import {api} from "@/lib/api";
-import {useAuth} from "@/hooks/useAuth";
-import {useEffect, useState} from "react";
-import {Task} from "@/types/task";
-import {Card, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
+import { useState } from "react";
+import { useAuth } from "@/hooks/useAuth";
+import { useTasks } from "@/features/tasks/hooks/use-tasks";
+import UserAvatarButton from "@/components/user-avatar-button";
+import { toast } from "@/components/ui/use-toast";
+import AddTaskDialog from "@/features/tasks/components/add-task-dialog";
+import { api } from "@/lib/api";
+import TasksList from "@/features/tasks/components/tasks-list";
+import { Button } from "@/components/ui/button";
+import TasksListSkeleton from "@/features/tasks/components/tasks-list-skeleton";
 
 export default function Dashboard() {
+    const { user } = useAuth();
+    const [uid, setUid] = useState(user?.id!);
+    const { tasks, loading, error } = useTasks({ uid });
 
-    const {user} = useAuth();
-    const [tasks, setTasks] = useState<Task[]>([]);
+    async function toggleComplete(taskId: string, completed: boolean) {
+        try {
+            const response = await api.put(`/tasks/${taskId}`, { completed });
+            const { success, error, data } = response as any;
 
-    async function addTask() {
-        await api.post("/tasks", {
-            uid: user?.id,
-            name: "New Task",
-            description: "This is a new tasks",
-            completed: false,
-            dueDate: new Date(),
-        });
-    }
-
-    async function fetchTasks() {
-        const response = await api.get("/tasks", {
-            params: {
-                uid: user?.id
+            if (success) {
+                toast({
+                    title: `Task marked as ${data.completed ? "completed" : "incomplete"}`,
+                    duration: 1000,
+                    variant: "default",
+                });
+            } else {
+                throw new Error(error);
             }
-        });
-        console.log(response.data);
-        setTasks(response.data);
+        } catch (e: any) {
+            toast({
+                title: "Error",
+                variant: "destructive",
+                description: e.message,
+                duration: 3000,
+            });
+        }
     }
 
-    useEffect(() => {
-        fetchTasks();
-    }, []);
+    async function onDelete(taskId: string) {
+        try {
+            const response = await api.delete(`/tasks/${taskId}`);
+            const { success, error } = response as any;
+
+            if (success) {
+                toast({
+                    title: "Task deleted successfully",
+                    duration: 1000,
+                    variant: "default",
+                });
+            } else {
+                toast({
+                    title: "Error",
+                    variant: "destructive",
+                    description: error,
+                    duration: 3000,
+                });
+            }
+        } catch (e: any) {
+            toast({
+                title: "Error",
+                variant: "destructive",
+                description: e.message,
+                duration: 3000,
+            });
+        }
+    }
 
     return (
-        <div>
-            <p
-                className={'font-bold text-2xl'}
-            >
-                Good Morning! 🌤️
-            </p>
-            <div
-                className={'p-3 space-y-2'}
-            >
-                {tasks.map(task => (
-                    <div
-                        key={task.id}
-                        className={'rounded-lg p-3 border border-gray-200'}
-                    >
-                        <p className={'font-bold text-xl'}>
-                            {task.name}
-                        </p>
-                        <p className={'font-medium text-gray-500'}>
-                            {task.description}
-                        </p>
-                    </div>
-                ))}
+        <div className="container mx-auto my-10 space-y-4">
+            <div className="flex items-center justify-between">
+                <div>
+                    <p className={'font-bold text-4xl'}>
+                        Good Morning! 🌤️
+                    </p>
+                    <p className="text-gray-400 text-xl">
+                        Here are your tasks for today
+                    </p>
+                </div>
+                <div className="flex items-center gap-2">
+                    <AddTaskDialog userId={user?.id!} />
+                    <UserAvatarButton />
+                </div>
             </div>
-            <Button onClick={addTask}>
-                Add Task
-            </Button>
+            {loading && <TasksListSkeleton />}
+            {error && <div>Error: {error}</div>}
+            {!loading && <TasksList tasks={tasks} onDelete={onDelete} toggleComplete={toggleComplete} />}
         </div>
-    )
+    );
 }
