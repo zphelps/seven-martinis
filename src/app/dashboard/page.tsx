@@ -88,19 +88,6 @@ export default function Dashboard() {
         }
     }
 
-    // function OrderCard({ card }: { card: any }) {
-    //     return (
-    //         <div key={card.id} className="p-4 w-[350px] bg-white rounded shadow">
-    //             <p className="font-bold">{card.customer_name}</p>
-    //             {card.items.map((item: any) => (
-    //                 <p key={item.id}>
-    //                     {item.quantity}x {item.name}
-    //                 </p>
-    //             ))}
-    //         </div>
-    //     );
-    // }
-
     return (
         <div className="container mx-auto my-10 space-y-4">
             <div className="flex items-center justify-between">

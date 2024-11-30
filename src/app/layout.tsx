@@ -3,7 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/providers";
 import { config } from "@/config";
-import React from "react";
+import React, { Suspense } from "react";
 import { getMetadata } from "@/utils/seo/get-metadata";
 import { cn } from "@/lib/utils";
 
@@ -20,9 +20,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={cn(inter.className)}>
-        <Providers>
-          {children}
-        </Providers>
+        <Suspense fallback={<p>Loading...</p>}>
+          <Providers>
+            {children}
+          </Providers>
+        </Suspense>
       </body>
     </html>
   );
