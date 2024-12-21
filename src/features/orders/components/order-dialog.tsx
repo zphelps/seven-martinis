@@ -9,7 +9,6 @@ import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/
 
 export default function OrderDialog({ children, order }: OrderDialogProps) {
 
-    console.log(order);
     return (
         <Dialog>
             <DialogTrigger asChild>{children}</DialogTrigger>

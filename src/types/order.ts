@@ -1,4 +1,4 @@
-export type OrderStatus = "ordered" | "preparing" | "ready";
+export type OrderStatus = "ordered" | "preparing" | "ready" | "served";
 
 export interface Order {
     id: string;
@@ -10,6 +10,11 @@ export interface Order {
 }
 
 export interface OrderItem {
+    menu_item_id: string;
+    quantity: number;
+}
+
+export interface MenuItem {
     id: string;
     name: string;
     quantity: number;

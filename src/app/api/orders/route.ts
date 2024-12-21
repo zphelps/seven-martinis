@@ -1,12 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
+import { OrderItem } from "@/types/order";
 
 export async function GET(request: NextRequest) {
     try {
+        const uid = request.nextUrl.searchParams.get('uid');
+        console.log(uid)
         const supabase = createClient();
-        const { data: orders, error } = await supabase
-            .from('orders')
-            .select(`
+
+        let query = supabase.from('orders').select(`
                 id,
                 customer_name,
                 status,
@@ -21,7 +23,14 @@ export async function GET(request: NextRequest) {
                         recipe
                     )
                 )
-            `);
+            `)
+
+        if (uid) {
+            query = query.eq('uid', uid)
+        }
+
+        const { data: orders, error } = await query;
+        console.log(orders)
 
         if (error) {
             console.log(error);
@@ -55,4 +64,66 @@ export async function GET(request: NextRequest) {
             error: err.message
         }, { status: 400 });
     }
+}
+
+export async function POST(request: NextRequest) {
+    const { customer_name, items, uid } = await request.json();
+    console.log(customer_name, items, uid)
+
+    const supabase = createClient();
+    const { data, error } = await supabase
+        .from('orders')
+        .insert({ customer_name, uid })
+        .select();
+
+    if (error) {
+        console.log(error);
+        return NextResponse.json({
+            success: false,
+            error: error.message
+        }, { status: 400 });
+    }
+
+    const orderItems = items.map((item: OrderItem) => ({
+        order_id: data[0].id,
+        menu_item_id: item.menu_item_id,
+        quantity: item.quantity
+    }));
+
+    const { data: order_items, error: order_items_error } = await supabase
+        .from('order_items')
+        .insert(orderItems)
+        .select();
+
+    if (order_items_error) {
+        console.log(order_items_error);
+        return NextResponse.json({
+            success: false,
+            error: order_items_error.message
+        }, { status: 400 });
+    }
+
+    return NextResponse.json({
+        success: true,
+        message: "Order placed successfully"
+    }, { status: 200 });
+}
+
+export async function DELETE(request: NextRequest) {
+    const { orderId } = await request.json();
+    const supabase = createClient();
+    const { data, error } = await supabase.from('orders').delete().eq('id', orderId);
+
+    if (error) {
+        console.log(error);
+        return NextResponse.json({
+            success: false,
+            error: error.message
+        }, { status: 400 });
+    }
+
+    return NextResponse.json({
+        success: true,
+        message: "Order cancelled successfully"
+    }, { status: 200 });
 }
