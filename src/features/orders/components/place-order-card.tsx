@@ -40,7 +40,7 @@ export function PlaceOrderCard({ menuItems, uid }: PlaceOrderCardProps) {
 
         const order = {
             uid,
-            customer_name: customerName,
+            customer_name: customerName.trim(),
             items: orderItems
         }
 

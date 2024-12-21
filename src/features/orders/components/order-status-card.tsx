@@ -37,7 +37,7 @@ export function OrderStatusCard({ order, setOrders }: OrderStatusCardProps) {
             </div>
 
             <p className="font-medium">
-                {order.status === 'ordered' && `We've recieved your order, ${order.customer_name}!`}
+                {order.status === 'ordered' && `We've received your order, ${order.customer_name}!`}
                 {order.status === 'preparing' && `We're preparing your order, ${order.customer_name}!`}
                 {order.status === 'ready' && `Your order is ready, ${order.customer_name}!`}
             </p>

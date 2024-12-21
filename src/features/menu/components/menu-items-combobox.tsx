@@ -100,7 +100,7 @@ function MenuItemsList({
 }) {
     return (
         <Command>
-            <CommandInput placeholder="Search for a drink..." />
+            <CommandInput className="text-base placeholder:text-base" placeholder="Search for a drink..." />
             <CommandList>
                 <CommandEmpty>No results found.</CommandEmpty>
                 <CommandGroup>
