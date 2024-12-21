@@ -24,7 +24,7 @@ export default function OrderDialog({ children, order }: OrderDialogProps) {
                                 <p>{item.quantity}x {item.name} (#{item.drink_number})</p>
                             </AccordionTrigger>
                             <AccordionContent>
-                                <p>{item.recipe}</p>
+                                <p className="whitespace-pre-wrap">{item.recipe}</p>
                             </AccordionContent>
                         </AccordionItem>
                     ))}
