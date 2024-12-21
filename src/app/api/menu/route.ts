@@ -23,7 +23,8 @@ export async function GET(request: NextRequest) {
             success: true,
         }, { status: 200 })
     } catch (e) {
-        console.log(e);
+        console.log("Error in GET /api/menu", e);
+        console.log("ERRR")
         return NextResponse.json({
             success: false,
             error: e

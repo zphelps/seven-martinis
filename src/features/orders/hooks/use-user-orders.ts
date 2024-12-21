@@ -2,17 +2,19 @@ import { useState, useEffect } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { Order } from '@/types/order';
 
-export function useOrders() {
+export function useUserOrders(uid: string | null) {
     const [orders, setOrders] = useState<Order[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<any>(null);
 
     useEffect(() => {
+        if (!uid) return;
+
         const supabase = createClient();
 
         const fetchOrders = async () => {
             try {
-                console.log('fetching orders', new Date().toISOString());
+                console.log('fetching orders');
                 const { data, error } = await supabase
                     .from('orders')
                     .select(`
@@ -31,7 +33,8 @@ export function useOrders() {
                             )
                         )
                     `)
-                    .order('created_at', { ascending: false });
+                    .not('status', 'eq', 'served')
+                    .eq('uid', uid);
 
                 if (error) throw error;
 
@@ -68,9 +71,10 @@ export function useOrders() {
                     event: '*',
                     schema: 'public',
                     table: 'orders',
+                    filter: `uid=eq.${uid}`,
                 },
                 (payload) => {
-                    console.log(payload);
+                    console.log('payload', payload);
                     fetchOrders();
                 }
             )
@@ -79,7 +83,7 @@ export function useOrders() {
         return () => {
             supabase.removeChannel(ordersChannel);
         };
-    }, []);
+    }, [uid]);
 
     return { orders, setOrders, loading, error };
 }

@@ -6,6 +6,7 @@ import { config } from "@/config";
 import React, { Suspense } from "react";
 import { getMetadata } from "@/utils/seo/get-metadata";
 import { cn } from "@/lib/utils";
+import { Toaster } from "@/components/ui/toaster";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,6 +24,7 @@ export default function RootLayout({
         <Suspense fallback={<p>Loading...</p>}>
           <Providers>
             {children}
+            <Toaster />
           </Providers>
         </Suspense>
       </body>

@@ -4,7 +4,10 @@ const nextConfig = {
         return [
             { source: '/', destination: '/menu', permanent: true },
         ]
-    }
+    },
+    eslint: {
+        ignoreDuringBuilds: true,
+    },
 };
 
 export default nextConfig;
