@@ -67,7 +67,7 @@ export function MenuItemsCombobox({ menuItems, selectedMenuItem, setSelectedMenu
                                 <p className="text-sm">{selectedMenuItem.name}</p>
                             </div>
                             : (
-                                <p className="font-normal text-gray-500">
+                                <p className="text-base font-normal text-gray-500">
                                     Select a drink
                                 </p>
                             )}

@@ -78,12 +78,12 @@ export function PlaceOrderCard({ menuItems, uid }: PlaceOrderCardProps) {
     }
 
     return (
-        <div className="border border-gray-200 shadow-md bg-white rounded-md p-3 mx-2 my-4">
+        <div className="border border-gray-200 shadow-md bg-white rounded-lg p-4 mx-3 my-4">
             <div className="">
-                <p className="font-bold">
+                <p className="font-bold text-lg">
                     Place Order
                 </p>
-                <p className="text-sm text-gray-500 mb-2">
+                <p className="text text-gray-500 mb-2">
                     Please enter your name and select a drink from the menu below.
                 </p>
             </div>
@@ -96,7 +96,7 @@ export function PlaceOrderCard({ menuItems, uid }: PlaceOrderCardProps) {
                     type="text"
                     value={customerName}
                     onChange={(e) => setCustomerName(e.target.value)}
-                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder:text-gray-500"
+                    className="text-base block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder:text-gray-500"
                     placeholder="Enter your name"
                 />
             </div>
