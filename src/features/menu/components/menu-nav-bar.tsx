@@ -13,12 +13,12 @@ export default function MenuNavBar() {
 
     return (
         <header className="bg-gray-200 shadow-md">
-            <nav aria-label="Global" className="mx-auto flex max-w-7xl items-center justify-between p-3 lg:px-8">
+            <nav aria-label="Global" className="mx-auto flex max-w-7xl items-center justify-center p-3 lg:px-8">
                 <div className="flex lg:flex-1">
                     <a href="#" className="">
                         <span className="sr-only">Seven Martinis</span>
                         <img alt="" src="7MPrimaryCropped.png"
-                            className="h-10 max-w-fit" />
+                            className="h-14 max-w-fit" />
                     </a>
                 </div>
                 {/* <div className="flex lg:hidden">
