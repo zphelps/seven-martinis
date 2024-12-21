@@ -20,6 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <meta name="viewport" content="width=device-width, user-scalable=no" />
       <body className={cn(inter.className)}>
         <Suspense fallback={<p>Loading...</p>}>
           <Providers>
