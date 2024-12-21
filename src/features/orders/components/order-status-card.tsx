@@ -44,19 +44,19 @@ export function OrderStatusCard({ order, setOrders }: OrderStatusCardProps) {
 
             {order.status === 'ordered' && (
                 <p className="text-sm text-gray-500">
-                    We'll let you know when we begin preparing your order.
+                    {"We'll let you know when we begin preparing your order."}
                 </p>
             )}
 
             {order.status === 'preparing' && (
                 <p className="text-sm text-gray-500">
-                    We'll let you know when your order is ready.
+                    {"We'll let you know when your order is ready."}
                 </p>
             )}
 
             {order.status === 'ready' && (
                 <p className="text-sm text-gray-500">
-                    Please pick up your order at the counter.
+                    {"Please pick up your order at the counter."}
                 </p>
             )}
 

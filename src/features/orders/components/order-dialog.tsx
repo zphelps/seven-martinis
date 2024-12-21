@@ -18,7 +18,7 @@ export default function OrderDialog({ children, order }: OrderDialogProps) {
                 </DialogHeader>
 
                 <Accordion type="single" collapsible className="focus:outline-none">
-                    {order.items.map((item, index) => (
+                    {order.items.map((item: any, index: number) => (
                         <AccordionItem key={index} value={index.toString()}>
                             <AccordionTrigger>
                                 <p>{item.quantity}x {item.name} (#{item.drink_number})</p>
