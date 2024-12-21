@@ -178,7 +178,7 @@ export default function Dashboard() {
                         renderColumnHeader={(column: any) => {
                             console.log(column);
                             return (
-                                <div className="w-[295px] flex items-center justify-between">
+                                <div className="w-[290px] flex items-center justify-between">
                                     <p className=" text-lg font-bold mb-2">
                                         {column.title}
                                     </p>
