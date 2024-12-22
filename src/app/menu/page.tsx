@@ -39,7 +39,8 @@ export default function Menu() {
 
             <div className="max-w-screen-sm mx-auto">
                 {orders.length > 0 && <OrderStatusList orders={orders} setOrders={setOrders} />}
-                {orders.length === 0 && <PlaceOrderCard menuItems={menuItems} uid={uid} />}
+                {/* {orders.length === 0 && <PlaceOrderCard menuItems={menuItems} uid={uid} />} */}
+                <PlaceOrderCard menuItems={menuItems} uid={uid} />
             </div>
 
         </div>
