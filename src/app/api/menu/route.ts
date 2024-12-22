@@ -8,7 +8,9 @@ export async function GET(request: NextRequest) {
         const supabase = createClient();
         const { data, error } = await supabase
             .from("menu_items")
-            .select("*");
+            .select("*")
+            .order('drink_number', { ascending: true })
+            .eq('available', true);
 
         if (error) {
             console.log(error);

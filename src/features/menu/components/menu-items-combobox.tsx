@@ -116,7 +116,7 @@ function MenuItemsList({
                             }}
                         >
                             <div className="flex space-x-2">
-                                <p className="text-sm text-gray-500">#{item.drink_number}</p>
+                                <p className="text-sm text-gray-500 w-8">#{item.drink_number}</p>
                                 <div className="">
                                     <p className="text-sm font-medium">{item.name}</p>
                                     <p className="text-sm text-gray-500">{item.description}</p>
