@@ -50,7 +50,7 @@ export function useOrders() {
                     })),
                 }));
 
-                setOrders(formattedOrders);
+                setOrders(formattedOrders as Order[]);
             } catch (err: any) {
                 setError(err);
             } finally {

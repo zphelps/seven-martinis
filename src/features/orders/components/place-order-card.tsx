@@ -1,4 +1,4 @@
-import { CheckCircleIcon } from "lucide-react";
+import { CheckCircleIcon, Router } from "lucide-react";
 import { MenuItemsCombobox } from "@/features/menu/components/menu-items-combobox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,17 +8,19 @@ import { MenuItem } from "@/types/order";
 import { toast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
+import useMenu from "@/features/menu/hooks/use-menu";
+import { useUid } from "../hooks/use-uid";
+import { useRouter } from "next/navigation";
 
-interface PlaceOrderCardProps {
-    menuItems: MenuItem[];
-    uid: string | null;
-}
 
-export function PlaceOrderCard({ menuItems, uid }: PlaceOrderCardProps) {
-
+export function PlaceOrderCard() {
+    const { uid, setUid } = useUid();
+    const { menuItems, loading: menuItemsLoading, error: menuItemsError } = useMenu();
     const [selectedMenuItem, setSelectedMenuItem] = useState<MenuItem | null>(null);
     const [customerName, setCustomerName] = useState<string>("");
     const [placingOrder, setPlacingOrder] = useState<boolean>(false);
+
+    const router = useRouter();
 
     const handlePlaceOrder = async () => {
         setPlacingOrder(true)
@@ -57,6 +59,7 @@ export function PlaceOrderCard({ menuItems, uid }: PlaceOrderCardProps) {
                     title: `Order placed successfully for ${customerName}!`,
                     variant: "default",
                 });
+                router.push('/menu?tab=orders');
             } else {
                 toast({
                     title: "Failed to place order",
