@@ -16,7 +16,7 @@ export function StarRating({ orderId }: StarRatingProps) {
 
     return (
         <div className='py-2.5'>
-            {order && <div className="flex justify-around">
+            <div className="flex justify-around">
                 {[1, 2, 3, 4, 5].map((star) => (
                     <button
                         key={star}
@@ -26,7 +26,7 @@ export function StarRating({ orderId }: StarRatingProps) {
                         ★
                     </button>
                 ))}
-            </div>}
+            </div>
         </div>
     );
 }
