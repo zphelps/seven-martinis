@@ -45,6 +45,7 @@ const items = [
 
 export function AppSidebar() {
     const pathname = usePathname()
+    const { toggleSidebar, open } = useSidebar()
 
     return (
         <Sidebar variant="floating" collapsible="icon">
@@ -59,7 +60,15 @@ export function AppSidebar() {
                             {items.map((item) => (
                                 <SidebarMenuItem key={item.title}>
                                     <SidebarMenuButton asChild>
-                                        <Link href={item.url} className={cn(pathname === item.url && "bg-gray-200 hover:bg-gray-200")}>
+                                        <Link
+                                            href={item.url}
+                                            className={cn(pathname === item.url && "bg-gray-200 hover:bg-gray-200")}
+                                            onClick={() => {
+                                                if (item.title === "Orders" && open) {
+                                                    toggleSidebar()
+                                                }
+                                            }}
+                                        >
                                             <item.icon />
                                             <span>{item.title}</span>
                                         </Link>
