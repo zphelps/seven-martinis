@@ -212,7 +212,7 @@ export function IngredientDropdown() {
                 >
                     {value
                         ? ingredients.find((ingredient) => ingredient.value === value)?.label
-                        : "Select framework..."}
+                        : "Select ingredient..."}
                     <ChevronsUpDown className="opacity-50" />
                 </Button>
             </PopoverTrigger>
