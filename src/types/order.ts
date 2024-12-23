@@ -6,7 +6,7 @@ export interface Order {
     status: OrderStatus;
     created_at: string;
     items: OrderItem[];
-    // Include other properties as needed
+    rating: number | null;
 }
 
 export interface OrderItem {

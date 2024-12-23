@@ -151,7 +151,13 @@ export default function Dashboard() {
         }
     }
 
-    if (loading) return <p>Loading orders...</p>;
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center h-screen">
+                <Loader2 className="w-4 h-4 animate-spin" />
+            </div>
+        )
+    }
     if (error) return <p>Error fetching orders</p>;
 
     return (
@@ -159,17 +165,6 @@ export default function Dashboard() {
 
             {/* Kanban Board */}
             <div className="flex flex-col justify-center">
-                {/* <div className="flex items-center justify-between m-2">
-                    <div className="space-y-2">
-                        <p className="font-bold text-4xl">🍸 Seven Martinis</p>
-                        <p className="text-gray-500 text-xl">
-                            Here are your current orders
-                        </p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <UserAvatarButton />
-                    </div>
-                </div> */}
                 <div className="flex justify-center">
                     <Board
                         children={board}

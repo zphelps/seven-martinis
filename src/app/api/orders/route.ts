@@ -5,7 +5,6 @@ import { OrderItem } from "@/types/order";
 export async function GET(request: NextRequest) {
     try {
         const uid = request.nextUrl.searchParams.get('uid');
-        console.log(uid)
         const supabase = createClient();
 
         let query = supabase.from('orders').select(`

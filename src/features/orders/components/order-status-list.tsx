@@ -1,14 +1,14 @@
 import { Order } from "@/types/order";
 import { OrderStatusCard } from "./order-status-card";
+import { useUserOrders } from "../hooks/use-user-orders";
+import { useUid } from "../hooks/use-uid";
 
-interface OrderStatusListProps {
-    orders: Order[];
-    setOrders: (orders: Order[]) => void;
-}
+export function OrderStatusList() {
+    const { uid } = useUid();
+    const { orders, setOrders, loading: ordersLoading, error: ordersError } = useUserOrders(uid);
 
-export function OrderStatusList({ orders, setOrders }: OrderStatusListProps) {
     return (
-        <div className="flex flex-col gap-2 p-2 pt-4">
+        <div className="flex flex-col gap-2 p-2 pt-2">
             {orders.map((order: Order) => (
                 <div key={order.id}>
                     <OrderStatusCard order={order} setOrders={setOrders} />

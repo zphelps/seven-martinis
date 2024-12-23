@@ -33,7 +33,7 @@ export function useUserOrders(uid: string | null) {
                             )
                         )
                     `)
-                    .not('status', 'eq', 'served')
+                    // .not('status', 'eq', 'served')
                     .eq('uid', uid);
 
                 if (error) throw error;
@@ -53,7 +53,7 @@ export function useUserOrders(uid: string | null) {
                     })),
                 }));
 
-                setOrders(formattedOrders);
+                setOrders(formattedOrders as Order[]);
             } catch (err: any) {
                 setError(err);
             } finally {

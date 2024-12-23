@@ -4,6 +4,7 @@ import { Separator } from "@/components/ui/separator"
 import { X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { CancelOrderButton } from "./cancel-order-button"
+import { StarRating } from "./star-rating"
 
 interface OrderStatusCardProps {
     order: Order,
@@ -33,6 +34,12 @@ export function OrderStatusCard({ order, setOrders }: OrderStatusCardProps) {
                     </Badge>
                 )}
 
+                {order.status === 'served' && (
+                    <Badge variant="outline" className="mb-2">
+                        ⭐️ Served
+                    </Badge>
+                )}
+
                 {order.status === 'ordered' && <CancelOrderButton orderId={order.id} setOrders={setOrders} />}
             </div>
 
@@ -40,6 +47,7 @@ export function OrderStatusCard({ order, setOrders }: OrderStatusCardProps) {
                 {order.status === 'ordered' && `We've received your order, ${order.customer_name}!`}
                 {order.status === 'preparing' && `We're preparing your order, ${order.customer_name}!`}
                 {order.status === 'ready' && `Your order is ready, ${order.customer_name}!`}
+                {order.status === 'served' && `Thank you for your order, ${order.customer_name}!`}
             </p>
 
             {order.status === 'ordered' && (
@@ -58,6 +66,15 @@ export function OrderStatusCard({ order, setOrders }: OrderStatusCardProps) {
                 <p className="text-sm text-gray-500">
                     {"Please pick up your order at the counter."}
                 </p>
+            )}
+
+            {order.status === 'served' && (
+                <div>
+                    <p className="text-sm text-gray-500">
+                        {"We've love to hear how you enjoyed your drink."}
+                    </p>
+                    <StarRating orderId={order.id} />
+                </div>
             )}
 
             <Separator className="my-2" />
