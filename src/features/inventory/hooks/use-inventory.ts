@@ -9,6 +9,12 @@ export interface AddInventoryItemProps {
     image: File | null
 }
 
+export interface UpdateInventoryItemProps {
+    name?: string
+    type?: string
+    stock?: string
+}
+
 const useInventory = () => {
     const [inventory, setInventory] = useState<InventoryItem[]>([])
     const [loading, setLoading] = useState(true)
@@ -56,10 +62,23 @@ const useInventory = () => {
         }
     }
 
-    const updateInventoryItem = async (id: string, item: InventoryItem) => {
+    const deleteInventoryItem = async (id: string) => {
+        try {
+            const response = await fetch(`/api/inventory/${id}`, { method: "DELETE" })
+            if (!response.ok) {
+                throw new Error("Failed to delete inventory item")
+            }
+
+            setInventory((prevInventory) => prevInventory.filter((item) => item.id !== id))
+        } catch (error: any) {
+            setError(error.message)
+        }
+    }
+
+    const updateInventoryItem = async (id: string, item: UpdateInventoryItemProps) => {
         const previousInventory = [...inventory]
         setInventory((prevInventory) =>
-            prevInventory.map((invItem) => (invItem.id === id ? item : invItem))
+            prevInventory.map((invItem) => (invItem.id === id ? { ...invItem, ...item } : invItem) as InventoryItem)
         )
 
         try {
@@ -75,9 +94,6 @@ const useInventory = () => {
                 throw new Error("Failed to update inventory item")
             }
 
-            const result = await response.json()
-
-            setInventory(result.data)
         } catch (e: any) {
             setError(e.message)
             setInventory(previousInventory)
@@ -88,7 +104,7 @@ const useInventory = () => {
         getInventory()
     }, [])
 
-    return { inventory, updateInventoryItem, loading, error, addInventoryItem }
+    return { inventory, updateInventoryItem, loading, error, addInventoryItem, deleteInventoryItem }
 }
 
 export default useInventory

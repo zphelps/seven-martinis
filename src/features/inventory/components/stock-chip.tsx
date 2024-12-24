@@ -1,7 +1,9 @@
 import { CheckIcon, XIcon } from "lucide-react";
 import { AlertTriangleIcon } from "lucide-react";
+import useInventory from "../hooks/use-inventory";
 
 export const StockChip = ({ stock }: { stock: string }) => {
+
     const getColor = (stock: string) => {
         switch (stock) {
             case "full":

@@ -1,19 +1,21 @@
 "use client"
 
 import { SidebarProvider } from "@/components/ui/sidebar"
-import { columns } from "@/features/inventory/components/columns"
-import { InventoryDataTable } from "@/features/inventory/components/data-table"
-import InventoryItemSidebar from "@/features/inventory/components/inventory-item-sidebar"
-import useInventory from "@/features/inventory/hooks/use-inventory"
+import { columns } from "@/features/menu/components/columns"
+import { MenuDataTable } from "@/features/menu/components/data-table"
+import MenuItemSidebar from "@/features/menu/components/menu-item-sidebar"
+import useMenu from "@/features/menu/hooks/use-menu"
+import { MenuItem } from "@/types/order"
 import { Loader2 } from "lucide-react"
 
-export default function InventoryPage() {
-    const { inventory,
-        updateInventoryItem,
+export default function MenuPage() {
+    const { menuItems,
         loading,
         error,
-        addInventoryItem,
-        deleteInventoryItem } = useInventory()
+        addMenuItem,
+        updateMenuItem,
+        deleteMenuItem
+    } = useMenu()
 
     if (loading) {
         return (
@@ -32,13 +34,25 @@ export default function InventoryPage() {
                 "--sidebar-width-mobile": "22rem",
             } as React.CSSProperties}
         >
-            <div className="flex w-full h-full">
+            <div className="w-full h-screen py-2 overflow-hidden flex">
+                <MenuDataTable
+                    columns={columns}
+                    data={menuItems}
+                    addMenuItem={addMenuItem} />
+                <MenuItemSidebar
+                    menu={menuItems}
+                    updateMenuItem={updateMenuItem}
+                    deleteMenuItem={deleteMenuItem}
+                />
+            </div>
+
+            {/* <div className="flex w-full h-full">
                 <div className="flex-grow overflow-hidden">
                     <div className="h-full overflow-auto py-2 box-border">
-                        <InventoryDataTable
+                        <MenuDataTable
                             columns={columns}
-                            data={inventory}
-                            addInventoryItem={addInventoryItem} />
+                            data={menuItems}
+                            addMenuItem={addMenuItem} />
                     </div>
                 </div>
                 <InventoryItemSidebar
@@ -46,7 +60,7 @@ export default function InventoryPage() {
                     updateInventoryItem={updateInventoryItem}
                     deleteInventoryItem={deleteInventoryItem}
                 />
-            </div>
+            </div> */}
         </SidebarProvider>
     )
 }

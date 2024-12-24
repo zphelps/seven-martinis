@@ -2,8 +2,6 @@
 
 import { ColumnDef } from "@tanstack/react-table"
 import TypeChip from "./type-chip"
-import Image from "next/image"
-import { CameraIcon } from "@heroicons/react/24/outline"
 import { ImageIcon } from "lucide-react"
 import { StockChip } from "./stock-chip"
 export type InventoryItem = {

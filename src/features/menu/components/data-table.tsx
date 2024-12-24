@@ -13,30 +13,31 @@ import {
     Table,
     TableBody,
     TableCell,
+    TableFooter,
     TableHead,
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { useSidebar } from "@/components/ui/sidebar"
 import { useRouter, useSearchParams } from "next/navigation"
-import InventoryItemSidebar from "./inventory-item-sidebar"
-import { InventoryItem } from "./columns"
-import { InventoryToolbar } from "./inventory-toolbar"
+import { MenuItem } from "@/types/order"
+// import { MenuToolbar } from "./menu-toolbar"
 import { Separator } from "@/components/ui/separator"
 import { useState } from "react"
-import { AddInventoryItemProps } from "../hooks/use-inventory"
+import { AddMenuItemProps } from "../hooks/use-menu"
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination"
+import { MenuToolbar } from "./menu-toolbar"
 
-interface InventoryDataTableProps<TData, TValue> {
+interface MenuDataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
     data: TData[],
-    addInventoryItem: (item: AddInventoryItemProps) => Promise<InventoryItem>
+    addMenuItem: (item: AddMenuItemProps) => Promise<MenuItem>
 }
 
-export function InventoryDataTable<TData, TValue>({
+export function MenuDataTable<TData, TValue>({
     columns,
     data,
-    addInventoryItem,
-}: InventoryDataTableProps<TData, TValue>) {
+    addMenuItem,
+}: MenuDataTableProps<TData, TValue>) {
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(
         []
     )
@@ -56,14 +57,11 @@ export function InventoryDataTable<TData, TValue>({
     const id = searchParams.get("id")
 
     return (
-        <div className="rounded-lg border h-full mr-2 shadow">
-            <InventoryToolbar
-                addInventoryItem={addInventoryItem}
-                table={table}
-            />
+        <div className="flex flex-col rounded-lg border w-full h-full mr-2 shadow">
+            <MenuToolbar table={table} addMenuItem={addMenuItem} />
             <Separator />
-            <Table>
-                <TableHeader>
+            <Table wrapperClassName="overflow-y-auto h-full">
+                <TableHeader className="sticky top-0 bg-gray-50">
                     {table.getHeaderGroups().map((headerGroup) => (
                         <TableRow key={headerGroup.id}>
                             {headerGroup.headers.map((header) => {
@@ -81,18 +79,18 @@ export function InventoryDataTable<TData, TValue>({
                         </TableRow>
                     ))}
                 </TableHeader>
-                <TableBody>
+                <TableBody className="w-full">
                     {table.getRowModel().rows?.length ? (
                         table.getRowModel().rows.map((row) => (
                             <TableRow
                                 key={row.id}
                                 className="cursor-pointer"
                                 onClick={() => {
-                                    const inventoryItem = row.original as InventoryItem
-                                    if (id === inventoryItem.id) {
-                                        router.push(`/dashboard/inventory`)
+                                    const menuItem = row.original as MenuItem
+                                    if (id === menuItem.id) {
+                                        router.push(`/dashboard/menu`)
                                     } else {
-                                        router.push(`/dashboard/inventory?id=${inventoryItem.id}`)
+                                        router.push(`/dashboard/menu?id=${menuItem.id}`)
                                     }
                                 }}
                                 data-state={row.getIsSelected() && "selected"}

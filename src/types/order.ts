@@ -20,4 +20,5 @@ export interface MenuItem {
     quantity: number;
     drink_number: number;
     recipe: string;
+    available: boolean;
 }

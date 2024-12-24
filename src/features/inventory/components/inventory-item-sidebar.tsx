@@ -4,16 +4,21 @@ import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarHead
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { InventoryItem } from "./columns";
-import { XIcon } from "lucide-react";
+import { TrashIcon, XIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import TypeChip from "./type-chip";
+import { ChangeStockSelect } from "./change-stock-select";
+import { UpdateInventoryItemProps } from "../hooks/use-inventory";
+import { ChangeTypeSelect } from "./change-type-select";
+import { DeleteItemButton } from "./delete-item-button";
 
 interface InventoryItemSidebarProps {
     inventory: InventoryItem[],
-    updateInventoryItem: (id: string, item: InventoryItem) => void
+    updateInventoryItem: (id: string, item: UpdateInventoryItemProps) => Promise<void>,
+    deleteInventoryItem: (id: string) => Promise<void>
 }
 
-export default function InventoryItemSidebar({ inventory, updateInventoryItem }: InventoryItemSidebarProps) {
+export default function InventoryItemSidebar({ inventory, updateInventoryItem, deleteInventoryItem }: InventoryItemSidebarProps) {
     const { toggleSidebar, open } = useSidebar()
     const router = useRouter()
 
@@ -32,6 +37,7 @@ export default function InventoryItemSidebar({ inventory, updateInventoryItem }:
 
     useEffect(() => {
         if (id) {
+            console.log(inventory)
             setItem(inventory.find((item) => item.id === id) || null)
         }
     }, [id, inventory])
@@ -48,23 +54,31 @@ export default function InventoryItemSidebar({ inventory, updateInventoryItem }:
                     </Button>
                 </div>
             </SidebarHeader>
-            <SidebarContent className="bg-white">
-                <SidebarGroup className="px-0">
-                    <SidebarGroupContent className="bg-white">
+            <SidebarContent className="bg-white h-full rounded-b-lg">
+                <SidebarGroup className="px-0 h-full">
+                    <SidebarGroupContent className="bg-white h-full">
                         {item && (
-                            <div className="space-y-4">
+                            <div className="relative space-y-4 -mt-2 h-full flex flex-col">
                                 {/* Image */}
-                                <div className="w-full h-40 rounded-md overflow-hidden bg-gray-200 flex items-center justify-center">
+                                <div className="w-full h-48 bg-gray-200 flex items-center justify-center">
                                     {item.image_url ? (
-                                        <img src={item.image_url} alt={item.name} className="w-full rounded-md h-full object-cover" />
+                                        <img src={item.image_url} alt={item.name} className="flex w-full h-full object-cover" />
                                     ) : (
                                         <p className="text-xs text-center text-gray-500">No Image</p>
                                     )}
                                 </div>
 
-                                {/* Type */}
-                                <div>
-                                    <TypeChip type={item.type} />
+                                <div className="flex items-center gap-2 px-2">
+                                    <div className="w-full">
+                                        <ChangeTypeSelect id={item.id} type={item.type} updateInventoryItem={updateInventoryItem} />
+                                    </div>
+                                    <div className="w-full">
+                                        <ChangeStockSelect id={item.id} stock={item.stock} updateInventoryItem={updateInventoryItem} />
+                                    </div>
+                                </div>
+
+                                <div className="absolute -bottom-1.5 left-0 right-0 px-2 mb-2">
+                                    <DeleteItemButton id={item.id} deleteInventoryItem={deleteInventoryItem} />
                                 </div>
 
                             </div>

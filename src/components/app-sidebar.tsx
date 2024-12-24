@@ -27,8 +27,8 @@ const items = [
         icon: ListTodo,
     },
     {
-        title: "Catalog",
-        url: "/dashboard/catalog",
+        title: "Menu",
+        url: "/dashboard/menu",
         icon: Martini,
     },
     {
@@ -62,7 +62,7 @@ export function AppSidebar() {
                                     <SidebarMenuButton asChild>
                                         <Link
                                             href={item.url}
-                                            className={cn(pathname === item.url && "bg-gray-200 hover:bg-gray-200")}
+                                            className={cn(pathname === item.url && "bg-gray-200 group-hover:bg-gray-200 hover:bg-gray-200")}
                                             onClick={() => {
                                                 if (item.title === "Orders" && open) {
                                                     toggleSidebar()

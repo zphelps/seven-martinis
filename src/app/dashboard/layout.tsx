@@ -1,5 +1,4 @@
 import { AppSidebar } from "@/components/app-sidebar";
-import { SidebarTrigger } from "@/components/ui/sidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import AuthGuard from "@/guards/auth-guard";
 
