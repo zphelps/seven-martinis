@@ -40,8 +40,8 @@ export const ChangeMenuItemInstructions = ({ menu_item, updateMenuItem }: Change
                 Enter instructions for the bartender to follow when making this drink.
             </p>
             <Textarea
-                placeholder="Enter instructions for the bartender..."
-                value={instructions}
+                placeholder="Ex: Add vodka, lime, and soda water to a shaker, shake, and pour into a glass."
+                value={instructions || ""}
                 onChange={handleInstructionsChange}
                 className="h-24 bg-gray-50 hover:bg-gray-100 border-0 focus:border focus:border-gray-300 ring-transparent focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:outline-none"
             />

@@ -4,10 +4,12 @@ import { MenuItem } from '@/types/order';
 import { useState, useEffect } from 'react';
 
 export interface AddMenuItemProps {
+    id: string;
     drink_number: number;
     name: string;
     description: string;
     available: boolean;
+    instructions: string;
 }
 
 export interface UpdateMenuItemProps {
@@ -24,19 +26,29 @@ const useMenu = () => {
     const [error, setError] = useState(null);
 
     const addMenuItem = async (item: AddMenuItemProps) => {
-        const response = await fetch('/api/menu', {
-            method: 'POST',
-            body: JSON.stringify(item),
-        });
-        const result = await response.json();
+        const newMenuItem = item
+        const previousMenuItems = [...menuItems];
+        setMenuItems(prev => [...prev, newMenuItem] as MenuItem[]);
 
-        if (response.ok) {
-            setMenuItems(prev => [...prev, result.data] as MenuItem[]);
-        } else {
-            setError(result.error);
+        try {
+            const response = await fetch('/api/menu', {
+                method: 'POST',
+                body: JSON.stringify(item),
+            });
+            const result = await response.json();
+
+            if (response.ok) {
+                setMenuItems(prev => prev.map(menuItem => menuItem.id === newMenuItem.id ? result.data : menuItem) as MenuItem[]);
+            } else {
+                throw new Error(result.error);
+            }
+
+            return result.data;
+        } catch (error: any) {
+            setError(error.message);
+            setMenuItems(previousMenuItems);
+            throw error;
         }
-
-        return result.data;
     }
 
     const deleteMenuItem = async (id: string) => {

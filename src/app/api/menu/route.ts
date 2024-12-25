@@ -33,3 +33,27 @@ export async function GET(request: NextRequest) {
         }, { status: 400 })
     }
 }
+
+export async function POST(request: NextRequest) {
+    const item = await request.json();
+    console.log(item);
+    const supabase = createClient();
+
+    const { data, error } = await supabase
+        .from("menu_items")
+        .insert(item)
+        .select();
+
+    if (error) {
+        console.log(error);
+        return NextResponse.json({
+            success: false,
+            error: error.message
+        }, { status: 400 })
+    }
+
+    return NextResponse.json({
+        data: data[0],
+        success: true,
+    }, { status: 200 })
+}

@@ -39,8 +39,8 @@ export const ChangeMenuItemDescription = ({ menu_item, updateMenuItem }: ChangeM
             </p>
             <Textarea
                 className="h-24 bg-gray-50 hover:bg-gray-100 border-0 focus:border focus:border-gray-300 ring-transparent focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:outline-none"
-                placeholder="Enter a description for the menu item..."
-                value={description}
+                placeholder="Ex: A refreshing cocktail made with vodka, lemonade, and lime."
+                value={description || ""}
                 onChange={handleDescriptionChange}
             />
         </div>
