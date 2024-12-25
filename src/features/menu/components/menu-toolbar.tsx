@@ -24,7 +24,7 @@ export const MenuToolbar = <TData, TValue>({ table, addMenuItem }: MenuToolbarPr
             name: "",
             description: "",
             instructions: "",
-            available: true,
+            available: false,
             drink_number: 0,
         })
 

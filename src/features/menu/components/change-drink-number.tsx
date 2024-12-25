@@ -51,7 +51,7 @@ export const ChangeDrinkNumber = ({ item, updateMenuItem }: ChangeDrinkNumberPro
                 />
             ) : (
                 <div>
-                    {(currentDrinkNumber !== 0) && <p className="text-lg font-semibold text-black hover:cursor-pointer">
+                    {(currentDrinkNumber !== 0 && currentDrinkNumber !== null) && <p className="text-lg font-semibold text-black hover:cursor-pointer">
                         {currentDrinkNumber || "0"}.
                     </p>}
                     {(!currentDrinkNumber || currentDrinkNumber === 0) && <p className="text-lg font-normal text-gray-500 hover:cursor-pointer">

@@ -12,7 +12,7 @@ interface ChangeAvailabilityProps {
 export const ChangeAvailability = ({ item, updateMenuItem }: ChangeAvailabilityProps) => {
     const [availability, setAvailability] = useState(item?.available);
 
-    const showWarning = item?.name === "" || item?.drink_number === 0;
+    const showWarning = item?.name === "" || item?.drink_number === 0 || item?.drink_number === null || item?.name === null;
 
     const handleAvailabilityChange = async (checked: boolean) => {
         if (!item?.id) return;
