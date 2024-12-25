@@ -15,7 +15,7 @@ import { useRouter } from "next/navigation";
 
 export function PlaceOrderCard() {
     const { uid, setUid } = useUid();
-    const { menuItems, loading: menuItemsLoading, error: menuItemsError } = useMenu();
+    const { menuItems, loading: menuItemsLoading, error: menuItemsError } = useMenu({ onlyAvailable: true });
     const [selectedMenuItem, setSelectedMenuItem] = useState<MenuItem | null>(null);
     const [customerName, setCustomerName] = useState<string>("");
     const [placingOrder, setPlacingOrder] = useState<boolean>(false);

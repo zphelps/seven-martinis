@@ -15,14 +15,10 @@ import { useUserOrders } from '@/features/orders/hooks/use-user-orders';
 import { MenuTabs } from '@/features/menu/components/menu-tabs';
 
 export default function Menu() {
-    // const { orders, setOrders, loading: ordersLoading, error: ordersError } = useUserOrders(uid);
-
     return (
         <div>
             <MenuNavBar />
-
             <MenuTabs />
-
         </div>
     )
 }

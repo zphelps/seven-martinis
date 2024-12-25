@@ -5,12 +5,21 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
     try {
+        const onlyAvailable = request.nextUrl.searchParams.get('onlyAvailable');
+
+        console.log("onlyAvailable", onlyAvailable);
+
         const supabase = createClient();
-        const { data, error } = await supabase
+        let query = supabase
             .from("menu_items")
             .select("*")
-            .order('drink_number', { ascending: true })
-            .eq('available', true);
+            .order('drink_number', { ascending: true });
+
+        if (onlyAvailable === 'true') {
+            query = query.eq('available', true);
+        }
+
+        const { data, error } = await query;
 
         if (error) {
             console.log(error);
@@ -53,7 +62,7 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json({
-        data: data[0],
+        data: data,
         success: true,
     }, { status: 200 })
 }

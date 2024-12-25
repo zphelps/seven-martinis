@@ -15,7 +15,7 @@ export default function MenuPage() {
         addMenuItem,
         updateMenuItem,
         deleteMenuItem
-    } = useMenu()
+    } = useMenu({ onlyAvailable: false })
 
     if (loading) {
         return (

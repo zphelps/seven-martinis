@@ -15,6 +15,7 @@ import ChangeRecipeSection from "@/features/recipe/components/change-recipe-sect
 import useInventory from "@/features/inventory/hooks/use-inventory";
 import { ChangeDrinkNumber } from "./change-drink-number";
 import { ChangeDrinkName } from "./change-drink-name";
+import { ChangeAvailability } from "./change-availability";
 
 interface MenuItemSidebarProps {
     menu: MenuItem[],
@@ -68,7 +69,12 @@ export default function MenuItemSidebar({ menu, updateMenuItem, deleteMenuItem }
                 <SidebarGroup className="px-0 h-full">
                     <SidebarGroupContent className="bg-white h-full">
                         {item && (
-                            <div className="relative space-y-4 h-full flex flex-col">
+                            <div className="relative space-y-4 h-full flex flex-col pt-1.5">
+                                <ChangeAvailability
+                                    item={item}
+                                    updateMenuItem={updateMenuItem}
+                                />
+                                <Separator />
                                 <ChangeMenuItemDescription
                                     menu_item={item}
                                     updateMenuItem={updateMenuItem}

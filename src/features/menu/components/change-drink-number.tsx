@@ -17,7 +17,11 @@ export const ChangeDrinkNumber = ({ item, updateMenuItem }: ChangeDrinkNumberPro
         if (!item?.id) return;
         const newDrinkNumber = e.target.value ? parseInt(e.target.value) : 0;
         setCurrentDrinkNumber(newDrinkNumber);
-        await updateMenuItem(item.id, { drink_number: newDrinkNumber });
+        if (newDrinkNumber === 0) {
+            await updateMenuItem(item.id, { drink_number: newDrinkNumber, available: false });
+        } else {
+            await updateMenuItem(item.id, { drink_number: newDrinkNumber });
+        }
     };
 
     useEffect(() => {
@@ -46,9 +50,15 @@ export const ChangeDrinkNumber = ({ item, updateMenuItem }: ChangeDrinkNumberPro
                     style={{ width: `${(currentDrinkNumber?.toString().length || 1)}ch` }}
                 />
             ) : (
-                <p className="text-lg font-semibold text-black hover:cursor-pointer">
-                    {currentDrinkNumber || "0"}.
-                </p>
+                <div>
+                    {(currentDrinkNumber !== 0) && <p className="text-lg font-semibold text-black hover:cursor-pointer">
+                        {currentDrinkNumber || "0"}.
+                    </p>}
+                    {(!currentDrinkNumber || currentDrinkNumber === 0) && <p className="text-lg font-normal text-gray-500 hover:cursor-pointer">
+                        {currentDrinkNumber || "0"}.
+                    </p>}
+                </div>
+
             )}
         </div>
     );

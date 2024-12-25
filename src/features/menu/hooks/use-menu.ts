@@ -20,7 +20,11 @@ export interface UpdateMenuItemProps {
     instructions?: string;
 }
 
-const useMenu = () => {
+interface UseMenuProps {
+    onlyAvailable: boolean;
+}
+
+const useMenu = ({ onlyAvailable = false }: UseMenuProps) => {
     const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -92,7 +96,7 @@ const useMenu = () => {
     useEffect(() => {
         const fetchMenuItems = async () => {
             try {
-                const response = await fetch('/api/menu');
+                const response = await fetch(`/api/menu?onlyAvailable=${onlyAvailable}`);
                 const result = await response.json();
 
                 if (response.ok) {

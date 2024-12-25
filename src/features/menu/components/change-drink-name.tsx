@@ -16,7 +16,11 @@ export const ChangeDrinkName = ({ item, updateMenuItem }: ChangeDrinkNameProps) 
 
     const debouncedUpdateMenuItem = useCallback(
         debounce(async (id: string, updatedName: string) => {
-            await updateMenuItem(id, { name: updatedName });
+            if (updatedName === "") {
+                await updateMenuItem(id, { name: updatedName, available: false });
+            } else {
+                await updateMenuItem(id, { name: updatedName });
+            }
         }, 500),
         []
     );
