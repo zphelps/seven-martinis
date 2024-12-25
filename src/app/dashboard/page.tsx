@@ -7,14 +7,35 @@ import { Board } from "@caldwell619/react-kanban";
 import "@caldwell619/react-kanban/dist/styles.css";
 import { Order } from "@/types/order";
 import { toast } from "@/components/ui/use-toast";
-import OrderCard from "@/features/orders/components/order-card";
+import OrderKanbanCard from "@/features/orders/components/order-card";
 import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
+import { Check, Loader2, X } from "lucide-react";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Separator } from "@/components/ui/separator";
+import { styled } from '@mui/material'
+import { useSidebar } from "@/components/ui/sidebar";
 
 export default function Dashboard() {
-    const { user } = useAuth();
     const { orders, setOrders, loading, error } = useOrders();
     const [isClearingServed, setIsClearingServed] = useState(false);
+
+    const [leftOrder, setLeftOrder] = useState<Order | null>(null);
+    const [rightOrder, setRightOrder] = useState<Order | null>(null);
+
+    const { open, toggleSidebar } = useSidebar();
+
+    function handleOrderClick(order: Order) {
+        console.log(order);
+        if (leftOrder) {
+            setRightOrder(order);
+        } else {
+            setLeftOrder(order);
+        }
+
+        if (open) {
+            toggleSidebar();
+        }
+    }
 
     // Compute the board from orders
     const board = useMemo(
@@ -161,38 +182,90 @@ export default function Dashboard() {
     if (error) return <p>Error fetching orders</p>;
 
     return (
-        <div className="container-lg mx-3 my-8 space-y-4">
+        <div className="container-lg mx-3 mb-2.5 space-y-4">
+
 
             {/* Kanban Board */}
             <div className="flex flex-col justify-center">
-                <div className="flex justify-center">
-                    <Board
-                        children={board}
-                        disableColumnDrag
-                        allowAddCard={false}
-                        renderColumnHeader={(column: any) => {
-                            console.log(column);
-                            return (
-                                <div className="w-[290px] flex items-center justify-between">
-                                    <p className=" text-lg font-bold mb-2">
-                                        {column.title}
-                                    </p>
-                                    {column.id === 4 && (
-                                        <Button variant="outline" onClick={handleClearServed} disabled={isClearingServed}>
-                                            {isClearingServed ? <Loader2 className="w-4 h-4 animate-spin" /> : "Clear"}
-                                        </Button>
-                                    )}
+                <div className="sticky top-0 pt-2.5 bg-white">
+                    <div className="flex justify-center z-1 w-full space-x-4">
+                        {leftOrder && <div className="w-1/2 h-full items-center justify-center bg-gray-100 rounded-lg p-4">
+                            <div className="flex justify-between items-center">
+                                <p
+                                    className="text-lg font-bold"
+                                >
+                                    {leftOrder.customer_name}
+                                </p>
+                                <div className="flex items-center space-x-1">
+                                    <Button variant="outline">
+                                        <Check className="w-4 h-4" />
+                                        Mark Ready
+                                    </Button>
+                                    <Button variant="outline" onClick={() => setLeftOrder(null)}>
+                                        <X className="w-4 h-4" />
+                                    </Button>
                                 </div>
-                            );
-                        }}
-                        onCardDragEnd={handleCardDragEnd}
-                        renderCard={(card) => {
-                            return <OrderCard order={card} />;
-                        }}
-                    />
+                            </div>
+                            <Accordion type="single" collapsible className="focus:outline-none">
+                                {leftOrder.items.map((item: any, index: number) => (
+                                    <AccordionItem key={index} value={index.toString()}>
+                                        <AccordionTrigger>
+                                            <p>{item.quantity}x {item.name} (#{item.drink_number})</p>
+                                        </AccordionTrigger>
+                                        <AccordionContent>
+                                            <p className="whitespace-pre-wrap">{item.recipe}</p>
+                                        </AccordionContent>
+                                    </AccordionItem>
+                                ))}
+                            </Accordion>
+                        </div>}
+                        {rightOrder && <div className="w-1/2 h-full flex items-center justify-center bg-gray-100 rounded-lg p-4">
+                            Right Order
+                        </div>}
+                    </div>
+
+                    {(leftOrder || rightOrder) && <Separator className="mt-2" />}
                 </div>
 
+
+                <div className="flex justify-center">
+                    <KanbanStyles>
+                        <Board
+                            children={board}
+                            disableColumnDrag
+                            allowAddCard={false}
+                            renderColumnHeader={(column: any) => {
+                                return (
+                                    <div className="w-[290px] flex items-center justify-between">
+                                        <p className=" text-lg font-bold mb-2">
+                                            {column.title}
+                                        </p>
+                                        {column.id === 4 && (
+                                            <Button variant="outline" onClick={handleClearServed} disabled={isClearingServed}>
+                                                {isClearingServed ? <Loader2 className="w-4 h-4 animate-spin" /> : "Clear"}
+                                            </Button>
+                                        )}
+                                    </div>
+                                );
+                            }}
+                            onCardDragEnd={handleCardDragEnd}
+                            renderCard={(card) => {
+                                return <OrderKanbanCard
+                                    order={card}
+                                    onClick={handleOrderClick}
+                                />;
+                            }}
+                        />
+                    </KanbanStyles>
+                </div>
             </div>
         </div >
     );
 }
+
+const KanbanStyles = styled('div')`
+  & .react-kanban-column {
+    border-radius: 8px;
+    background-color: #f3f4f6;
+  }
+`
