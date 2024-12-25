@@ -34,6 +34,10 @@ export interface UpdateIngredientProps {
     inventory_item_id?: string
 }
 
+export interface UpdateRecipeProps {
+    instructions?: string
+}
+
 export const useRecipe = ({ menu_item_id }: UseRecipeProps) => {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
@@ -148,7 +152,6 @@ export const useRecipe = ({ menu_item_id }: UseRecipeProps) => {
                 throw new Error("Failed to update ingredient")
             }
 
-            const data = await response.json()
         } catch (error) {
             setRecipe(prevRecipe => {
                 const updatedRecipe = { ...prevRecipe, ingredients: prevRecipe?.ingredients.map(ingredient => ingredient.inventory_item.id === ingredient_id ? { ...ingredient, ...item } : ingredient) }

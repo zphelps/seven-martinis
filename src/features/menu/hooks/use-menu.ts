@@ -11,10 +11,11 @@ export interface AddMenuItemProps {
 }
 
 export interface UpdateMenuItemProps {
-    drink_number: number;
-    name: string;
-    description: string;
-    available: boolean;
+    drink_number?: number;
+    name?: string;
+    description?: string;
+    available?: boolean;
+    instructions?: string;
 }
 
 const useMenu = () => {

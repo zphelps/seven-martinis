@@ -1,13 +1,14 @@
 import { InventoryItem } from "@/features/inventory/components/columns"
-import { AddIngredientProps, Recipe, UpdateIngredientProps } from "../hooks/use-recipe"
+import { AddIngredientProps, Recipe, UpdateIngredientProps, UpdateRecipeProps } from "../hooks/use-recipe"
 import { IngredientCard } from "./ingredient-card"
 import { Ingredient } from "../hooks/use-recipe"
 import { Button } from "@/components/ui/button"
 import { PlusIcon } from "lucide-react"
 import { v4 as uuidv4 } from 'uuid'
+import { Separator } from "@/components/ui/separator"
+import { Textarea } from "@/components/ui/textarea"
 
-
-interface RecipeCardProps {
+interface RecipeSectionProps {
     recipe: Recipe
     inventory: InventoryItem[]
     updateIngredient: (id: string, item: UpdateIngredientProps) => Promise<void>
@@ -15,7 +16,13 @@ interface RecipeCardProps {
     deleteIngredient: (id: string) => Promise<void>
 }
 
-export default function RecipeCard({ recipe, inventory, updateIngredient, addIngredient, deleteIngredient }: RecipeCardProps) {
+export default function RecipeSection({
+    recipe,
+    inventory,
+    updateIngredient,
+    addIngredient,
+    deleteIngredient,
+}: RecipeSectionProps) {
 
     const handleAddIngredient = async () => {
         const newIngredient = {
@@ -30,7 +37,7 @@ export default function RecipeCard({ recipe, inventory, updateIngredient, addIng
     }
 
     return (
-        <div className="space-y-2 p-3">
+        <div className="space-y-2 px-3">
             <p className="text-md font-bold">
                 Recipe
             </p>
@@ -47,7 +54,7 @@ export default function RecipeCard({ recipe, inventory, updateIngredient, addIng
                 onClick={handleAddIngredient}
                 className="w-full text-xs bg-gray-50 hover:bg-gray-100 text-black h-7 font-normal"
             >
-                <PlusIcon className=" w-1 h-1" />
+                <PlusIcon className="w-1 h-1 text-gray-500" />
             </Button>
         </div>
     )

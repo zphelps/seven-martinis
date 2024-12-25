@@ -12,7 +12,10 @@ import { DeleteItemButton } from "@/features/inventory/components/delete-item-bu
 import { MenuItem } from "@/types/order";
 import { UpdateMenuItemProps } from "../hooks/use-menu";
 import { useRecipe } from "../../recipe/hooks/use-recipe";
-import RecipeCard from "@/features/recipe/components/recipe-card";
+import RecipeSection from "@/features/recipe/components/recipe-card";
+import { ChangeMenuItemInstructions } from "./change-menu-item-instructions";
+import { Separator } from "@/components/ui/separator";
+import { ChangeMenuItemDescription } from "./change-menu-item-description";
 
 interface MenuItemSidebarProps {
     menu: MenuItem[],
@@ -61,14 +64,24 @@ export default function MenuItemSidebar({ menu, updateMenuItem, deleteMenuItem }
                 <SidebarGroup className="px-0 h-full">
                     <SidebarGroupContent className="bg-white h-full">
                         {item && (
-                            <div className="relative space-y-4 -mt-2 h-full flex flex-col">
-                                {recipe && inventory && recipe.menu_item_id === item.id && <RecipeCard
+                            <div className="relative space-y-4 h-full flex flex-col">
+                                <ChangeMenuItemDescription
+                                    menu_item={item}
+                                    updateMenuItem={updateMenuItem}
+                                />
+                                <Separator />
+                                {recipe && inventory && recipe.menu_item_id === item.id && <RecipeSection
                                     recipe={recipe}
                                     inventory={inventory}
                                     updateIngredient={updateIngredient}
                                     addIngredient={addIngredient}
                                     deleteIngredient={deleteIngredient}
                                 />}
+                                <Separator />
+                                <ChangeMenuItemInstructions
+                                    menu_item={item}
+                                    updateMenuItem={updateMenuItem}
+                                />
                             </div>
                         )}
                     </SidebarGroupContent>

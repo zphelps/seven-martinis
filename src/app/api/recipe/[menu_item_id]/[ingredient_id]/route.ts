@@ -3,7 +3,7 @@ import { NextResponse } from "next/server"
 
 export async function PUT(request: Request, { params }: { params: { menu_item_id: string, ingredient_id: string } }) {
     const { menu_item_id, ingredient_id } = params
-    const { quantity, unit, inventory_item_id } = await request.json()
+    const { quantity, unit, inventory_item_id, instructions } = await request.json()
 
     const supabase = createClient()
 
@@ -11,7 +11,7 @@ export async function PUT(request: Request, { params }: { params: { menu_item_id
 
     const { error } = await supabase
         .from('ingredients')
-        .update({ quantity, unit, inventory_item_id })
+        .update({ quantity, unit, inventory_item_id, instructions })
         .eq('menu_item_id', menu_item_id)
         .eq('id', ingredient_id)
 
