@@ -14,6 +14,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Separator } from "@/components/ui/separator";
 import { styled } from '@mui/material'
 import { useSidebar } from "@/components/ui/sidebar";
+import { OrderDetailsCard } from "@/features/menu/components/order-details-card";
 
 export default function Dashboard() {
     const { orders, setOrders, loading, error } = useOrders();
@@ -188,43 +189,24 @@ export default function Dashboard() {
             {/* Kanban Board */}
             <div className="flex flex-col justify-center">
                 <div className="sticky top-0 pt-2.5 bg-white">
-                    <div className="flex justify-center z-1 w-full space-x-4">
-                        {leftOrder && <div className="w-1/2 h-full items-center justify-center bg-gray-100 rounded-lg p-4">
-                            <div className="flex justify-between items-center">
-                                <p
-                                    className="text-lg font-bold"
-                                >
-                                    {leftOrder.customer_name}
-                                </p>
-                                <div className="flex items-center space-x-1">
-                                    <Button variant="outline">
-                                        <Check className="w-4 h-4" />
-                                        Mark Ready
-                                    </Button>
-                                    <Button variant="outline" onClick={() => setLeftOrder(null)}>
-                                        <X className="w-4 h-4" />
-                                    </Button>
-                                </div>
-                            </div>
-                            <Accordion type="single" collapsible className="focus:outline-none">
-                                {leftOrder.items.map((item: any, index: number) => (
-                                    <AccordionItem key={index} value={index.toString()}>
-                                        <AccordionTrigger>
-                                            <p>{item.quantity}x {item.name} (#{item.drink_number})</p>
-                                        </AccordionTrigger>
-                                        <AccordionContent>
-                                            <p className="whitespace-pre-wrap">{item.recipe}</p>
-                                        </AccordionContent>
-                                    </AccordionItem>
-                                ))}
-                            </Accordion>
-                        </div>}
-                        {rightOrder && <div className="w-1/2 h-full flex items-center justify-center bg-gray-100 rounded-lg p-4">
-                            Right Order
-                        </div>}
+                    <div className="flex justify-center z-1 w-full space-x-2.5">
+                        {leftOrder && (
+                            <OrderDetailsCard
+                                order={leftOrder}
+                                onMarkReady={() => { }}
+                                onClose={() => setLeftOrder(null)}
+                            />
+                        )}
+                        {rightOrder && (
+                            <OrderDetailsCard
+                                order={rightOrder}
+                                onMarkReady={() => { }}
+                                onClose={() => setRightOrder(null)}
+                            />
+                        )}
                     </div>
 
-                    {(leftOrder || rightOrder) && <Separator className="mt-2" />}
+                    {(leftOrder || rightOrder) && <Separator className="mt-2.5" />}
                 </div>
 
 
@@ -240,11 +222,11 @@ export default function Dashboard() {
                                         <p className=" text-lg font-bold mb-2">
                                             {column.title}
                                         </p>
-                                        {column.id === 4 && (
+                                        {/* {column.id === 4 && (
                                             <Button variant="outline" onClick={handleClearServed} disabled={isClearingServed}>
                                                 {isClearingServed ? <Loader2 className="w-4 h-4 animate-spin" /> : "Clear"}
                                             </Button>
-                                        )}
+                                        )} */}
                                     </div>
                                 );
                             }}

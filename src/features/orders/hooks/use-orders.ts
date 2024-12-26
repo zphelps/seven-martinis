@@ -27,6 +27,7 @@ export function useOrders() {
                                 name,
                                 description,
                                 drink_number,
+                                instructions,
                                 recipe
                             )
                         )
@@ -47,6 +48,7 @@ export function useOrders() {
                         description: item.menu_items.description,
                         drink_number: item.menu_items.drink_number,
                         recipe: item.menu_items.recipe,
+                        instructions: item.menu_items.instructions,
                     })),
                 }));
 

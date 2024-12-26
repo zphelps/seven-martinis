@@ -1,11 +1,11 @@
 "use client";
-import type {FC, ReactNode} from "react";
-import {createContext, useCallback, useEffect, useReducer} from "react";
+import type { FC, ReactNode } from "react";
+import { createContext, useCallback, useEffect, useReducer } from "react";
 import PropTypes from "prop-types";
-import {AuthChangeEvent, Session, User} from "@supabase/supabase-js";
-import {createClient} from "@/utils/supabase/client";
-import {useSearchParams} from "next/navigation";
-import {config} from "@/config";
+import { AuthChangeEvent, Session, User } from "@supabase/supabase-js";
+import { createClient } from "@/utils/supabase/client";
+import { useSearchParams } from "next/navigation";
+import { config } from "@/config";
 
 interface State {
     isInitialized: boolean;
@@ -35,7 +35,7 @@ const initialState: State = {
 
 const reducer = (state: State, action: Action): State => {
     if (action.type === "AUTH_STATE_CHANGED") {
-        const {isAuthenticated, user} = action.payload;
+        const { isAuthenticated, user } = action.payload;
 
         return {
             ...state,
@@ -49,7 +49,7 @@ const reducer = (state: State, action: Action): State => {
 };
 
 export interface AuthContextType extends State {
-    signInWithEmailAndPassword: (data: {email: string, password: string}) => Promise<any>;
+    signInWithEmailAndPassword: (data: { email: string, password: string }) => Promise<any>;
     signInWithGoogle: () => Promise<any>;
     signOut: () => Promise<any>;
 }
@@ -65,15 +65,15 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider: FC<AuthProviderProps> = (props) => {
-    const {children} = props;
+    const { children } = props;
     const [state, dispatch] = useReducer(reducer, initialState);
 
     const supabase = createClient();
     const auth = supabase.auth;
     const searchParams = useSearchParams();
 
-    const signInWithEmailAndPassword = async (data: {email: string, password: string}) => {
-        const {error} = await supabase.auth.signInWithPassword(data)
+    const signInWithEmailAndPassword = async (data: { email: string, password: string }) => {
+        const { error } = await supabase.auth.signInWithPassword(data)
 
         if (error) {
             throw error;
@@ -84,7 +84,7 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
 
     const signInWithGoogle = async () => {
         const returnTo = searchParams.get("returnTo") || config.auth.defaultAuthenticatedUrl;
-        const {error} = await supabase.auth.signInWithOAuth({
+        const { error } = await supabase.auth.signInWithOAuth({
             provider: "google",
             options: {
                 redirectTo: window.location.origin + `/auth/callback?next=${returnTo}`,
@@ -154,8 +154,8 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
     );
 };
 
-AuthProvider.propTypes = {
-    children: PropTypes.node.isRequired
-};
+// AuthProvider.propTypes = {
+//     children: PropTypes.node.isRequired
+// };
 
 export const AuthConsumer = AuthContext.Consumer;

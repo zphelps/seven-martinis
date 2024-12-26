@@ -37,7 +37,9 @@ export function PlaceOrderCard() {
 
         const orderItems: OrderItem[] = [{
             menu_item_id: selectedMenuItem.id,
-            quantity: 1
+            quantity: 1,
+            name: selectedMenuItem.name,
+            instructions: ""
         }]
 
         const order = {

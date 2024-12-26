@@ -11,7 +11,9 @@ export interface Order {
 
 export interface OrderItem {
     menu_item_id: string;
+    name: string;
     quantity: number;
+    instructions: string;
 }
 
 export interface MenuItem {
