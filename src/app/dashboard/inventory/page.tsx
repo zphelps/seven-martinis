@@ -32,7 +32,18 @@ export default function InventoryPage() {
                 "--sidebar-width-mobile": "22rem",
             } as React.CSSProperties}
         >
-            <div className="flex w-full h-full">
+            <div className="w-full h-screen py-2 overflow-hidden flex">
+                <InventoryDataTable
+                    columns={columns}
+                    data={inventory}
+                    addInventoryItem={addInventoryItem} />
+                <InventoryItemSidebar
+                    inventory={inventory}
+                    updateInventoryItem={updateInventoryItem}
+                    deleteInventoryItem={deleteInventoryItem}
+                />
+            </div>
+            {/* <div className="flex w-full h-full">
                 <div className="flex-grow overflow-hidden">
                     <div className="h-full overflow-auto py-2 box-border">
                         <InventoryDataTable
@@ -46,7 +57,7 @@ export default function InventoryPage() {
                     updateInventoryItem={updateInventoryItem}
                     deleteInventoryItem={deleteInventoryItem}
                 />
-            </div>
+            </div> */}
         </SidebarProvider>
     )
 }

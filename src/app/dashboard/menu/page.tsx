@@ -45,22 +45,6 @@ export default function MenuPage() {
                     deleteMenuItem={deleteMenuItem}
                 />
             </div>
-
-            {/* <div className="flex w-full h-full">
-                <div className="flex-grow overflow-hidden">
-                    <div className="h-full overflow-auto py-2 box-border">
-                        <MenuDataTable
-                            columns={columns}
-                            data={menuItems}
-                            addMenuItem={addMenuItem} />
-                    </div>
-                </div>
-                <InventoryItemSidebar
-                    inventory={inventory}
-                    updateInventoryItem={updateInventoryItem}
-                    deleteInventoryItem={deleteInventoryItem}
-                />
-            </div> */}
         </SidebarProvider>
     )
 }

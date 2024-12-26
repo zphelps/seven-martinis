@@ -56,14 +56,11 @@ export function InventoryDataTable<TData, TValue>({
     const id = searchParams.get("id")
 
     return (
-        <div className="rounded-lg border h-full mr-2 shadow">
-            <InventoryToolbar
-                addInventoryItem={addInventoryItem}
-                table={table}
-            />
+        <div className="flex flex-col rounded-lg border w-full h-full mr-2 shadow">
+            <InventoryToolbar table={table} addInventoryItem={addInventoryItem} />
             <Separator />
-            <Table>
-                <TableHeader>
+            <Table wrapperClassName="overflow-y-auto h-full">
+                <TableHeader className="sticky top-0 bg-gray-50">
                     {table.getHeaderGroups().map((headerGroup) => (
                         <TableRow key={headerGroup.id}>
                             {headerGroup.headers.map((header) => {
@@ -81,7 +78,7 @@ export function InventoryDataTable<TData, TValue>({
                         </TableRow>
                     ))}
                 </TableHeader>
-                <TableBody>
+                <TableBody className="w-full">
                     {table.getRowModel().rows?.length ? (
                         table.getRowModel().rows.map((row) => (
                             <TableRow
@@ -114,5 +111,63 @@ export function InventoryDataTable<TData, TValue>({
                 </TableBody>
             </Table>
         </div>
+        // <div className="rounded-lg border h-full mr-2 shadow">
+        //     <InventoryToolbar
+        //         addInventoryItem={addInventoryItem}
+        //         table={table}
+        //     />
+        //     <Separator />
+        //     <Table>
+        //         <TableHeader>
+        //             {table.getHeaderGroups().map((headerGroup) => (
+        //                 <TableRow key={headerGroup.id}>
+        //                     {headerGroup.headers.map((header) => {
+        //                         return (
+        //                             <TableHead key={header.id}>
+        //                                 {header.isPlaceholder
+        //                                     ? null
+        //                                     : flexRender(
+        //                                         header.column.columnDef.header,
+        //                                         header.getContext()
+        //                                     )}
+        //                             </TableHead>
+        //                         )
+        //                     })}
+        //                 </TableRow>
+        //             ))}
+        //         </TableHeader>
+        //         <TableBody>
+        //             {table.getRowModel().rows?.length ? (
+        //                 table.getRowModel().rows.map((row) => (
+        //                     <TableRow
+        //                         key={row.id}
+        //                         className="cursor-pointer"
+        //                         onClick={() => {
+        //                             const inventoryItem = row.original as InventoryItem
+        //                             if (id === inventoryItem.id) {
+        //                                 router.push(`/dashboard/inventory`)
+        //                             } else {
+        //                                 router.push(`/dashboard/inventory?id=${inventoryItem.id}`)
+        //                             }
+        //                         }}
+        //                         data-state={row.getIsSelected() && "selected"}
+        //                     >
+        //                         {row.getVisibleCells().map((cell) => (
+        //                             <TableCell key={cell.id} className="px-4 py-2">
+        //                                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
+        //                             </TableCell>
+        //                         ))}
+        //                     </TableRow>
+        //                 ))
+        //             ) : (
+        //                 <TableRow>
+        //                     <TableCell colSpan={columns.length} className="h-24 text-center">
+        //                         No results.
+        //                     </TableCell>
+        //                 </TableRow>
+        //             )}
+        //         </TableBody>
+        //     </Table>
+        // </div>
     )
 }
