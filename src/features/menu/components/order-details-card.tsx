@@ -12,6 +12,7 @@ interface OrderDetailsCardProps {
 }
 
 export const OrderDetailsCard = ({ order, onMarkReady, onClose }: OrderDetailsCardProps) => {
+    console.log(order);
     return (
         <div className="w-1/2 min-h-full h-full items-center justify-center bg-gray-100 rounded-lg p-4">
             <div className="flex justify-between items-center">

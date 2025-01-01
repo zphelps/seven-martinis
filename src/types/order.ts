@@ -14,6 +14,7 @@ export interface OrderItem {
     name: string;
     quantity: number;
     instructions: string;
+    recipe: string;
 }
 
 export interface MenuItem {
