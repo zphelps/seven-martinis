@@ -19,7 +19,7 @@ export const MenuTabs = () => {
     useEffect(() => {
         const tab = searchParams.get('tab') || "menu";
         setTab(tab);
-    }, []);
+    }, [searchParams]);
 
     return (
         <Tabs value={tab}>

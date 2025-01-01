@@ -34,7 +34,8 @@ export function useUserOrders(uid: string | null) {
                         )
                     `)
                     // .not('status', 'eq', 'served')
-                    .eq('uid', uid);
+                    .eq('uid', uid)
+                    .order('created_at', { ascending: false });
 
                 if (error) throw error;
 
