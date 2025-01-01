@@ -109,6 +109,7 @@ function MenuItemsList({
                             key={item.id}
                             value={`#${item.drink_number} ${item.name}`}
                             onSelect={(value) => {
+                                const menuItem = menuItems.find((item) => `#${item.drink_number} ${item.name}` === value);
                                 setSelectedMenuItem(
                                     menuItems.find((item) => `#${item.drink_number} ${item.name}` === value) || null
                                 )

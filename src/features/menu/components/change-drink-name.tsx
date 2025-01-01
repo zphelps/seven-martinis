@@ -26,7 +26,7 @@ export const ChangeDrinkName = ({ item, updateMenuItem }: ChangeDrinkNameProps) 
     );
 
     const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const newName = e.target.value;
+        const newName = e.target.value.trim();
         setName(newName);
         debouncedUpdateMenuItem(item?.id || "", newName);
     };
