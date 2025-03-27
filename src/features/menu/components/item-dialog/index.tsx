@@ -10,6 +10,8 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { OrderItem } from "@/types/order";
 import { useUid } from "@/features/orders/hooks/use-uid";
+import { Badge } from "@/components/ui/badge";
+import Image from "next/image";
 
 interface ItemDialogProps {
     menuItem: MenuItem;
@@ -86,21 +88,41 @@ export const ItemDialog = ({ menuItem, children }: ItemDialogProps) => {
             <DialogTrigger asChild>
                 {children}
             </DialogTrigger>
-            <DialogContent className="h-auto max-w-auto sm:max-w-[425px] sm:h-auto">
-                <DialogHeader>
-                    <DialogTitle>#{menuItem.drink_number}. {menuItem.name}</DialogTitle>
-                    <DialogDescription>
+            <DialogContent className="h-full max-w-auto sm:max-w-[425px] sm:h-auto p-0">
+                <DialogHeader className="w-full p-6">
+                    {menuItem.tags && menuItem.tags.length > 0 && (
+                        <div className="flex flex-wrap gap-2 mb-2">
+                            {menuItem.tags.map((tag) => (
+                                <Badge
+                                    key={tag}
+                                    variant="outline"
+                                    className="py-1.5 px-3 border-gray-200 bg-white"
+                                >
+                                    <Image
+                                        src={`/${tag.toLowerCase()}.png`}
+                                        className="mr-2 h-5 w-auto"
+                                        alt={tag}
+                                        height={16}
+                                        width={16}
+                                        style={{ objectFit: 'contain' }}
+                                    />
+                                    {tag}
+                                </Badge>
+                            ))}
+                        </div>
+                    )}
+                    <DialogTitle className="text-left w-full">#{menuItem.drink_number}. {menuItem.name}</DialogTitle>
+                    <DialogDescription className="text-left w-full">
                         {menuItem.description}
                     </DialogDescription>
+                    <div className="w-full space-y-2 border-t pt-2">
+                        <Input className="w-full" id="name" placeholder="Enter your name" value={customerName} onChange={(e) => setCustomerName(e.target.value)} />
+                        <Button className="w-full" type="submit" onClick={handlePlaceOrder} disabled={placingOrder}>
+                            {placingOrder ? <Loader2 className="w-4 h-4 animate-spin" /> : <PlusIcon className="w-4 h-4" />}
+                            {placingOrder ? "Placing Order..." : "Place Order"}
+                        </Button>
+                    </div>
                 </DialogHeader>
-                <Separator />
-                <DialogFooter>
-                    <Input id="name" placeholder="Enter your name" value={customerName} onChange={(e) => setCustomerName(e.target.value)} />
-                    <Button type="submit" onClick={handlePlaceOrder} disabled={placingOrder}>
-                        {placingOrder ? <Loader2 className="w-4 h-4 animate-spin" /> : <PlusIcon className="w-4 h-4" />}
-                        {placingOrder ? "Placing Order..." : "Place Order"}
-                    </Button>
-                </DialogFooter>
             </DialogContent>
         </Dialog>
     )
