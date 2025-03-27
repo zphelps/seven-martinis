@@ -84,7 +84,7 @@ export function MenuDataTable<TData, TValue>({
                         table.getRowModel().rows.map((row) => (
                             <TableRow
                                 key={row.id}
-                                className="cursor-pointer"
+                                className={`cursor-pointer ${id === (row.original as MenuItem).id ? 'bg-muted' : ''}`}
                                 onClick={() => {
                                     const menuItem = row.original as MenuItem
                                     if (id === menuItem.id) {

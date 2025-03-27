@@ -36,7 +36,7 @@ export const ItemTagFilter = ({ menuItems, selectedTags, onTagSelect }: ItemTagF
                         key={tag}
                         variant={"outline"}
                         className={cn(
-                            "cursor-pointer hover:bg-blue-50 py-1.5 px-3 border-gray-200 bg-white",
+                            "cursor-pointer py-1.5 px-3 border-gray-200 bg-white",
                             isSelected && "bg-blue-100 hover:bg-blue-100 border-blue-100"
                         )}
                         onClick={() => onTagSelect(tag)}
