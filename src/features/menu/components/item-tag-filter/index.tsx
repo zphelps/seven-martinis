@@ -42,7 +42,7 @@ export const ItemTagFilter = ({ menuItems, selectedTags, onTagSelect }: ItemTagF
                         onClick={() => onTagSelect(tag)}
                     >
                         <Image
-                            src={`/${tag}.png`}
+                            src={`/${tag.toLowerCase()}.png`}
                             className="mr-2 h-5 w-auto"
                             alt={tag}
                             height={16}
