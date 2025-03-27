@@ -16,6 +16,7 @@ export interface UpdateMenuItemProps {
     description?: string;
     available?: boolean;
     instructions?: string;
+    tags?: string[];
 }
 
 interface UseMenuProps {

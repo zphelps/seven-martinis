@@ -26,4 +26,5 @@ export interface MenuItem {
     available: boolean;
     instructions: string;
     description: string;
+    tags: string[];
 }

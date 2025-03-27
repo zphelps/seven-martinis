@@ -17,6 +17,7 @@ import { ChangeDrinkNumber } from "@/features/menu/components/item-sidebar/chang
 import { ChangeDrinkName } from "@/features/menu/components/item-sidebar/change-drink-name";
 import { ChangeAvailability } from "@/features/menu/components/item-sidebar/change-availability";
 import { DeleteMenuItem } from "@/features/menu/components/item-sidebar/delete-menu-item";
+import { ChangeDrinkTags } from "@/features/menu/components/item-sidebar/change-drink-tags";
 
 interface MenuItemSidebarProps {
     menu: MenuItem[],
@@ -94,6 +95,13 @@ export default function MenuItemSidebar({ menu, updateMenuItem, deleteMenuItem }
                                     menu_item={item}
                                     updateMenuItem={updateMenuItem}
                                 />
+                                <Separator />
+                                <div className="px-3">
+                                    <ChangeDrinkTags
+                                        item={item}
+                                        updateMenuItem={updateMenuItem}
+                                    />
+                                </div>
                                 <Separator />
                                 <div className="mx-3">
                                     <DeleteMenuItem
