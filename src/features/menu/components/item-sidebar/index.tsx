@@ -6,16 +6,17 @@ import { useEffect, useState } from "react";
 import { XIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { MenuItem } from "@/types/order";
-import { UpdateMenuItemProps } from "../hooks/use-menu";
-import { useRecipe } from "../../recipe/hooks/use-recipe";
-import { ChangeMenuItemInstructions } from "./change-menu-item-instructions";
+import { UpdateMenuItemProps } from "@/features/menu/hooks/use-menu";
+import { useRecipe } from "@/features/recipe/hooks/use-recipe";
+import { ChangeMenuItemInstructions } from "@/features/menu/components/item-sidebar/change-menu-item-instructions";
 import { Separator } from "@/components/ui/separator";
-import { ChangeMenuItemDescription } from "./change-menu-item-description";
+import { ChangeMenuItemDescription } from "@/features/menu/components/item-sidebar/change-menu-item-description";
 import ChangeRecipeSection from "@/features/recipe/components/change-recipe-section";
 import useInventory from "@/features/inventory/hooks/use-inventory";
-import { ChangeDrinkNumber } from "./change-drink-number";
-import { ChangeDrinkName } from "./change-drink-name";
-import { ChangeAvailability } from "./change-availability";
+import { ChangeDrinkNumber } from "@/features/menu/components/item-sidebar/change-drink-number";
+import { ChangeDrinkName } from "@/features/menu/components/item-sidebar/change-drink-name";
+import { ChangeAvailability } from "@/features/menu/components/item-sidebar/change-availability";
+import { DeleteMenuItem } from "@/features/menu/components/item-sidebar/delete-menu-item";
 
 interface MenuItemSidebarProps {
     menu: MenuItem[],
@@ -31,8 +32,6 @@ export default function MenuItemSidebar({ menu, updateMenuItem, deleteMenuItem }
     const id = searchParams.get("id")
 
     const [item, setItem] = useState<MenuItem | null>(null)
-    const { recipe, loading, error, updateIngredient, addIngredient, deleteIngredient } = useRecipe({ menu_item_id: id })
-    const { inventory, loading: inventoryLoading, error: inventoryError } = useInventory()
 
     useEffect(() => {
         if (id && !open) {
@@ -44,6 +43,9 @@ export default function MenuItemSidebar({ menu, updateMenuItem, deleteMenuItem }
 
     useEffect(() => {
         if (id) {
+            console.log("Item ID", id)
+            console.log("Menu", menu)
+            console.log("Item", menu.find((item) => item.id === id) || null)
             setItem(menu.find((item) => item.id === id) || null)
         }
     }, [id, menu])
@@ -80,18 +82,26 @@ export default function MenuItemSidebar({ menu, updateMenuItem, deleteMenuItem }
                                     updateMenuItem={updateMenuItem}
                                 />
                                 <Separator />
-                                <ChangeRecipeSection
+                                {/* <ChangeRecipeSection
                                     recipe={id === recipe?.menu_item_id ? recipe : null}
                                     inventory={inventory}
                                     updateIngredient={updateIngredient}
                                     addIngredient={addIngredient}
                                     deleteIngredient={deleteIngredient}
                                 />
-                                <Separator />
+                                <Separator /> */}
                                 <ChangeMenuItemInstructions
                                     menu_item={item}
                                     updateMenuItem={updateMenuItem}
                                 />
+                                <Separator />
+                                <div className="mx-3">
+                                    <DeleteMenuItem
+                                        itemId={item.id}
+                                        itemName={item.name}
+                                        onDelete={deleteMenuItem}
+                                    />
+                                </div>
                             </div>
                         )}
                     </SidebarGroupContent>

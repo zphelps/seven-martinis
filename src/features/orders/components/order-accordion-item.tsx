@@ -1,6 +1,4 @@
 import { AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Separator } from "@/components/ui/separator";
-import { useRecipe } from "@/features/recipe/hooks/use-recipe";
 import { OrderItem } from "@/types/order";
 
 interface OrderAccordionItemProps {
@@ -9,9 +7,6 @@ interface OrderAccordionItemProps {
 }
 
 export const OrderAccordionItem = ({ index, order_item }: OrderAccordionItemProps) => {
-    const { recipe } = useRecipe({ menu_item_id: order_item.menu_item_id });
-
-    console.log(recipe);
 
     return (
         <AccordionItem value={index.toString()}>
@@ -21,23 +16,12 @@ export const OrderAccordionItem = ({ index, order_item }: OrderAccordionItemProp
                 </p>
             </AccordionTrigger>
             <AccordionContent>
-                {recipe && order_item.menu_item_id === recipe.menu_item_id && <div className="flex">
-                    <div className="w-1/2 border-r border-gray-200 ">
-                        <p className="font-bold text-sm">Ingredients:</p>
-                        {/* {recipe?.ingredients.map((ingredient: any) => (
-                            <p key={ingredient.id} className="text-sm">
-                                {ingredient.quantity}{ingredient.unit} {ingredient.inventory_item.name}
-                            </p>
-                        ))} */}
-                        <p className="text-sm whitespace-pre-wrap">
-                            {order_item.recipe as string}
-                        </p>
-                    </div>
-                    <div className="w-1/2 pl-2.5">
-                        <p className="font-bold text-sm">Instructions:</p>
-                        <p className="text-sm whitespace-pre-wrap">{order_item.instructions}</p>
-                    </div>
-                </div>}
+                <div className="">
+                    <p className="font-bold text-sm">Instructions:</p>
+                    <p className="text-sm whitespace-pre-wrap">
+                        {order_item.instructions}
+                    </p>
+                </div>
             </AccordionContent>
         </AccordionItem>
     )

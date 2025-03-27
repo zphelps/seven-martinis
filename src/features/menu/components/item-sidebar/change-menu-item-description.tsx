@@ -1,5 +1,5 @@
 import { MenuItem } from "@/types/order"
-import { UpdateMenuItemProps } from "../hooks/use-menu"
+import { UpdateMenuItemProps } from "@/features/menu/hooks/use-menu"
 import { Textarea } from "@/components/ui/textarea"
 import { useEffect } from "react"
 import { useState } from "react"

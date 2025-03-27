@@ -1,7 +1,7 @@
 import { Badge } from "@/components/ui/badge"
 import { MenuItem, Order, OrderItem } from "@/types/order"
 import { Separator } from "@/components/ui/separator"
-import { X } from "lucide-react"
+import { X, UserIcon, CircleUserRound } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { CancelOrderButton } from "./cancel-order-button"
 import { StarRating } from "./star-rating"
@@ -13,58 +13,66 @@ interface OrderStatusCardProps {
 
 export function OrderStatusCard({ order, setOrders }: OrderStatusCardProps) {
     return (
-        <div className="p-3 border border-gray-200 bg-white rounded-md shadow-md">
+        <div className="p-4 border border-gray-200 bg-white rounded-lg shadow-md space-y-1">
 
             <div className="flex justify-between">
-                {order.status === 'ordered' && (
-                    <Badge variant="outline" className="mb-2">
-                        🍹 Ordered
-                    </Badge>
-                )}
+                <div className="flex gap-1">
+                    {order.status === 'ordered' && (
+                        <Badge variant="outline" className="mb-2">
+                            🍹 Ordered
+                        </Badge>
+                    )}
 
-                {order.status === 'preparing' && (
-                    <Badge variant="outline" className="mb-2">
-                        ⏳ Preparing
-                    </Badge>
-                )}
+                    {order.status === 'preparing' && (
+                        <Badge variant="outline" className="mb-2">
+                            ⏳ Preparing
+                        </Badge>
+                    )}
 
-                {order.status === 'ready' && (
-                    <Badge variant="outline" className="mb-2">
-                        ✅ Ready
-                    </Badge>
-                )}
+                    {order.status === 'ready' && (
+                        <Badge variant="outline" className="mb-2">
+                            ✅ Ready
+                        </Badge>
+                    )}
 
-                {order.status === 'served' && (
+                    {order.status === 'served' && (
+                        <Badge variant="outline" className="mb-2">
+                            ⭐️ Served
+                        </Badge>
+                    )}
+
                     <Badge variant="outline" className="mb-2">
-                        ⭐️ Served
+                        <CircleUserRound className="w-3 h-3 pl-0 ml-0 mr-1" /> {order.customer_name}
                     </Badge>
-                )}
+                </div>
 
                 {order.status === 'ordered' && <CancelOrderButton orderId={order.id} setOrders={setOrders} />}
             </div>
 
+
             <p className="font-medium">
-                {order.status === 'ordered' && `We've received your order, ${order.customer_name}!`}
+                {order.items.map((item: any) => item.name).join(", ")}
+                {/* {order.status === 'ordered' && `We've received your order, ${order.customer_name}!`}
                 {order.status === 'preparing' && `We're preparing your order, ${order.customer_name}!`}
                 {order.status === 'ready' && `Your order is ready, ${order.customer_name}!`}
-                {order.status === 'served' && `Thank you for your order, ${order.customer_name}!`}
+                {order.status === 'served' && `Thank you for your order, ${order.customer_name}!`} */}
             </p>
 
             {order.status === 'ordered' && (
                 <p className="text-sm text-gray-500">
-                    {"We'll let you know when we begin preparing your order."}
+                    {"We will begin preparing your order shortly."}
                 </p>
             )}
 
             {order.status === 'preparing' && (
                 <p className="text-sm text-gray-500">
-                    {"We'll let you know when your order is ready."}
+                    {"Your order is being prepared. Please wait a moment."}
                 </p>
             )}
 
             {order.status === 'ready' && (
                 <p className="text-sm text-gray-500">
-                    {"Please pick up your order at the counter."}
+                    {"Your order is ready. Please pick it up at the counter."}
                 </p>
             )}
 
@@ -77,12 +85,14 @@ export function OrderStatusCard({ order, setOrders }: OrderStatusCardProps) {
                 </div>
             )}
 
-            <Separator className="my-2" />
-            {order.items.map((item: any, index: number) => (
-                <div key={index} className="text-sm text-gray-500">
-                    {item.quantity}x {item.name} (#{item.drink_number})
-                </div>
-            ))}
-        </div>
+            {order.status === 'served' && <div>
+                <Separator className="my-2" />
+                {order.items.map((item: any, index: number) => (
+                    <div key={index} className="text-sm text-gray-500">
+                        {item.quantity}x {item.name} (#{item.drink_number})
+                    </div>
+                ))}
+            </div>}
+        </div >
     )
 }

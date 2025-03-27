@@ -1,6 +1,6 @@
 import { Switch } from "@/components/ui/switch"
 import { MenuItem } from "@/types/order";
-import { UpdateMenuItemProps } from "../hooks/use-menu";
+import { UpdateMenuItemProps } from "@/features/menu/hooks/use-menu";
 import { useEffect } from "react";
 import { useState } from "react";
 

@@ -3,9 +3,8 @@
 import { SidebarProvider } from "@/components/ui/sidebar"
 import { columns } from "@/features/menu/components/columns"
 import { MenuDataTable } from "@/features/menu/components/data-table"
-import MenuItemSidebar from "@/features/menu/components/menu-item-sidebar"
+import MenuItemSidebar from "@/features/menu/components/item-sidebar"
 import useMenu from "@/features/menu/hooks/use-menu"
-import { MenuItem } from "@/types/order"
 import { Loader2 } from "lucide-react"
 
 export default function MenuPage() {

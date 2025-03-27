@@ -51,7 +51,8 @@ export async function POST(request: NextRequest) {
     const { data, error } = await supabase
         .from("menu_items")
         .insert(item)
-        .select();
+        .select()
+        .single();
 
     if (error) {
         console.log(error);

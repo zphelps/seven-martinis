@@ -7,7 +7,8 @@ import AddItemDialog from "@/features/inventory/components/add-item-dialog"
 import { useRouter } from "next/navigation"
 import { v4 as uuidv4 } from 'uuid';
 import { useState } from "react"
-import { Loader2 } from "lucide-react"
+import { Loader2, Plus } from "lucide-react"
+
 type MenuToolbarProps<TData> = {
     table: Table<TData>
     addMenuItem: (item: AddMenuItemProps) => Promise<MenuItem>
@@ -19,17 +20,23 @@ export const MenuToolbar = <TData, TValue>({ table, addMenuItem }: MenuToolbarPr
 
     const handleAddMenuItem = async () => {
         setAddingItem(true)
-        const newMenuItem = await addMenuItem({
-            id: uuidv4(),
-            name: "",
-            description: "",
-            instructions: "",
-            available: false,
-            drink_number: 0,
-        })
+        try {
+            const newMenuItemId = uuidv4()
+            await addMenuItem({
+                id: newMenuItemId,
+                name: "",
+                description: "",
+                instructions: "",
+                available: false,
+                drink_number: 0,
+            })
 
-        router.push(`/dashboard/menu?id=${newMenuItem.id}`)
-        setAddingItem(false)
+            router.push(`/dashboard/menu?id=${newMenuItemId}`)
+            setAddingItem(false)
+        } catch (error) {
+            console.error(error)
+            setAddingItem(false)
+        }
     }
     return (
         <div className="flex justify-between items-center p-2 space-x-2">
@@ -43,7 +50,12 @@ export const MenuToolbar = <TData, TValue>({ table, addMenuItem }: MenuToolbarPr
             />
             {/* Add Item */}
             <Button variant="default" onClick={handleAddMenuItem} disabled={addingItem}>
-                {addingItem ? <Loader2 className="w-4 h-4 animate-spin" /> : "Add Drink"}
+                {addingItem ? <Loader2 className="w-4 h-4 animate-spin" /> : (
+                    <div className="flex items-center gap-2">
+                        <Plus className="w-4 h-4" />
+                        Drink
+                    </div>
+                )}
             </Button>
         </div>
     )

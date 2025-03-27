@@ -15,18 +15,41 @@ import { Separator } from "@/components/ui/separator";
 import { styled } from '@mui/material'
 import { useSidebar } from "@/components/ui/sidebar";
 import { OrderDetailsCard } from "@/features/menu/components/order-details-card";
-
+import { useOrder } from "@/features/orders/hooks/use-order";
 export default function Dashboard() {
     const { orders, setOrders, loading, error } = useOrders();
     const [isClearingServed, setIsClearingServed] = useState(false);
+    const [isMarkingReady, setIsMarkingReady] = useState(false);
 
     const [leftOrder, setLeftOrder] = useState<Order | null>(null);
     const [rightOrder, setRightOrder] = useState<Order | null>(null);
 
+    const { updateOrder: updateLeftOrder } = useOrder({
+        id: leftOrder?.id || null,
+        onUpdate: (updatedOrder) => {
+            setOrders(prev => prev.map(order =>
+                order.id === updatedOrder.id ? updatedOrder : order
+            ));
+        }
+    });
+
+    const { updateOrder: updateRightOrder } = useOrder({
+        id: rightOrder?.id || null,
+        onUpdate: (updatedOrder) => {
+            setOrders(prev => prev.map(order =>
+                order.id === updatedOrder.id ? updatedOrder : order
+            ));
+        }
+    });
+
     const { open, toggleSidebar } = useSidebar();
 
     function handleOrderClick(order: Order) {
-        console.log(order);
+        // If the order is already open on either side, don't open it again
+        if (leftOrder?.id === order.id || rightOrder?.id === order.id) {
+            return;
+        }
+
         if (leftOrder) {
             setRightOrder(order);
         } else {
@@ -35,6 +58,25 @@ export default function Dashboard() {
 
         if (open) {
             toggleSidebar();
+        }
+    }
+
+    async function handleMarkReady(order: Order) {
+        try {
+            setIsMarkingReady(true);
+
+            if (leftOrder?.id === order.id) {
+                await updateLeftOrder({ id: order.id, status: "ready" });
+                setLeftOrder(null);
+            } else if (rightOrder?.id === order.id) {
+                await updateRightOrder({ id: order.id, status: "ready" });
+                setRightOrder(null);
+            }
+        } catch (error) {
+            // Error handling is done in the useOrder hook
+            console.error('Error marking order as ready:', error);
+        } finally {
+            setIsMarkingReady(false);
         }
     }
 
@@ -193,15 +235,17 @@ export default function Dashboard() {
                         {leftOrder && (
                             <OrderDetailsCard
                                 order={leftOrder}
-                                onMarkReady={() => { }}
+                                onMarkReady={() => handleMarkReady(leftOrder)}
                                 onClose={() => setLeftOrder(null)}
+                                isLoading={isMarkingReady}
                             />
                         )}
                         {rightOrder && (
                             <OrderDetailsCard
                                 order={rightOrder}
-                                onMarkReady={() => { }}
+                                onMarkReady={() => handleMarkReady(rightOrder)}
                                 onClose={() => setRightOrder(null)}
+                                isLoading={isMarkingReady}
                             />
                         )}
                     </div>

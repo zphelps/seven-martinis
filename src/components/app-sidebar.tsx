@@ -31,16 +31,16 @@ const items = [
         url: "/dashboard/menu",
         icon: Martini,
     },
-    {
-        title: "Inventory",
-        url: "/dashboard/inventory",
-        icon: Container,
-    },
-    {
-        title: "Settings",
-        url: "#",
-        icon: Settings,
-    },
+    // {
+    //     title: "Inventory",
+    //     url: "/dashboard/inventory",
+    //     icon: Container,
+    // },
+    // {
+    //     title: "Settings",
+    //     url: "#",
+    //     icon: Settings,
+    // },
 ]
 
 export function AppSidebar() {
@@ -54,7 +54,7 @@ export function AppSidebar() {
             </SidebarHeader>
             <SidebarContent>
                 <SidebarGroup>
-                    <SidebarGroupLabel>Application</SidebarGroupLabel>
+                    {/* <SidebarGroupLabel>Application</SidebarGroupLabel> */}
                     <SidebarGroupContent>
                         <SidebarMenu>
                             {items.map((item) => (

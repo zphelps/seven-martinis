@@ -1,23 +1,33 @@
-
-import { Order } from "@/types/order";
+import { Order, OrderStatus } from "@/types/order";
 import { useEffect, useState } from "react";
+import { toast } from "@/components/ui/use-toast";
 
 interface UpdateOrderProps {
     id: string;
     rating?: number;
-    status?: string;
+    status?: OrderStatus;
 }
 
 interface UseOrderProps {
     id: string | null;
+    onUpdate?: (order: Order) => void;
 }
 
-export function useOrder({ id }: UseOrderProps) {
+export function useOrder({ id, onUpdate }: UseOrderProps) {
     const [order, setOrder] = useState<Order | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
 
     const updateOrder = async ({ id, rating, status }: UpdateOrderProps) => {
+        setIsLoading(true);
         const previousOrder = order;
-        setOrder(previousOrder => ({ ...previousOrder, rating, status }) as Order);
+
+        // Optimistically update the local state
+        if (status) {
+            setOrder(prev => prev ? { ...prev, status } : null);
+        }
+        if (rating) {
+            setOrder(prev => prev ? { ...prev, rating } : null);
+        }
 
         try {
             const response = await fetch(`/api/orders/${id}`, {
@@ -34,15 +44,37 @@ export function useOrder({ id }: UseOrderProps) {
                 throw new Error(data.error || 'Failed to update order');
             }
 
-            console.log('Order updated successfully');
-        } catch (error) {
-            console.error('Error updating order:', error);
+            // Update the parent component's state if callback provided
+            if (onUpdate && data.data) {
+                onUpdate(data.data);
+            }
+
+            toast({
+                title: "Order updated successfully",
+                description: status ? `Order marked as ${status}` : "Rating updated",
+            });
+
+            return data.data;
+        } catch (error: any) {
+            // Revert optimistic update on error
             setOrder(previousOrder);
+
+            toast({
+                title: "Failed to update order",
+                description: error.message,
+                variant: "destructive",
+            });
+            throw error;
+        } finally {
+            setIsLoading(false);
         }
     }
 
     useEffect(() => {
         const fetchOrder = async () => {
+            if (!id) return;
+
+            setIsLoading(true);
             try {
                 const response = await fetch(`/api/orders/${id}`);
                 const data = await response.json();
@@ -50,14 +82,20 @@ export function useOrder({ id }: UseOrderProps) {
                     throw new Error(data.error || 'Failed to fetch order');
                 }
                 setOrder(data.data);
-            } catch (error) {
+            } catch (error: any) {
                 console.error('Error fetching order:', error);
+                toast({
+                    title: "Failed to fetch order",
+                    description: error.message,
+                    variant: "destructive",
+                });
+            } finally {
+                setIsLoading(false);
             }
         };
-        if (id) {
-            fetchOrder();
-        }
+
+        fetchOrder();
     }, [id]);
 
-    return { order, updateOrder };
+    return { order, updateOrder, isLoading };
 }

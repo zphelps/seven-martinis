@@ -16,17 +16,17 @@ export const ChangeDrinkName = ({ item, updateMenuItem }: ChangeDrinkNameProps) 
 
     const debouncedUpdateMenuItem = useCallback(
         debounce(async (id: string, updatedName: string) => {
-            if (updatedName === "") {
-                await updateMenuItem(id, { name: updatedName, available: false });
-            } else {
-                await updateMenuItem(id, { name: updatedName });
-            }
+            // Only update if the name is empty or has content
+            await updateMenuItem(id, {
+                name: updatedName,
+                // available: updatedName.trim() !== ""
+            });
         }, 500),
         []
     );
 
     const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const newName = e.target.value.trim();
+        const newName = e.target.value;
         setName(newName);
         debouncedUpdateMenuItem(item?.id || "", newName);
     };
@@ -54,10 +54,10 @@ export const ChangeDrinkName = ({ item, updateMenuItem }: ChangeDrinkNameProps) 
                 />
             ) : (
                 <div className="flex gap-1">
-                    {(name && name !== "") && <p className="text-lg font-bold text-black hover:cursor-pointer">
-                        {name || ""}
+                    {(name && name.trim() !== "") && <p className="text-lg font-bold text-black hover:cursor-pointer">
+                        {name}
                     </p>}
-                    {(!name || name === "") && <p className="text-lg ml-1 text-gray-500 hover:cursor-pointer">
+                    {(!name || name.trim() === "") && <p className="text-lg ml-1 text-gray-500 hover:cursor-pointer">
                         Enter a name...
                     </p>}
                 </div>

@@ -1,7 +1,7 @@
 import { Input } from "@/components/ui/input";
 import { MenuItem } from "@/types/order";
 import { useState, useEffect, useRef } from "react";
-import { UpdateMenuItemProps } from "../hooks/use-menu";
+import { UpdateMenuItemProps } from "../../hooks/use-menu";
 
 interface ChangeDrinkNumberProps {
     item: MenuItem | null;

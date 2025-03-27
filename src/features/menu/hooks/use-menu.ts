@@ -1,5 +1,3 @@
-
-
 import { MenuItem } from '@/types/order';
 import { useState, useEffect } from 'react';
 
@@ -27,30 +25,29 @@ interface UseMenuProps {
 const useMenu = ({ onlyAvailable = false }: UseMenuProps) => {
     const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [error, setError] = useState();
 
     const addMenuItem = async (item: AddMenuItemProps) => {
-        const newMenuItem = item
-        const previousMenuItems = [...menuItems];
-        setMenuItems(prev => [...prev, newMenuItem] as MenuItem[]);
-
         try {
             const response = await fetch('/api/menu', {
                 method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
                 body: JSON.stringify(item),
             });
             const result = await response.json();
 
-            if (response.ok) {
-                setMenuItems(prev => prev.map(menuItem => menuItem.id === newMenuItem.id ? result.data : menuItem) as MenuItem[]);
-            } else {
-                throw new Error(result.error);
-            }
+            console.log("Result", result)
 
-            return result.data;
+            if (response.ok) {
+                setMenuItems(prev => [...prev, result.data] as MenuItem[]);
+                return result.data;
+            } else {
+                throw new Error(result.error || 'Failed to add menu item');
+            }
         } catch (error: any) {
             setError(error.message);
-            setMenuItems(previousMenuItems);
             throw error;
         }
     }
