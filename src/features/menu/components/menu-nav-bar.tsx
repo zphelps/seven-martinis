@@ -61,7 +61,7 @@ export default function MenuNavBar() {
                         variant="outline"
                         size="sm"
                         className="flex items-center gap-2"
-                        onClick={() => window.open('https://venmo.com/zphelps8216', '_blank')}
+                        onClick={() => window.open('https://venmo.com/caylan-fields', '_blank')}
                     >
                         <CreditCard className="h-4 w-4" />
                         Tip
