@@ -2,7 +2,7 @@ import { MenuItem } from "@/types/order";
 import { MenuItemCard } from "./menu-item-card";
 import { ItemTagFilter } from "../item-tag-filter";
 import { useState, useMemo } from "react";
-import { Loader2 } from "lucide-react";
+import { Loader2, Search } from "lucide-react";
 
 interface MenuListProps {
     menuItems: MenuItem[];
@@ -12,14 +12,29 @@ interface MenuListProps {
 
 export function MenuList({ menuItems, loading, error }: MenuListProps) {
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
+    const [searchQuery, setSearchQuery] = useState("");
 
     const filteredMenuItems = useMemo(() => {
-        if (selectedTags.length === 0) return menuItems;
+        let filtered = menuItems;
 
-        return menuItems.filter(item =>
-            selectedTags.every(tag => item.tags?.includes(tag))
-        );
-    }, [menuItems, selectedTags]);
+        // Apply tag filtering
+        if (selectedTags.length > 0) {
+            filtered = filtered.filter(item =>
+                selectedTags.every(tag => item.tags?.includes(tag))
+            );
+        }
+
+        // Apply search filtering
+        if (searchQuery.trim()) {
+            const query = searchQuery.toLowerCase().trim();
+            filtered = filtered.filter(item =>
+                item.name.toLowerCase().includes(query) ||
+                item.description?.toLowerCase().includes(query) || item.drink_number?.toString().includes(query)
+            );
+        }
+
+        return filtered;
+    }, [menuItems, selectedTags, searchQuery]);
 
     const handleTagSelect = (tag: string) => {
         setSelectedTags(prev =>
@@ -38,6 +53,16 @@ export function MenuList({ menuItems, loading, error }: MenuListProps) {
 
     return (
         <div className="py-4 px-2 space-y-4">
+            <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <input
+                    type="text"
+                    placeholder="Search drinks..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full text-normal font-normal pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+            </div>
             <ItemTagFilter
                 menuItems={menuItems}
                 selectedTags={selectedTags}
