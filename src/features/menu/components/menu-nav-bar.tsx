@@ -61,7 +61,8 @@ export default function MenuNavBar() {
                         variant="outline"
                         size="sm"
                         className="flex items-center gap-2"
-                        onClick={() => window.open('https://venmo.com/caylan-fields', '_blank')}
+                        // #frank-wynne
+                        onClick={() => window.open('https://venmo.com/caylan-fields?note=Seven%20Martinis%20(TIP)%20%F0%9F%8D%B8', '_blank')}
                     >
                         <CreditCard className="h-4 w-4" />
                         Tip
