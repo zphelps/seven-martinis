@@ -21,6 +21,8 @@ export const OrderDetailsCard = ({ order, onStartPreparing, onMarkReady, onClose
                 return "Start Preparing";
             case "preparing":
                 return "Mark Ready";
+            case "served":
+                return "Served";
             default:
                 return "Mark Ready";
         }
@@ -34,7 +36,7 @@ export const OrderDetailsCard = ({ order, onStartPreparing, onMarkReady, onClose
         }
     };
 
-    const isButtonDisabled = order.status === "ready" || isLoading;
+    const isButtonDisabled = order.status === "ready" || order.status === "served" || isLoading;
 
     return (
         <div className="w-1/2 min-h-full h-full items-center justify-center bg-gray-100 rounded-lg p-4">
@@ -47,6 +49,7 @@ export const OrderDetailsCard = ({ order, onStartPreparing, onMarkReady, onClose
                 </div>
 
                 <div className="flex items-center space-x-1">
+
                     <Button
                         variant="outline"
                         onClick={handleStatusChange}

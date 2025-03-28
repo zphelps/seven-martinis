@@ -244,7 +244,7 @@ export default function Dashboard() {
     if (error) return <p>Error fetching orders</p>;
 
     return (
-        <div className="container-lg mx-3 mb-2.5 space-y-4">
+        <div className="container-lg mx-0 mb-2.5 space-y-4">
 
 
             {/* Kanban Board */}
