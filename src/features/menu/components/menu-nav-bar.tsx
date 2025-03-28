@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { CreditCard, PlusIcon, MartiniIcon } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
 
 const navigation = [
     { name: 'Order', href: '#' },
@@ -37,7 +38,7 @@ export default function MenuNavBar() {
                             className="h-12 max-w-fit" />
                     </a>
                 </div>
-                <div className="flex justify-center">
+                <div className="flex items-center gap-4">
                     <Tabs value={tab} className="w-full max-w-sm">
                         <TabsList className="grid w-full grid-cols-2 bg-gray-200">
                             <TabsTrigger
@@ -56,6 +57,15 @@ export default function MenuNavBar() {
                             </TabsTrigger>
                         </TabsList>
                     </Tabs>
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        className="flex items-center gap-2"
+                        onClick={() => window.open('https://venmo.com/zphelps8216', '_blank')}
+                    >
+                        <CreditCard className="h-4 w-4" />
+                        Tip
+                    </Button>
                 </div>
             </nav>
         </header>
