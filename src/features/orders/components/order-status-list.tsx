@@ -56,6 +56,17 @@ function getDateGroupTitle(groupKey: string): string {
 export function OrderStatusList({ orders, setOrders }: OrderStatusListProps) {
     const groupedOrders = groupOrdersByDate(orders);
 
+    if (orders.length === 0) {
+        return (
+            <div className="mx-auto max-w-7xl p-4">
+                <div className="text-center py-12">
+                    <h3 className="text-lg font-semibold text-gray-900">No orders yet</h3>
+                    <p className="mt-2 text-sm text-gray-500">Your order history will appear here once you place an order.</p>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="mx-auto max-w-7xl space-y-6 p-4">
             {Object.entries(groupedOrders).map(([groupKey, groupOrders]) => {

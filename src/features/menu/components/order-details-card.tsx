@@ -3,17 +3,39 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { OrderAccordion } from "@/features/orders/components/order-accordion";
 import { useRecipe } from "@/features/recipe/hooks/use-recipe";
-import { Order } from "@/types/order";
+import { Order, OrderStatus } from "@/types/order";
 import { Check, Loader2, X } from "lucide-react";
 
 interface OrderDetailsCardProps {
-    order: any;
+    order: Order;
+    onStartPreparing: () => void;
     onMarkReady: () => void;
     onClose: () => void;
     isLoading?: boolean;
 }
 
-export const OrderDetailsCard = ({ order, onMarkReady, onClose, isLoading }: OrderDetailsCardProps) => {
+export const OrderDetailsCard = ({ order, onStartPreparing, onMarkReady, onClose, isLoading }: OrderDetailsCardProps) => {
+    const getButtonText = (status: OrderStatus) => {
+        switch (status) {
+            case "ordered":
+                return "Start Preparing";
+            case "preparing":
+                return "Mark Ready";
+            default:
+                return "Mark Ready";
+        }
+    };
+
+    const handleStatusChange = () => {
+        if (order.status === "ordered") {
+            onStartPreparing();
+        } else if (order.status === "preparing") {
+            onMarkReady();
+        }
+    };
+
+    const isButtonDisabled = order.status === "ready" || isLoading;
+
     return (
         <div className="w-1/2 min-h-full h-full items-center justify-center bg-gray-100 rounded-lg p-4">
             <div className="flex justify-between items-center">
@@ -27,16 +49,15 @@ export const OrderDetailsCard = ({ order, onMarkReady, onClose, isLoading }: Ord
                 <div className="flex items-center space-x-1">
                     <Button
                         variant="outline"
-                        onClick={onMarkReady}
-                        disabled={isLoading || order.status === "ready"}
+                        onClick={handleStatusChange}
+                        disabled={isButtonDisabled}
                     >
                         {isLoading ? (
                             <Loader2 className="w-4 h-4 animate-spin" />
                         ) : (
                             <Check className="w-4 h-4" />
                         )}
-                        {isLoading ? "Marking Ready..." : "Mark Ready"}
-
+                        {isLoading ? "Processing..." : getButtonText(order.status)}
                     </Button>
                     <Button variant="outline" onClick={onClose}>
                         <X className="w-4 h-4" />

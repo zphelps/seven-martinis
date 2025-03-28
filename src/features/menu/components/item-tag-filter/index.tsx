@@ -4,7 +4,8 @@ import { useMemo } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { X } from "lucide-react";
-const AVAILABLE_TAGS = ["Vodka", "Gin", "Bourbon", "Tequila", "Rum", "Whiskey", "Beer", "Wine", "Cocktail", "Mocktail"];
+// const AVAILABLE_TAGS = ["Vodka", "Gin", "Bourbon", "Tequila", "Rum", "Whiskey", "Beer", "Wine", "Cocktail", "Mocktail"];
+const AVAILABLE_TAGS = ["Vodka", "Gin", "Bourbon", "Tequila", "Rum", "Whiskey", "Wine", "Cocktail"];
 
 interface ItemTagFilterProps {
     menuItems: MenuItem[];

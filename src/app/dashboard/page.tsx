@@ -20,6 +20,7 @@ export default function Dashboard() {
     const { orders, setOrders, loading, error } = useOrders();
     const [isClearingServed, setIsClearingServed] = useState(false);
     const [isMarkingReady, setIsMarkingReady] = useState(false);
+    const [isStartingPreparing, setIsStartingPreparing] = useState(false);
 
     const [leftOrder, setLeftOrder] = useState<Order | null>(null);
     const [rightOrder, setRightOrder] = useState<Order | null>(null);
@@ -77,6 +78,24 @@ export default function Dashboard() {
             console.error('Error marking order as ready:', error);
         } finally {
             setIsMarkingReady(false);
+        }
+    }
+
+    async function handleStartPreparing(order: Order) {
+        try {
+            setIsStartingPreparing(true);
+            if (leftOrder?.id === order.id) {
+                await updateLeftOrder({ id: order.id, status: "preparing" });
+                setLeftOrder(null);
+            } else if (rightOrder?.id === order.id) {
+                await updateRightOrder({ id: order.id, status: "preparing" });
+                setRightOrder(null);
+            }
+        } catch (error) {
+            // Error handling is done in the useOrder hook
+            console.error('Error starting preparation:', error);
+        } finally {
+            setIsStartingPreparing(false);
         }
     }
 
@@ -235,17 +254,19 @@ export default function Dashboard() {
                         {leftOrder && (
                             <OrderDetailsCard
                                 order={leftOrder}
+                                onStartPreparing={() => handleStartPreparing(leftOrder)}
                                 onMarkReady={() => handleMarkReady(leftOrder)}
                                 onClose={() => setLeftOrder(null)}
-                                isLoading={isMarkingReady}
+                                isLoading={isMarkingReady || isStartingPreparing}
                             />
                         )}
                         {rightOrder && (
                             <OrderDetailsCard
                                 order={rightOrder}
+                                onStartPreparing={() => handleStartPreparing(rightOrder)}
                                 onMarkReady={() => handleMarkReady(rightOrder)}
                                 onClose={() => setRightOrder(null)}
-                                isLoading={isMarkingReady}
+                                isLoading={isMarkingReady || isStartingPreparing}
                             />
                         )}
                     </div>
