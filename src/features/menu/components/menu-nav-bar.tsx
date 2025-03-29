@@ -38,7 +38,7 @@ export default function MenuNavBar() {
                             className="h-12 max-w-fit" />
                     </a>
                 </div>
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
                     <Tabs value={tab} className="w-full max-w-sm">
                         <TabsList className="grid w-full grid-cols-2 bg-gray-200">
                             <TabsTrigger
