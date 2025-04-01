@@ -1,36 +1,57 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Seven Martinis Bar Management System
+
+A modern, full-stack web application for managing a bar's operations, from order processing to menu management. Built with Next.js, TypeScript, and Supabase.
+
+## Features
+
+### Customer Interface
+- **Digital Menu**: Browse available drinks with detailed descriptions and ingredients
+- **Easy Ordering**: Place orders with custom instructions and track order status in real-time
+- **Order History**: View past orders and their status
+- **Digital Tipping**: Integrated Venmo tipping system for convenient payment
+
+### Staff Interface
+- **Order Management**: 
+  - Real-time order tracking using Kanban board
+  - Order status updates (Ordered → Preparing → Ready → Served)
+  - Customer name tracking for order delivery
+  - Order history and analytics
+
+- **Menu Management**:
+  - Add, edit, and remove menu items
+  - Update drink availability in real-time
+  - Manage drink numbers and descriptions
+  - Tag-based categorization (Vodka, Gin, Bourbon, etc.)
+  - Recipe management with ingredient tracking
+
+- **Inventory Integration**:
+  - Track ingredient usage
+  - Monitor stock levels
+  - Link ingredients to recipes
+
+### Technical Features
+- **Real-time Updates**: Live order status updates using Supabase subscriptions
+- **Responsive Design**: Mobile-friendly interface for both customers and staff
+- **Modern UI**: Built with Radix UI and shadcn/ui components
+- **Type Safety**: Full TypeScript implementation
+- **Authentication**: Secure user management system
 
 ## Getting Started
 
-First, run the development server:
+1. Clone the repository
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Set up your environment variables
+4. Run the development server:
+   ```bash
+   npm run dev
+   ```
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Tech Stack
+- **Frontend**: Next.js, TypeScript, Tailwind CSS
+- **UI Components**: Radix UI, shadcn/ui
+- **Backend**: Supabase (PostgreSQL)
+- **State Management**: React Hooks
+- **Real-time**: Supabase Realtime
