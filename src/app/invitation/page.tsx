@@ -1,0 +1,103 @@
+import Link from "next/link";
+
+export default function Invitation() {
+    return (
+        <div className="min-h-screen bg-neutral-300 flex items-center justify-center p-8 font-cormorant">
+            <div className="max-w-2xl text-center space-y-8">
+                {/* Heading */}
+                <p className="text-lg leading-relaxed">
+                    You are cordially invited to an evening of refined indulgence and clandestine revelry during an
+                    exclusive and intoxingly elegant event at
+                </p>
+
+                {/* Logo */}
+                <div className="flex justify-center">
+                    <img
+                        src="7MPrimaryCropped.png"
+                        alt="Seven Martinis Logo"
+                        className="w-44"
+                    />
+                </div>
+
+                {/* Date/Time */}
+                <div className="text-2xl leading-snug">
+                    Saturday, the Eighth of November
+                    <br/> Nine o’clock in the evening until midnight*
+                </div>
+
+                {/* Buttons */}
+                <div className="flex gap-4 justify-center mt-8">
+                    {/* eslint-disable-next-line react/jsx-no-undef */}
+                    <Link href={"#"}>
+                        <button
+                            className="font-cormorant px-6 py-3 bg-neutral-900 text-neutral-100 rounded-md border border-neutral-700 transition-colors duration-200 hover:bg-neutral-800 hover:text-white">
+                            Reserve Your Place
+                        </button>
+                    </Link>
+
+                    <Link href={"#"}>
+                        <button
+                            className="font-cormorant px-6 py-3 bg-neutral-200 text-neutral-900 rounded-md border border-neutral-400 transition-colors duration-200 hover:bg-neutral-300 hover:text-neutral-950">
+                            Inquiries Addressed
+                        </button>
+                    </Link>
+                </div>
+
+                {/* Sections */}
+
+                <div className="pl-10 space-y-6 max-w-2xl mx-auto">
+                    <Section
+                        title="Location"
+                        text={`Lower level of the Phelps Residence
+10895 Holliday Farms Blvd., Zionsville, IN 46077`}
+                    />
+
+                    <Section
+                        title="Access"
+                        text={`Upon arrival to the Holliday Farms neighborhood, stop at the gate house and mention you are here for the “Phelps Residence.” Remember, Seven Martinis is a secret.`}
+                    />
+
+                    <Section
+                        title="Attire"
+                        text={`Cocktail attire is often spotted, but it is certainly not required. Dress like you are here for a good drink and an even better story. We’ve seen suits and denim at the same party — both ordered a second round.`}
+                    />
+
+                    <Section
+                        title="Selection"
+                        text={`The Seven Martinis mixologists will serve its inaugural Seven for Autumn menu, featuring exquisite seasonal flavors and craft cocktails, as well as old favorites and new specials.`}
+                    />
+                </div>
+
+                {/* Nota Bene */}
+                <div className="text-sm leading-relaxed text-neutral-800">
+                    <span className="italic font-semibold whitespace-pre-line">N.B.</span> Access to Seven Martinis is
+                    by invitation only and may be obtained through a concealed entrance on the lower level of the Phelps
+                    Residence. Those in the know will find their way...seek where the wood whispers and the panels part.
+                </div>
+
+                {/* Last Call Note */}
+                <div className="text-sm leading-relaxed text-neutral-800 mt-6">
+                    *Seven Martinis does not participate in this horrifying contemporary notion of “last call.” The bar
+                    will remain open so long as bodies remain inside — dead or alive.
+                </div>
+
+            </div>
+        </div>
+    )
+}
+
+function Section({title, text}: { title: string; text: string }) {
+    return (
+        <div className="grid grid-cols-4 gap-4 text-left">
+            {/* Left column: title */}
+            <h2 className="col-span-1 uppercase tracking-wide font-bold text-xl">
+                {title}
+            </h2>
+
+            {/* Right column: text */}
+            <p className="col-span-3 whitespace-pre-line leading-relaxed">
+                {text}
+            </p>
+        </div>
+    )
+}
