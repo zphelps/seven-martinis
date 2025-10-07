@@ -135,7 +135,7 @@ export function AttendeesDataTable() {
     console.log(dates)
     // --- UI ---
     return (
-        <div className="flex flex-col rounded-lg border w-full h-full mr-2 shadow bg-white dark:bg-neutral-950">
+        <div className="flex flex-col mt-2 rounded-lg border h-full mr-2 shadow bg-white dark:bg-neutral-950">
             {/* Toolbar */}
             <div className="flex items-center justify-between px-4 py-3">
                 <h2 className="font-semibold text-lg text-neutral-800 dark:text-neutral-100">
