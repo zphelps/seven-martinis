@@ -2,6 +2,30 @@ import Link from "next/link";
 import {StoryOfSevenMartinis} from "@/components/invitation/StoryDialog";
 import {ReservationModal} from "@/components/invitation/ReservationModal";
 
+const CURRENT_DATE = new Date(2025, 10, 8); // CHANGE DATE HERE
+
+function getDayOrdinalWord(day: any) {
+    const words = [
+        'First', 'Second', 'Third', 'Fourth', 'Fifth', 'Sixth', 'Seventh',
+        'Eighth', 'Ninth', 'Tenth', 'Eleventh', 'Twelfth', 'Thirteenth',
+        'Fourteenth', 'Fifteenth', 'Sixteenth', 'Seventeenth', 'Eighteenth',
+        'Nineteenth', 'Twentieth', 'Twenty-First', 'Twenty-Second', 'Twenty-Third',
+        'Twenty-Fourth', 'Twenty-Fifth', 'Twenty-Sixth', 'Twenty-Seventh',
+        'Twenty-Eighth', 'Twenty-Ninth', 'Thirtieth', 'Thirty-First'
+    ];
+    return words[day - 1];
+}
+const weekday = CURRENT_DATE.toLocaleDateString('en-US', {
+    weekday: 'long',
+    timeZone: 'America/New_York',
+});
+const month = CURRENT_DATE.toLocaleDateString('en-US', {
+    month: 'long',
+    timeZone: 'America/New_York',
+});
+const dayWord = getDayOrdinalWord(new Date(CURRENT_DATE.toLocaleString('en-US', { timeZone: 'America/New_York' })).getDate());
+
+
 export default function Invitation() {
     return (
         <div className="min-h-screen bg-neutral-300 flex items-center justify-center p-8 font-cormorant">
@@ -23,7 +47,7 @@ export default function Invitation() {
 
                 {/* Date/Time */}
                 <div className="text-2xl leading-snug">
-                    Saturday, the Eighth of November
+                    {weekday}, the {dayWord} of {month}
                     <br/> Nine o’clock in the evening until midnight*
                 </div>
 
@@ -37,7 +61,7 @@ export default function Invitation() {
                     {/*    </button>*/}
                     {/*</Link>*/}
 
-                    <ReservationModal/>
+                    <ReservationModal date={CURRENT_DATE} />
 
                     {/*<Link href={"invitation/inquiries-addressed"}>*/}
                     {/*    <button*/}
@@ -93,7 +117,7 @@ export default function Invitation() {
                             Selection
                         </h3>
                         <p className="text-neutral-700 leading-relaxed text-center sm:text-left">
-                            The Seven Martinis mixologists will debut its <em>Seven for Autumn</em> menu, featuring
+                            The 7M mixologists will debut its <em>Seven for Autumn</em> menu, featuring
                             exquisite
                             seasonal flavors and craft cocktails, as well as old favorites and new specials.
                         </p>

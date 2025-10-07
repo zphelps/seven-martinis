@@ -37,7 +37,7 @@ export function StoryOfSevenMartinis() {
                         <h4 className="font-cormorant text-sm font-semibold uppercase tracking-wide text-neutral-800 not-italic mb-2">
                             The People Behind the Door
                         </h4>
-                        <p>7M was founded by Suzanne and Sheldon Phelps — though only one dares to tell the unadulterated origin of the name.</p>
+                        <p>Seven Martinis was founded by Suzanne and Sheldon Phelps — though only one dares to tell the unadulterated origin of the name.</p>
                         <p><a target={"_blank"} href={"https://www.davidwolfebender.com"}>David Wolfe Bender</a>, Head Mixologist — curator of every menu, guided by the belief that cocktails are as much about character as they are ingredients.</p>
                         <p>7M Interior Design by Stephanie Weitkamp — creator of every corner's elegance and intent.</p>
                     </div>
