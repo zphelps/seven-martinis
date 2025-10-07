@@ -1,4 +1,6 @@
 import Link from "next/link";
+import {StoryOfSevenMartinis} from "@/components/invitation/StoryDialog";
+import {ReservationModal} from "@/components/invitation/ReservationModal";
 
 export default function Invitation() {
     return (
@@ -7,7 +9,7 @@ export default function Invitation() {
                 {/* Heading */}
                 <p className="text-lg leading-relaxed">
                     You are cordially invited to an evening of refined indulgence and clandestine revelry during an
-                    exclusive and intoxingly elegant event at
+                    exclusive and intoxicatingly elegant event at
                 </p>
 
                 {/* Logo */}
@@ -28,45 +30,76 @@ export default function Invitation() {
                 {/* Buttons */}
                 <div className="flex gap-4 justify-center mt-8">
                     {/* eslint-disable-next-line react/jsx-no-undef */}
-                    <Link href={"#"}>
-                        <button
-                            className="font-cormorant px-6 py-3 bg-neutral-900 text-neutral-100 rounded-md border border-neutral-700 transition-colors duration-200 hover:bg-neutral-800 hover:text-white">
-                            Reserve Your Place
-                        </button>
-                    </Link>
+                    {/*<Link href={"#"}>*/}
+                    {/*    <button*/}
+                    {/*        className="font-cormorant px-6 py-3 bg-neutral-900 text-neutral-100 rounded-md border border-neutral-700 transition-colors duration-200 hover:bg-neutral-800 hover:text-white">*/}
+                    {/*        Reserve Your Place*/}
+                    {/*    </button>*/}
+                    {/*</Link>*/}
 
-                    <Link href={"#"}>
-                        <button
-                            className="font-cormorant px-6 py-3 bg-neutral-200 text-neutral-900 rounded-md border border-neutral-400 transition-colors duration-200 hover:bg-neutral-300 hover:text-neutral-950">
-                            Inquiries Addressed
-                        </button>
-                    </Link>
+                    <ReservationModal/>
+
+                    {/*<Link href={"invitation/inquiries-addressed"}>*/}
+                    {/*    <button*/}
+                    {/*        className="font-cormorant px-6 py-3 bg-neutral-200 text-neutral-900 rounded-md border border-neutral-400 transition-colors duration-200 hover:bg-neutral-300 hover:text-neutral-950">*/}
+                    {/*        FAQs*/}
+                    {/*    </button>*/}
+                    {/*</Link>*/}
+                    <StoryOfSevenMartinis/>
                 </div>
 
                 {/* Sections */}
 
-                <div className="pl-10 space-y-6 max-w-2xl mx-auto">
-                    <Section
-                        title="Location"
-                        text={`Lower level of the Phelps Residence
-10895 Holliday Farms Blvd., Zionsville, IN 46077`}
-                    />
+                <div className="mx-auto max-w-2xl px-4 sm:px-6 md:px-10 space-y-10 text-center sm:text-left">
+                    <div
+                        className="grid grid-cols-1 sm:grid-cols-[150px_1fr] sm:gap-8 gap-4 items-start justify-items-center sm:justify-items-start">
+                        <h3 className="font-cormorant text-lg text-neutral-900 font-bold uppercase text-center sm:text-right">
+                            Location
+                        </h3>
+                        <p className="text-neutral-700 leading-relaxed text-center sm:text-left">
+                            Lower level of the Phelps Residence<br/>
+                            10895 Holliday Farms Blvd., Zionsville, IN 46077 <br/>
+                            Follow the signs at the front door upon arrival.
+                        </p>
+                    </div>
 
-                    <Section
-                        title="Access"
-                        text={`Upon arrival to the Holliday Farms neighborhood, stop at the gate house and mention you are here for the “Phelps Residence.” Remember, Seven Martinis is a secret.`}
-                    />
+                    <div
+                        className="grid grid-cols-1 sm:grid-cols-[150px_1fr] sm:gap-8 gap-4 items-start justify-items-center sm:justify-items-start">
+                        <h3 className="font-cormorant text-lg text-neutral-900 font-bold uppercase text-center sm:text-right">
+                            Access
+                        </h3>
+                        <p className="text-neutral-700 leading-relaxed text-center sm:text-left">
+                            Upon arrival to the Holliday Farms neighborhood, stop at the gate house and mention you are
+                            here
+                            for the “Phelps Residence.” Remember, Seven Martinis is a secret.
+                        </p>
+                    </div>
 
-                    <Section
-                        title="Attire"
-                        text={`Cocktail attire is often spotted, but it is certainly not required. Dress like you are here for a good drink and an even better story. We’ve seen suits and denim at the same party — both ordered a second round.`}
-                    />
+                    <div
+                        className="grid grid-cols-1 sm:grid-cols-[150px_1fr] sm:gap-8 gap-4 items-start justify-items-center sm:justify-items-start">
+                        <h3 className="font-cormorant text-lg text-neutral-900 font-bold uppercase text-center sm:text-right">
+                            Attire
+                        </h3>
+                        <p className="text-neutral-700 leading-relaxed text-center sm:text-left">
+                            Cocktail attire is often spotted, but it is certainly not required. Dress like you are here
+                            for a good drink and an even better story. We’ve seen suits and denim at the same party —
+                            both ordered a second round.
+                        </p>
+                    </div>
 
-                    <Section
-                        title="Selection"
-                        text={`The Seven Martinis mixologists will serve its inaugural Seven for Autumn menu, featuring exquisite seasonal flavors and craft cocktails, as well as old favorites and new specials.`}
-                    />
+                    <div
+                        className="grid grid-cols-1 sm:grid-cols-[150px_1fr] sm:gap-8 gap-4 items-start justify-items-center sm:justify-items-start">
+                        <h3 className="font-cormorant text-lg text-neutral-900 font-bold uppercase text-center sm:text-right">
+                            Selection
+                        </h3>
+                        <p className="text-neutral-700 leading-relaxed text-center sm:text-left">
+                            The Seven Martinis mixologists will debut its <em>Seven for Autumn</em> menu, featuring
+                            exquisite
+                            seasonal flavors and craft cocktails, as well as old favorites and new specials.
+                        </p>
+                    </div>
                 </div>
+
 
                 {/* Nota Bene */}
                 <div className="text-sm leading-relaxed text-neutral-800">
