@@ -27,6 +27,7 @@ export function ReservationModal({ date }: ReservationModalProps) {
         const name = formData.get("name") as string;
         const phoneNumber = formData.get("phone") as string;
         const email = formData.get("email") as string;
+        const firstTimeAttendee = formData.get("firstTime") === "on";
 
         const guestNum = Number(guestCount) || null;
         const eventDate = date.toISOString().split("T")[0];
@@ -38,6 +39,7 @@ export function ReservationModal({ date }: ReservationModalProps) {
                 email,
                 guestNum,
                 eventDate,
+                firstTimeAttendee
             },
         ]);
 
@@ -114,8 +116,24 @@ export function ReservationModal({ date }: ReservationModalProps) {
                         </div>
 
                         <div className="space-y-2">
-                            <GuestInput guestCount={guestCount} setGuestCount={setGuestCount} />
+                            <GuestInput guestCount={guestCount} setGuestCount={setGuestCount}/>
                         </div>
+
+                        <div className="flex items-center justify-center space-x-2">
+                            <input
+                                id="firstTime"
+                                name="firstTime"
+                                type="checkbox"
+                                className="w-4 h-4 border-neutral-700 bg-neutral-900 text-neutral-100 rounded focus:ring-amber-400"
+                            />
+                            <label
+                                htmlFor="firstTime"
+                                className="text-neutral-300 font-cormorant cursor-pointer"
+                            >
+                                This is my first time at Seven Martinis
+                            </label>
+                        </div>
+
 
                         <button
                             type="submit"
@@ -127,7 +145,8 @@ export function ReservationModal({ date }: ReservationModalProps) {
                     </form>
                 ) : (
                     <div className="text-center py-10">
-                        <p className="text-neutral-200 font-cormorant text-xl mb-2">Welcome to the Seven. See you soon.</p>
+                        <p className="text-neutral-200 font-cormorant text-xl mb-2">Welcome to the Seven. See you
+                            soon.</p>
                     </div>
                 )}
 

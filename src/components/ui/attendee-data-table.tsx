@@ -33,7 +33,8 @@ interface Attendee {
     name: string;
     phoneNumber: string | null;
     guestNum: number | null;
-    eventDate: string | null; // stored as YYYY-MM-DD
+    eventDate: string | null;
+    firstTimeAttendee: boolean | null;
 }
 
 export function AttendeesDataTable() {
@@ -74,6 +75,15 @@ export function AttendeesDataTable() {
                 </div>
             ),
         },
+        {
+            accessorKey: "firstTimeAttendee",
+            header: "First Time Attendee",
+            cell: ({ row }: { row: { original: Attendee } }) => (
+                <div className="text-neutral-700 dark:text-neutral-300">
+                    {row.original.firstTimeAttendee ? "✅ Yes" : "No"}
+                </div>
+            ),
+        },
     ];
 
     const table = useReactTable({
@@ -110,7 +120,7 @@ export function AttendeesDataTable() {
 
             let query = createClient()
                 .from("attendees")
-                .select("id, name, phoneNumber, guestNum, eventDate")
+                .select("id, name, phoneNumber, guestNum, eventDate, firstTimeAttendee")
                 .order("name", { ascending: true });
 
             if (selectedDate) {
