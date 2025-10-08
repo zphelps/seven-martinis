@@ -83,3 +83,16 @@
     @apply bg-background text-foreground;
   }
 }
+
+:root {
+  --font-inter: "Inter", sans-serif;
+  --font-cormorant: "Cormorant Garamond", serif;
+}
+
+body {
+  font-family: var(--font-inter);
+}
+
+.font-cormorant {
+  font-family: var(--font-cormorant);
+}
