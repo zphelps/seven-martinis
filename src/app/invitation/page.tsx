@@ -1,42 +1,47 @@
 import Link from "next/link";
-import {StoryOfSevenMartinis} from "@/components/invitation/StoryDialog";
-import {ReservationModal} from "@/components/invitation/ReservationModal";
+import { StoryOfSevenMartinis } from "@/components/invitation/StoryDialog";
+import { ReservationModal } from "@/components/invitation/ReservationModal";
 
-const CURRENT_DATE = new Date('2025-11-08T00:00:00'); // CHANGE DATE HERE
+// ✅ Create the date as UTC midnight — this guarantees the day stays consistent globally
+const CURRENT_DATE = new Date(Date.UTC(2025, 10, 8)); // November is month 10 (0-indexed)
 
-function getDayOrdinalWord(day: any) {
+// ✅ Helper to generate “Eighth”, “Ninth”, etc.
+function getDayOrdinalWord(day: number) {
     const words = [
-        'First', 'Second', 'Third', 'Fourth', 'Fifth', 'Sixth', 'Seventh',
-        'Eighth', 'Ninth', 'Tenth', 'Eleventh', 'Twelfth', 'Thirteenth',
-        'Fourteenth', 'Fifteenth', 'Sixteenth', 'Seventeenth', 'Eighteenth',
-        'Nineteenth', 'Twentieth', 'Twenty-First', 'Twenty-Second', 'Twenty-Third',
-        'Twenty-Fourth', 'Twenty-Fifth', 'Twenty-Sixth', 'Twenty-Seventh',
-        'Twenty-Eighth', 'Twenty-Ninth', 'Thirtieth', 'Thirty-First'
+        "First", "Second", "Third", "Fourth", "Fifth", "Sixth", "Seventh",
+        "Eighth", "Ninth", "Tenth", "Eleventh", "Twelfth", "Thirteenth",
+        "Fourteenth", "Fifteenth", "Sixteenth", "Seventeenth", "Eighteenth",
+        "Nineteenth", "Twentieth", "Twenty-First", "Twenty-Second", "Twenty-Third",
+        "Twenty-Fourth", "Twenty-Fifth", "Twenty-Sixth", "Twenty-Seventh",
+        "Twenty-Eighth", "Twenty-Ninth", "Thirtieth", "Thirty-First"
     ];
     return words[day - 1];
 }
-const weekday = CURRENT_DATE.toLocaleDateString('en-US', {
-    weekday: 'long',
-    timeZone: 'America/New_York',
-});
-const month = CURRENT_DATE.toLocaleDateString('en-US', {
-    month: 'long',
-    timeZone: 'America/New_York',
-});
-const dayWord = getDayOrdinalWord(new Date(CURRENT_DATE.toLocaleString('en-US', { timeZone: 'America/New_York' })).getDate());
 
+// ✅ Format using UTC to prevent any timezone conversion
+const weekday = CURRENT_DATE.toLocaleDateString("en-US", {
+    weekday: "long",
+    timeZone: "UTC",
+});
+
+const month = CURRENT_DATE.toLocaleDateString("en-US", {
+    month: "long",
+    timeZone: "UTC",
+});
+
+const dayWord = getDayOrdinalWord(
+    new Date(CURRENT_DATE.toLocaleString("en-US", { timeZone: "UTC" })).getUTCDate()
+);
 
 export default function Invitation() {
     return (
         <div className="min-h-screen bg-neutral-300 flex items-center justify-center p-8 font-cormorant">
             <div className="max-w-2xl text-center space-y-8">
-                {/* Heading */}
                 <p className="text-lg leading-relaxed">
                     You are cordially invited to an evening of refined indulgence and clandestine revelry during an
                     exclusive and intoxicatingly elegant event at
                 </p>
 
-                {/* Logo */}
                 <div className="flex justify-center">
                     <img
                         src="7MPrimaryCropped.png"
@@ -45,10 +50,9 @@ export default function Invitation() {
                     />
                 </div>
 
-                {/* Date/Time */}
                 <div className="text-2xl leading-snug">
                     {weekday}, the {dayWord} of {month}
-                    <br/> Nine o’clock in the evening until midnight*
+                    <br /> Nine o’clock in the evening until midnight*
                 </div>
 
                 {/* Buttons */}
