@@ -2,7 +2,7 @@ import Link from "next/link";
 import {StoryOfSevenMartinis} from "@/components/invitation/StoryDialog";
 import {ReservationModal} from "@/components/invitation/ReservationModal";
 
-const CURRENT_DATE = new Date(2025, 10, 8); // CHANGE DATE HERE
+const CURRENT_DATE = new Date('2025-11-08T00:00:00'); // CHANGE DATE HERE
 
 function getDayOrdinalWord(day: any) {
     const words = [
