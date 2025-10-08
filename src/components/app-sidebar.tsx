@@ -1,6 +1,6 @@
 "use client"
 
-import { Calendar, Container, Home, Inbox, ListTodo, Martini, Search, Settings } from "lucide-react"
+import {Calendar, CircleUser, Container, Home, Inbox, ListTodo, Martini, Search, Settings} from "lucide-react"
 
 import {
     Sidebar,
@@ -31,6 +31,11 @@ const items = [
         url: "/dashboard/menu",
         icon: Martini,
     },
+    {
+        title: "Attendees",
+        url: "/dashboard/attendees",
+        icon: CircleUser
+    }
     // {
     //     title: "Inventory",
     //     url: "/dashboard/inventory",

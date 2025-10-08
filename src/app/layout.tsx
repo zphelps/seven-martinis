@@ -9,7 +9,13 @@ import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/toaster";
 
 const inter = Inter({ subsets: ["latin"] });
+import { Cormorant_Garamond } from 'next/font/google'
 
+const cormorant = Cormorant_Garamond({
+    subsets: ['latin'],
+    weight: ['400', '600'], // adjust as needed
+    variable: '--font-cormorant',
+})
 
 export const metadata: Metadata = getMetadata();
 
