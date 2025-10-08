@@ -123,7 +123,7 @@ export const ItemDialog = ({ menuItem, children }: ItemDialogProps) => {
                             {menuItem.description}
                         </DialogDescription>
                         <div className="w-full space-y-2 border-t pt-2">
-                            <Input className="w-full" id="name" placeholder="Enter your name" value={customerName} onChange={(e) => setCustomerName(e.target.value)} />
+                            <Input className="w-full" id="name" data-1p-ignore placeholder="Enter your name" value={customerName} onChange={(e) => setCustomerName(e.target.value)} />
                             <Button className="w-full" type="submit" onClick={handlePlaceOrder} disabled={placingOrder}>
                                 {placingOrder ? <Loader2 className="w-4 h-4 animate-spin" /> : <PlusIcon className="w-4 h-4" />}
                                 {placingOrder ? "Placing Order..." : "Place Order"}
