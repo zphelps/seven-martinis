@@ -8,7 +8,10 @@ import { getMetadata } from "@/utils/seo/get-metadata";
 import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/toaster";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({
+    subsets: ['latin'],
+    variable: '--font-inter',
+})
 import { Cormorant_Garamond } from 'next/font/google'
 
 const cormorant = Cormorant_Garamond({
@@ -25,7 +28,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${inter.variable} ${cormorant.variable}`}>
       <meta name="viewport" content="width=device-width, user-scalable=no" />
       <body className={cn(inter.className)}>
         <Suspense fallback={<p>Loading...</p>}>
