@@ -20,9 +20,8 @@ const config = {
 		extend: {
 			fontFamily: {
 				// Inter is your global default
-				sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
-				// Cormorant is only used when you explicitly add className="font-cormorant"
-				cormorant: ["'Cormorant Garamond'", "serif"],
+				sans: ["var(--font-inter)", "ui-sans-serif", "system-ui", "sans-serif"],
+				cormorant: ["var(--font-cormorant)", "serif"],
 			},
 			colors: {
 				border: "hsl(var(--border))",
