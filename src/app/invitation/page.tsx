@@ -1,9 +1,13 @@
+"use client";
+
 import Link from "next/link";
 import { StoryOfSevenMartinis } from "@/components/invitation/StoryDialog";
 import { ReservationModal } from "@/components/invitation/ReservationModal";
+import Snowfall from "react-snowfall";
+import Confetti from "react-confetti";
 
 // ✅ Create the date as UTC midnight — this guarantees the day stays consistent globally
-const CURRENT_DATE = new Date(Date.UTC(2025, 10, 8)); // November is month 10 (0-indexed)
+const CURRENT_DATE = new Date(Date.UTC(2025, 11, 31)); // November is month 10 (0-indexed)
 
 // ✅ Helper to generate “Eighth”, “Ninth”, etc.
 function getDayOrdinalWord(day: number) {
@@ -33,13 +37,23 @@ const dayWord = getDayOrdinalWord(
     new Date(CURRENT_DATE.toLocaleString("en-US", { timeZone: "UTC" })).getUTCDate()
 );
 
+function NewYearEffect() {
+    return (
+        <>
+            <Snowfall snowflakeCount={200} />
+            <Confetti recycle={false} numberOfPieces={500} />
+        </>
+    );
+}
+
 export default function Invitation() {
     return (
-        <div className="min-h-screen bg-neutral-300 flex items-center justify-center p-8 font-cormorant">
+        <div className="min-h-screen bg-neutral-300 flex items-center justify-center p-8 font-cormorant relative">
+            <NewYearEffect />
             <div className="max-w-2xl text-center space-y-8">
                 <p className="text-lg leading-relaxed">
-                    You are cordially invited to an evening of refined indulgence and clandestine revelry during an
-                    exclusive and intoxicatingly elegant event at
+                    You are cordially invited to celebrate the new year and ring in 2026 with an evening of cocktails during an
+                    exclusive event at
                 </p>
 
                 <div className="flex justify-center">
@@ -52,7 +66,7 @@ export default function Invitation() {
 
                 <div className="text-2xl leading-snug">
                     {weekday}, the {dayWord} of {month}
-                    <br /> Nine o’clock in the evening until midnight*
+                    <br /> Ten o’clock in the evening until past midnight*
                 </div>
 
                 {/* Buttons */}
@@ -108,10 +122,13 @@ export default function Invitation() {
                         <h3 className="font-cormorant text-lg text-neutral-900 font-bold uppercase text-center sm:text-right">
                             Attire
                         </h3>
-                        <p className="text-neutral-700 leading-relaxed text-center sm:text-left">
+                        {/* <p className="text-neutral-700 leading-relaxed text-center sm:text-left">
                             Cocktail attire is often spotted, but it is certainly not required. Dress like you are here
                             for a good drink and an even better story. We’ve seen suits and denim at the same party —
                             both ordered a second round.
+                        </p> */}
+                        <p className="text-neutral-700 leading-relaxed text-center sm:text-left">
+                            NYE@7M is a high-end cocktail party. To celebrate, we imagine many will dress to impress, but it is not required. As always, we've seen suits and denim at the same party — both ordered a second round.
                         </p>
                     </div>
 
@@ -121,9 +138,11 @@ export default function Invitation() {
                             Selection
                         </h3>
                         <p className="text-neutral-700 leading-relaxed text-center sm:text-left">
-                            The 7M mixologists will debut its <em>Seven for Autumn</em> menu, featuring
+                            NYE@7M will feature a new <em>Seven for Winter</em> menu, featuring winter-inspired flavors.
+                            A one-night only menu of NYE drinks will also be served.
+                            {/* The 7M mixologists will debut its <em>Seven for Autumn</em> menu, featuring
                             exquisite
-                            seasonal flavors and craft cocktails, as well as old favorites and new specials.
+                            seasonal flavors and craft cocktails, as well as old favorites and new specials. */}
                         </p>
                     </div>
                 </div>
