@@ -66,7 +66,7 @@ export default function Invitation() {
 
                 <div className="text-2xl leading-snug">
                     {weekday}, the {dayWord} of {month}
-                    <br /> Ten o’clock in the evening until past midnight*
+                    <br /> Eight o’clock in the evening until past midnight*
                 </div>
 
                 {/* Buttons */}
