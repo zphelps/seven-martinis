@@ -18,7 +18,7 @@ export function CancelOrderButton({ orderId, setOrders }: CancelOrderButtonProps
 
     const handleCancelOrder = async () => {
         setIsLoading(true);
-        
+
         try {
             const response = await fetch('/api/orders', {
                 method: 'DELETE',
@@ -53,8 +53,8 @@ export function CancelOrderButton({ orderId, setOrders }: CancelOrderButtonProps
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button 
-                    size="sm" 
+                <Button
+                    size="sm"
                     variant="ghost"
                     className="text-muted-foreground hover:text-destructive h-8 px-3"
                 >

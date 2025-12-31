@@ -273,10 +273,15 @@ export default function Dashboard() {
                             allowAddCard={false}
                             renderColumnHeader={(column: any) => {
                                 return (
-                                    <div className="w-[290px] flex items-center justify-between">
-                                        <p className="text-lg font-semibold mb-2 text-foreground">
+                                    <div className="w-[275px] flex items-center justify-between">
+                                        <p className="text-lg font-semibold m-2 text-foreground">
                                             {column.title}
                                         </p>
+                                        {column.id === 4 && (
+                                            <Button variant="outline" className="-mr-3" onClick={handleClearServed} disabled={isClearingServed}>
+                                                {isClearingServed ? <Loader2 className="w-4 h-4 animate-spin" /> : "Clear"}
+                                            </Button>
+                                        )}
                                     </div>
                                 );
                             }}
@@ -297,8 +302,9 @@ export default function Dashboard() {
 
 const KanbanStyles = styled('div')`
   & .react-kanban-column {
-    border-radius: 8px;
+    border-radius: 12px;
     background-color: hsl(var(--secondary));
     border: 1px solid hsl(var(--border));
+    padding: 6px;
   }
 `
