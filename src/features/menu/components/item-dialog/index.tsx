@@ -130,7 +130,7 @@ export const ItemDialog = ({ menuItem, children }: ItemDialogProps) => {
     };
 
     return (
-        <Sheet open={open} onOpenChange={handleOpenChange}>
+        <Sheet open={open} onOpenChange={handleOpenChange} modal={false}>
             <SheetTrigger asChild>
                 {children}
             </SheetTrigger>
