@@ -22,7 +22,7 @@ export default function Menu() {
             <MenuNavBar />
 
             <main className="flex-1 overflow-y-auto scrollbar-hide">
-                <div className="mx-auto max-w-4xl h-full">
+                <div className="mx-auto max-w-4xl">
                     {tab === "menu" ? (
                         <MenuList
                             menuItems={menuItems}

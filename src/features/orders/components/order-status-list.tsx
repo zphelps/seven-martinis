@@ -60,7 +60,7 @@ export function OrderStatusList({ orders, setOrders }: OrderStatusListProps) {
 
     if (orders.length === 0) {
         return (
-            <div className="flex flex-col items-center justify-center h-full gap-4 text-center px-4">
+            <div className="flex flex-col items-center justify-center min-h-[50vh] gap-4 text-center px-4">
                 <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center border border-border shadow-sm">
                     <Martini className="w-8 h-8 text-primary" />
                 </div>

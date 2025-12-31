@@ -47,7 +47,7 @@ export function MenuList({ menuItems, loading, error }: MenuListProps) {
     };
 
     if (loading) return (
-        <div className="flex flex-col items-center justify-center h-full gap-4">
+        <div className="flex flex-col items-center justify-center min-h-[50vh] gap-4">
             <div className="w-16 h-16 rounded-full bg-primary/5 flex items-center justify-center animate-pulse border border-primary/10">
                 <Martini className="w-8 h-8 text-primary" />
             </div>
@@ -56,7 +56,7 @@ export function MenuList({ menuItems, loading, error }: MenuListProps) {
     );
 
     if (error) return (
-        <div className="flex flex-col items-center justify-center h-full gap-4 text-center px-4">
+        <div className="flex flex-col items-center justify-center min-h-[50vh] gap-4 text-center px-4">
             <p className="text-destructive">Error loading menu</p>
             <p className="text-sm text-muted-foreground">{error}</p>
         </div>

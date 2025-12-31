@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Loader2, Martini, Heart, CheckCircle2, ArrowLeft } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import { OrderItem } from "@/types/order";
 import { useUid } from "@/features/orders/hooks/use-uid";
 import { Badge } from "@/components/ui/badge";
@@ -28,45 +28,6 @@ export const ItemDialog = ({ menuItem, children }: ItemDialogProps) => {
     const [showTipPrompt, setShowTipPrompt] = useState(false);
     const { uid } = useUid();
     const router = useRouter();
-    const inputRef = useRef<HTMLInputElement>(null);
-    const scrollContainerRef = useRef<HTMLDivElement>(null);
-
-    // Focus input when sheet opens
-    useEffect(() => {
-        if (open && inputRef.current && !showSuccess && !showTipPrompt) {
-            setTimeout(() => {
-                inputRef.current?.focus();
-            }, 300);
-        }
-    }, [open, showSuccess, showTipPrompt]);
-
-    // Handle virtual keyboard on mobile - scroll input into view
-    useEffect(() => {
-        if (!open) return;
-
-        const handleViewportResize = () => {
-            // If the input is focused and viewport resized (keyboard appeared), scroll to input
-            if (document.activeElement === inputRef.current && inputRef.current) {
-                setTimeout(() => {
-                    inputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }, 100);
-            }
-        };
-
-        // Use visualViewport API for modern browsers
-        if (typeof window !== 'undefined' && window.visualViewport) {
-            window.visualViewport.addEventListener('resize', handleViewportResize);
-            return () => {
-                window.visualViewport?.removeEventListener('resize', handleViewportResize);
-            };
-        }
-
-        // Fallback for older browsers
-        window.addEventListener('resize', handleViewportResize);
-        return () => {
-            window.removeEventListener('resize', handleViewportResize);
-        };
-    }, [open]);
 
     const handlePlaceOrder = async () => {
         if (!customerName.trim()) {
@@ -266,7 +227,6 @@ export const ItemDialog = ({ menuItem, children }: ItemDialogProps) => {
                                             Who is this drink for?
                                         </label>
                                         <Input
-                                            ref={inputRef}
                                             className="h-16 text-2xl text-center bg-white border-border placeholder:text-muted-foreground/30 focus:border-primary focus:ring-primary/20 rounded-xl shadow-sm"
                                             placeholder="Enter your name"
                                             value={customerName}
@@ -275,6 +235,7 @@ export const ItemDialog = ({ menuItem, children }: ItemDialogProps) => {
                                             autoComplete="off"
                                             autoCapitalize="words"
                                             inputMode="text"
+                                            autoFocus
                                             onKeyDown={(e) => {
                                                 if (e.key === 'Enter' && customerName.trim()) {
                                                     handlePlaceOrder();
