@@ -29,6 +29,7 @@ export const ItemDialog = ({ menuItem, children }: ItemDialogProps) => {
     const { uid } = useUid();
     const router = useRouter();
     const inputRef = useRef<HTMLInputElement>(null);
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
 
     // Focus input when sheet opens
     useEffect(() => {
@@ -38,6 +39,34 @@ export const ItemDialog = ({ menuItem, children }: ItemDialogProps) => {
             }, 300);
         }
     }, [open, showSuccess, showTipPrompt]);
+
+    // Handle virtual keyboard on mobile - scroll input into view
+    useEffect(() => {
+        if (!open) return;
+
+        const handleViewportResize = () => {
+            // If the input is focused and viewport resized (keyboard appeared), scroll to input
+            if (document.activeElement === inputRef.current && inputRef.current) {
+                setTimeout(() => {
+                    inputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 100);
+            }
+        };
+
+        // Use visualViewport API for modern browsers
+        if (typeof window !== 'undefined' && window.visualViewport) {
+            window.visualViewport.addEventListener('resize', handleViewportResize);
+            return () => {
+                window.visualViewport?.removeEventListener('resize', handleViewportResize);
+            };
+        }
+
+        // Fallback for older browsers
+        window.addEventListener('resize', handleViewportResize);
+        return () => {
+            window.removeEventListener('resize', handleViewportResize);
+        };
+    }, [open]);
 
     const handlePlaceOrder = async () => {
         if (!customerName.trim()) {
@@ -191,9 +220,9 @@ export const ItemDialog = ({ menuItem, children }: ItemDialogProps) => {
                         <div className="flex flex-col min-h-full">
                             <div className="flex-1 flex flex-col items-center p-6 space-y-8 pt-12">
                                 {/* Drink Icon */}
-                                <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-primary/5 border border-primary/10">
+                                {/* <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-primary/5 border border-primary/10">
                                     <Martini className="w-10 h-10 text-primary" />
-                                </div>
+                                </div> */}
 
                                 {/* Drink Info */}
                                 <div className="text-center space-y-4 max-w-md mx-auto">
@@ -208,7 +237,7 @@ export const ItemDialog = ({ menuItem, children }: ItemDialogProps) => {
                                     </p>
 
                                     {menuItem.tags && menuItem.tags.length > 0 && (
-                                        <div className="flex flex-wrap justify-center gap-2 pt-4">
+                                        <div className="flex flex-wrap justify-center gap-2 pt-2">
                                             {menuItem.tags.map((tag) => (
                                                 <Badge
                                                     key={tag}
@@ -231,7 +260,7 @@ export const ItemDialog = ({ menuItem, children }: ItemDialogProps) => {
                                 </div>
 
                                 {/* Order Form */}
-                                <div className="w-full max-w-md mx-auto space-y-6 pt-8 pb-8">
+                                <div className="w-full max-w-md mx-auto space-y-6 pt-2 pb-8">
                                     <div className="space-y-3">
                                         <label className="text-sm font-medium text-muted-foreground text-center block uppercase tracking-wider">
                                             Who is this drink for?

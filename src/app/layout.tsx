@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/providers";
@@ -21,6 +21,14 @@ const cormorant = Cormorant_Garamond({
 
 export const metadata: Metadata = getMetadata();
 
+export const viewport: Viewport = {
+    width: "device-width",
+    initialScale: 1,
+    maximumScale: 1,
+    userScalable: false,
+    interactiveWidget: "resizes-content",
+};
+
 export default function RootLayout({
                                        children,
                                    }: {
@@ -28,7 +36,6 @@ export default function RootLayout({
 }) {
     return (
         <html lang="en" className={`${inter.variable} ${cormorant.variable}`}>
-        <meta name="viewport" content="width=device-width, user-scalable=no" />
         <body className={cn("font-inter bg-background text-foreground")}>
         <Suspense fallback={<p>Loading...</p>}>
             <Providers>
