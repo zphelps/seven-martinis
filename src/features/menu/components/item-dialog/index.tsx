@@ -193,46 +193,48 @@ export const ItemDialog = ({ menuItem, children }: ItemDialogProps) => {
                 {/* Order Form */}
                 {!showSuccess && !showTipPrompt && (
                     <div className="flex flex-col h-full bg-background">
-                        {/* Fixed drink info section */}
-                        <div className="flex-shrink-0 flex flex-col items-center p-6 space-y-4 pt-12 border-b border-border bg-background">
-                            <div className="text-center space-y-4 max-w-md mx-auto">
-                                <Badge variant="outline" className="border-border text-muted-foreground">
-                                    #{menuItem.drink_number}
-                                </Badge>
-                                <h2 className="text-3xl md:text-4xl font-serif font-semibold text-foreground leading-tight">
-                                    {menuItem.name}
-                                </h2>
-                                <p className="text-muted-foreground text-lg leading-relaxed">
-                                    {menuItem.description}
-                                </p>
+                        {/* Scrollable drink info section */}
+                        <div className="flex-1 overflow-y-auto">
+                            <div className="flex flex-col items-center p-6 space-y-4 pt-12">
+                                <div className="text-center space-y-4 max-w-md mx-auto">
+                                    <Badge variant="outline" className="border-border text-muted-foreground">
+                                        #{menuItem.drink_number}
+                                    </Badge>
+                                    <h2 className="text-3xl md:text-4xl font-serif font-semibold text-foreground leading-tight">
+                                        {menuItem.name}
+                                    </h2>
+                                    <p className="text-muted-foreground text-lg leading-relaxed">
+                                        {menuItem.description}
+                                    </p>
 
-                                {menuItem.tags && menuItem.tags.length > 0 && (
-                                    <div className="flex flex-wrap justify-center gap-2 pt-2">
-                                        {menuItem.tags.map((tag) => (
-                                            <Badge
-                                                key={tag}
-                                                variant="secondary"
-                                                className="py-1.5 px-3 bg-white border border-border text-foreground"
-                                            >
-                                                <Image
-                                                    src={`/${tag.toLowerCase()}.png`}
-                                                    className="mr-1.5 h-4 w-auto opacity-80"
-                                                    alt={tag}
-                                                    height={16}
-                                                    width={16}
-                                                    style={{ objectFit: 'contain' }}
-                                                />
-                                                <span className="text-xs">{tag}</span>
-                                            </Badge>
-                                        ))}
-                                    </div>
-                                )}
+                                    {menuItem.tags && menuItem.tags.length > 0 && (
+                                        <div className="flex flex-wrap justify-center gap-2 pt-2">
+                                            {menuItem.tags.map((tag) => (
+                                                <Badge
+                                                    key={tag}
+                                                    variant="secondary"
+                                                    className="py-1.5 px-3 bg-white border border-border text-foreground"
+                                                >
+                                                    <Image
+                                                        src={`/${tag.toLowerCase()}.png`}
+                                                        className="mr-1.5 h-4 w-auto opacity-80"
+                                                        alt={tag}
+                                                        height={16}
+                                                        width={16}
+                                                        style={{ objectFit: 'contain' }}
+                                                    />
+                                                    <span className="text-xs">{tag}</span>
+                                                </Badge>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         </div>
 
-                        {/* Scrollable input section */}
-                        <div className="flex-1 overflow-y-auto bg-white">
-                            <div className="p-6 pb-0 pb-safe space-y-4">
+                        {/* Fixed input section at bottom */}
+                        <div className="flex-shrink-0 bg-white border-t border-border shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+                            <div className="p-6 pb-safe space-y-4">
                                 <div className="space-y-2">
                                     <label className="text-sm font-medium text-muted-foreground text-center block uppercase tracking-wider">
                                         Who is this drink for?
