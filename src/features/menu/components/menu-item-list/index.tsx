@@ -63,7 +63,7 @@ export function MenuList({ menuItems, loading, error }: MenuListProps) {
     );
 
     return (
-        <div className="py-3 px-3 space-y-3 md:pb-6">
+        <div className="py-3 px-3 space-y-3 md:pb-6 pb-20">
             {/* Search and filters section */}
             <div className="space-y-2">
                 {/* Search input */}
