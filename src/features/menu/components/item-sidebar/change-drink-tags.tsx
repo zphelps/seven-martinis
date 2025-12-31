@@ -6,7 +6,7 @@ import { useState } from "react";
 import { toast } from "@/components/ui/use-toast";
 import { UpdateMenuItemProps } from "@/features/menu/hooks/use-menu";
 
-const AVAILABLE_TAGS = ["Fall","Vodka", "Gin", "Bourbon", "Tequila", "Rum", "Whiskey", "Wine","New","Special","Copycats"];
+const AVAILABLE_TAGS = ["Winter","Vodka", "Gin", "Bourbon", "Tequila", "Rum", "Whiskey", "Wine","New","Special","Copycats"];
 
 interface ChangeDrinkTagsProps {
     item: MenuItem | null;
