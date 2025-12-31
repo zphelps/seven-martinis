@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Loader2, Martini, Heart, CheckCircle2, ArrowLeft } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { OrderItem } from "@/types/order";
 import { useUid } from "@/features/orders/hooks/use-uid";
 import { Badge } from "@/components/ui/badge";
@@ -28,6 +28,7 @@ export const ItemDialog = ({ menuItem, children }: ItemDialogProps) => {
     const [showTipPrompt, setShowTipPrompt] = useState(false);
     const { uid } = useUid();
     const router = useRouter();
+    const scrollPositionRef = useRef(0);
 
     const handlePlaceOrder = async () => {
         if (!customerName.trim()) {
@@ -99,13 +100,27 @@ export const ItemDialog = ({ menuItem, children }: ItemDialogProps) => {
     };
 
     const handleOpenChange = (isOpen: boolean) => {
+        if (isOpen) {
+            // Save scroll position before opening
+            const scrollContainer = document.querySelector('main');
+            if (scrollContainer) {
+                scrollPositionRef.current = scrollContainer.scrollTop;
+            }
+        }
+
         setOpen(isOpen);
+
         if (!isOpen) {
+            // Restore scroll position after closing
             setTimeout(() => {
+                const scrollContainer = document.querySelector('main');
+                if (scrollContainer) {
+                    scrollContainer.scrollTop = scrollPositionRef.current;
+                }
                 setCustomerName("");
                 setShowSuccess(false);
                 setShowTipPrompt(false);
-            }, 300);
+            }, 50);
         }
     }
 
@@ -217,7 +232,7 @@ export const ItemDialog = ({ menuItem, children }: ItemDialogProps) => {
 
                         {/* Scrollable input section */}
                         <div className="flex-1 overflow-y-auto bg-white">
-                            <div className="p-6 pb-safe space-y-4">
+                            <div className="p-6 pb-0 pb-safe space-y-4">
                                 <div className="space-y-2">
                                     <label className="text-sm font-medium text-muted-foreground text-center block uppercase tracking-wider">
                                         Who is this drink for?
