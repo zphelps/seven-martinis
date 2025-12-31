@@ -63,15 +63,15 @@ export function MenuList({ menuItems, loading, error }: MenuListProps) {
     );
 
     return (
-        <div className="py-6 px-4 space-y-5 pb-20 md:pb-6">
+        <div className="py-3 px-3 space-y-3 pb-20 md:pb-6">
             {/* Search and filters section */}
-            <div className="space-y-4">
+            <div className="space-y-2">
                 {/* Search input */}
                 <div className="relative">
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
                     <Input
                         type="text"
-                        placeholder="Search drinks..."
+                        placeholder="Find a drink..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         className="pl-10 bg-white border-border focus:border-primary h-11"
@@ -107,10 +107,10 @@ export function MenuList({ menuItems, loading, error }: MenuListProps) {
                 </div>
             ) : (
                 <div>
-                    <p className="text-sm text-muted-foreground mb-3">
+                    <p className="text-sm text-muted-foreground mb-2">
                         {filteredMenuItems.length} {filteredMenuItems.length === 1 ? 'drink' : 'drinks'}
                     </p>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                         {filteredMenuItems.map((item) => (
                             <MenuItemCard key={item.id} menuItem={item} />
                         ))}

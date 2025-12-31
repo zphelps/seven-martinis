@@ -28,7 +28,7 @@ export const ItemTagFilter = ({ menuItems, selectedTags, onTagSelect }: ItemTagF
     }, [menuItems]);
 
     return (
-        <div className="flex overflow-x-auto gap-2 pb-2 -mx-2 px-2 scrollbar-hide">
+        <div className="flex overflow-x-auto gap-1 pb-0 -mx-3 px-3 scrollbar-hide">
             {AVAILABLE_TAGS.map((tag) => {
                 const count = tagCounts[tag] || 0;
                 const isSelected = selectedTags.includes(tag);
@@ -38,33 +38,32 @@ export const ItemTagFilter = ({ menuItems, selectedTags, onTagSelect }: ItemTagF
                         key={tag}
                         variant="outline"
                         className={cn(
-                            "cursor-pointer py-2 px-3 bg-white border-border hover:border-primary/30 transition-colors flex-shrink-0",
-                            isSelected && "bg-primary text-white border-primary hover:bg-primary/90"
+                            "cursor-pointer py-3 rounded-lg px-3 bg-white border-border hover:border-primary/30 transition-colors flex-shrink-0",
+                            isSelected && "bg-primary/10 text-primary border-primary hover:bg-primary/15 hover:border-primary"
                         )}
                         onClick={() => onTagSelect(tag)}
                     >
                         <Image
                             src={`/${tag.toLowerCase()}.png`}
                             className={cn(
-                                "mr-2 h-4 w-auto",
-                                isSelected ? "brightness-0 invert" : "opacity-80"
+                                "mr-2.5 h-5 w-auto opacity-80"
                             )}
                             alt={tag}
-                            height={16}
-                            width={16}
+                            height={20}
+                            width={20}
                             style={{ objectFit: 'contain' }}
                         />
-                        <span className="whitespace-nowrap">{tag}</span>
+                        <span className="whitespace-nowrap text-sm font-medium">{tag}</span>
                         {count > 0 && (
                             <span className={cn(
-                                "ml-1.5 text-xs",
-                                isSelected ? "text-white/70" : "text-muted-foreground"
+                                "ml-1.5 text-xs font-normal",
+                                isSelected ? "text-primary/70" : "text-muted-foreground"
                             )}>
-                                {count}
+                                ({count})
                             </span>
                         )}
                         {isSelected && (
-                            <X className="ml-1.5 h-3 w-3 text-white/80" />
+                            <X className="ml-1.5 h-3 w-3 text-primary/70" />
                         )}
                     </Badge>
                 );

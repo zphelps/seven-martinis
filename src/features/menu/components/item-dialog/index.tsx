@@ -30,12 +30,23 @@ export const ItemDialog = ({ menuItem, children }: ItemDialogProps) => {
     const router = useRouter();
     const inputRef = useRef<HTMLInputElement>(null);
 
-    // Focus input when sheet opens
+    // Focus input when sheet opens and scroll into view
     useEffect(() => {
         if (open && inputRef.current && !showSuccess && !showTipPrompt) {
-            setTimeout(() => inputRef.current?.focus(), 300);
+            setTimeout(() => {
+                inputRef.current?.focus();
+                // Scroll input into view for better mobile keyboard visibility
+                inputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 300);
         }
     }, [open, showSuccess, showTipPrompt]);
+
+    // Handle input focus to ensure it's visible when keyboard appears
+    const handleInputFocus = () => {
+        setTimeout(() => {
+            inputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 300);
+    };
 
     const handlePlaceOrder = async () => {
         if (!customerName.trim()) {
@@ -174,8 +185,8 @@ export const ItemDialog = ({ menuItem, children }: ItemDialogProps) => {
     const OrderFormContent = () => (
         <div className="flex flex-col h-full bg-background">
             {/* Scrollable content area */}
-            <div className="flex-1 overflow-y-auto">
-                <div className="flex flex-col items-center p-6 space-y-8 pt-12">
+            <div className="flex-1 overflow-y-auto overscroll-contain">
+                <div className="flex flex-col items-center p-6 space-y-8 pt-12 pb-8">
                     {/* Drink Icon */}
                     <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-primary/5 border border-primary/10 mb-4">
                         <Martini className="w-10 h-10 text-primary" />
@@ -219,7 +230,7 @@ export const ItemDialog = ({ menuItem, children }: ItemDialogProps) => {
             </div>
 
             {/* Fixed bottom section */}
-            <div className="p-6 pb-safe bg-white border-t border-border space-y-6 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+            <div className="flex-shrink-0 p-6 pb-safe bg-white border-t border-border space-y-6 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
                 <div className="space-y-3">
                     <label className="text-sm font-medium text-muted-foreground text-center block uppercase tracking-wider">
                         Who is this drink for?
@@ -230,9 +241,11 @@ export const ItemDialog = ({ menuItem, children }: ItemDialogProps) => {
                         placeholder="Enter your name"
                         value={customerName}
                         onChange={(e) => setCustomerName(e.target.value)}
+                        onFocus={handleInputFocus}
                         data-1p-ignore
                         autoComplete="off"
                         autoCapitalize="words"
+                        inputMode="text"
                         onKeyDown={(e) => {
                             if (e.key === 'Enter' && customerName.trim()) {
                                 handlePlaceOrder();

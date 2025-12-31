@@ -277,11 +277,11 @@ export default function Dashboard() {
                                         <p className="text-lg font-semibold m-2 text-foreground">
                                             {column.title}
                                         </p>
-                                        {column.id === 4 && (
+                                        {/* {column.id === 4 && (
                                             <Button variant="outline" className="-mr-3" onClick={handleClearServed} disabled={isClearingServed}>
                                                 {isClearingServed ? <Loader2 className="w-4 h-4 animate-spin" /> : "Clear"}
                                             </Button>
-                                        )}
+                                        )} */}
                                     </div>
                                 );
                             }}

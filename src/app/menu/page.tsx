@@ -4,7 +4,6 @@ import React from 'react'
 import MenuNavBar from "@/features/menu/components/menu-nav-bar";
 import { OrderStatusList } from "@/features/orders/components/order-status-list";
 import { MenuList } from "@/features/menu/components/menu-item-list";
-import { MobileBottomNav } from "@/features/menu/components/mobile-bottom-nav";
 import useMenu from "@/features/menu/hooks/use-menu";
 import { useSearchParams } from "next/navigation";
 import { useUserOrders } from '@/features/orders/hooks/use-user-orders';
@@ -35,8 +34,6 @@ export default function Menu() {
                     )}
                 </div>
             </main>
-
-            <MobileBottomNav />
         </div>
     )
 }
