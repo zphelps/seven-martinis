@@ -1,6 +1,6 @@
 "use client"
 
-import {Calendar, CircleUser, Container, Home, Inbox, ListTodo, Martini, Search, Settings} from "lucide-react"
+import { Calendar, CircleUser, Container, Home, Inbox, ListTodo, Martini, Search, Settings } from "lucide-react"
 
 import {
     Sidebar,
@@ -19,7 +19,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 
-// Menu items.
+// Menu items
 const items = [
     {
         title: "Orders",
@@ -36,16 +36,6 @@ const items = [
         url: "/dashboard/attendees",
         icon: CircleUser
     }
-    // {
-    //     title: "Inventory",
-    //     url: "/dashboard/inventory",
-    //     icon: Container,
-    // },
-    // {
-    //     title: "Settings",
-    //     url: "#",
-    //     icon: Settings,
-    // },
 ]
 
 export function AppSidebar() {
@@ -59,7 +49,6 @@ export function AppSidebar() {
             </SidebarHeader>
             <SidebarContent>
                 <SidebarGroup>
-                    {/* <SidebarGroupLabel>Application</SidebarGroupLabel> */}
                     <SidebarGroupContent>
                         <SidebarMenu>
                             {items.map((item) => (
@@ -67,7 +56,10 @@ export function AppSidebar() {
                                     <SidebarMenuButton asChild>
                                         <Link
                                             href={item.url}
-                                            className={cn(pathname === item.url && "bg-gray-200 group-hover:bg-gray-200 hover:bg-gray-200")}
+                                            className={cn(
+                                                "transition-colors",
+                                                pathname === item.url && "bg-secondary text-foreground hover:bg-secondary"
+                                            )}
                                             onClick={() => {
                                                 if (item.title === "Orders" && open) {
                                                     toggleSidebar()

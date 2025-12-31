@@ -1,17 +1,19 @@
+"use client";
+
+import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { MenuItem } from "@/types/order";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Loader2, PlusIcon, Heart } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
+import { Loader2, Martini, Heart, CheckCircle2, ArrowLeft } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { OrderItem } from "@/types/order";
 import { useUid } from "@/features/orders/hooks/use-uid";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
+import { config } from "@/config";
+import { cn } from "@/lib/utils";
 
 interface ItemDialogProps {
     menuItem: MenuItem;
@@ -19,24 +21,32 @@ interface ItemDialogProps {
 }
 
 export const ItemDialog = ({ menuItem, children }: ItemDialogProps) => {
+    const [open, setOpen] = useState(false);
     const [placingOrder, setPlacingOrder] = useState(false);
     const [customerName, setCustomerName] = useState("");
-    const [showTipDialog, setShowTipDialog] = useState(false);
+    const [showSuccess, setShowSuccess] = useState(false);
+    const [showTipPrompt, setShowTipPrompt] = useState(false);
     const { uid } = useUid();
     const router = useRouter();
+    const inputRef = useRef<HTMLInputElement>(null);
+
+    // Focus input when sheet opens
+    useEffect(() => {
+        if (open && inputRef.current && !showSuccess && !showTipPrompt) {
+            setTimeout(() => inputRef.current?.focus(), 300);
+        }
+    }, [open, showSuccess, showTipPrompt]);
 
     const handlePlaceOrder = async () => {
-        setPlacingOrder(true)
-
-        // validate inputs
-        if (!menuItem || !customerName) {
-            setPlacingOrder(false)
+        if (!customerName.trim()) {
             toast({
-                title: "Please select a drink and enter your name",
+                title: "Please enter your name",
                 variant: "destructive",
             });
-            return
+            return;
         }
+
+        setPlacingOrder(true);
 
         const orderItems: OrderItem[] = [{
             menu_item_id: menuItem.id,
@@ -44,13 +54,13 @@ export const ItemDialog = ({ menuItem, children }: ItemDialogProps) => {
             name: menuItem.name,
             instructions: "",
             recipe: menuItem.recipe
-        }]
+        }];
 
         const order = {
             uid,
             customer_name: customerName.trim(),
             items: orderItems
-        }
+        };
 
         try {
             const response = await fetch('/api/orders', {
@@ -59,13 +69,16 @@ export const ItemDialog = ({ menuItem, children }: ItemDialogProps) => {
             });
 
             if (response.ok) {
-                const data = await response.json();
-                console.log(data);
-                toast({
-                    title: `Order placed successfully for ${customerName}!`,
-                    variant: "default",
-                });
-                setShowTipDialog(true);
+                setShowSuccess(true);
+
+                setTimeout(() => {
+                    if (config.features.tipping) {
+                        setShowSuccess(false);
+                        setShowTipPrompt(true);
+                    } else {
+                        handleClose();
+                    }
+                }, 2000);
             } else {
                 toast({
                     title: "Failed to place order",
@@ -75,93 +88,208 @@ export const ItemDialog = ({ menuItem, children }: ItemDialogProps) => {
         } catch (error) {
             console.error(error);
             toast({
-                title: "An error occurred while placing your order",
+                title: "An error occurred",
                 variant: "destructive",
             });
         } finally {
-            setCustomerName("")
             setPlacingOrder(false);
+        }
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+        setTimeout(() => {
+            setCustomerName("");
+            setShowSuccess(false);
+            setShowTipPrompt(false);
+        }, 300);
+        router.push('/menu?tab=orders');
+    };
+
+    const handleOpenChange = (isOpen: boolean) => {
+        setOpen(isOpen);
+        if (!isOpen) {
+            setTimeout(() => {
+                setCustomerName("");
+                setShowSuccess(false);
+                setShowTipPrompt(false);
+            }, 300);
         }
     }
 
-    const handleTipDialogClose = () => {
-        setShowTipDialog(false);
-        router.push('/menu?tab=orders');
-    }
+    const handleTip = () => {
+        window.open(config.features.tipUrl, '_blank');
+        handleClose();
+    };
 
-    return (
-        <>
-            <Dialog>
-                <DialogTrigger asChild>
-                    {children}
-                </DialogTrigger>
-                <DialogContent className="h-full max-w-auto sm:max-w-[425px] sm:h-auto p-0">
-                    <DialogHeader className="w-full p-6">
+    // Success state content
+    const SuccessContent = () => (
+        <div className="flex flex-col items-center justify-center h-full px-8 text-center space-y-6 animate-fade-in pb-20">
+            <div className="w-24 h-24 rounded-full bg-green-50 flex items-center justify-center border-2 border-green-200">
+                <CheckCircle2 className="w-14 h-14 text-green-600" />
+            </div>
+            <div className="space-y-2">
+                <h2 className="text-3xl font-serif font-semibold text-foreground">Order Placed!</h2>
+                <p className="text-xl text-muted-foreground">
+                    We&apos;re crafting your drink, {customerName}
+                </p>
+            </div>
+        </div>
+    );
+
+    // Tip prompt content
+    const TipPromptContent = () => (
+        <div className="flex flex-col items-center justify-center h-full px-8 text-center space-y-8 animate-fade-in pb-20">
+            <div className="w-20 h-20 rounded-full bg-accent/10 flex items-center justify-center border border-accent/30">
+                <Heart className="w-10 h-10 text-accent" />
+            </div>
+            <div className="space-y-3">
+                <h2 className="text-2xl font-serif font-semibold text-foreground">Support the Bartender</h2>
+                <p className="text-muted-foreground text-lg">
+                    Your generosity keeps the craft alive
+                </p>
+            </div>
+            <div className="flex flex-col w-full max-w-xs gap-4">
+                <Button
+                    size="lg"
+                    className="w-full h-16 text-lg font-medium bg-accent hover:bg-accent/90 text-accent-foreground"
+                    onClick={handleTip}
+                >
+                    <Heart className="w-5 h-5 mr-2" />
+                    Leave a Tip
+                </Button>
+                <Button
+                    variant="ghost"
+                    size="lg"
+                    className="w-full h-12 text-muted-foreground hover:text-foreground"
+                    onClick={handleClose}
+                >
+                    Skip for now
+                </Button>
+            </div>
+        </div>
+    );
+
+    // Order form content
+    const OrderFormContent = () => (
+        <div className="flex flex-col h-full bg-background">
+            {/* Scrollable content area */}
+            <div className="flex-1 overflow-y-auto">
+                <div className="flex flex-col items-center p-6 space-y-8 pt-12">
+                    {/* Drink Icon */}
+                    <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-primary/5 border border-primary/10 mb-4">
+                        <Martini className="w-10 h-10 text-primary" />
+                    </div>
+
+                    {/* Drink Info */}
+                    <div className="text-center space-y-4 max-w-md mx-auto">
+                        <Badge variant="outline" className="border-border text-muted-foreground">
+                            #{menuItem.drink_number}
+                        </Badge>
+                        <h2 className="text-3xl md:text-4xl font-serif font-semibold text-foreground leading-tight">
+                            {menuItem.name}
+                        </h2>
+                        <p className="text-muted-foreground text-lg leading-relaxed">
+                            {menuItem.description}
+                        </p>
+
                         {menuItem.tags && menuItem.tags.length > 0 && (
-                            <div className="flex flex-wrap gap-2 mb-2">
+                            <div className="flex flex-wrap justify-center gap-2 pt-4">
                                 {menuItem.tags.map((tag) => (
                                     <Badge
                                         key={tag}
-                                        variant="outline"
-                                        className="py-1.5 px-3 border-gray-200 bg-white"
+                                        variant="secondary"
+                                        className="py-1.5 px-3 bg-white border border-border text-foreground"
                                     >
                                         <Image
                                             src={`/${tag.toLowerCase()}.png`}
-                                            className="mr-2 h-5 w-auto"
+                                            className="mr-1.5 h-4 w-auto opacity-80"
                                             alt={tag}
                                             height={16}
                                             width={16}
                                             style={{ objectFit: 'contain' }}
                                         />
-                                        {tag}
+                                        <span className="text-xs">{tag}</span>
                                     </Badge>
                                 ))}
                             </div>
                         )}
-                        <DialogTitle className="text-left w-full">#{menuItem.drink_number}. {menuItem.name}</DialogTitle>
-                        <DialogDescription className="text-left w-full">
-                            {menuItem.description}
-                        </DialogDescription>
-                        <div className="w-full space-y-2 border-t pt-2">
-                            <Input className="w-full" id="name" data-1p-ignore placeholder="Enter your name" value={customerName} onChange={(e) => setCustomerName(e.target.value)} />
-                            <Button className="w-full" type="submit" onClick={handlePlaceOrder} disabled={placingOrder}>
-                                {placingOrder ? <Loader2 className="w-4 h-4 animate-spin" /> : <PlusIcon className="w-4 h-4" />}
-                                {placingOrder ? "Placing Order..." : "Place Order"}
-                            </Button>
-                        </div>
-                    </DialogHeader>
-                </DialogContent>
-            </Dialog>
-
-            <Dialog open={showTipDialog} onOpenChange={handleTipDialogClose}>
-                <DialogContent className="sm:max-w-[425px]">
-                    <DialogHeader>
-                        <DialogTitle className="flex items-center gap-2">
-                            <Heart className="w-6 h-6 text-red-500" />
-                            Support the Bartender
-                        </DialogTitle>
-                        <DialogDescription>
-                            If you enjoyed your drink, consider leaving a tip for the bartender. Your generosity helps keep the craft alive!
-                        </DialogDescription>
-                    </DialogHeader>
-                    <div className="flex flex-col gap-4 py-4">
-                        <div className="flex justify-center gap-2">
-                            <Button variant="outline" size="lg" onClick={handleTipDialogClose}>
-                                Skip
-                            </Button>
-                            <Button
-                                size="lg"
-                                onClick={() => {
-                                    window.open('https://venmo.com/caylan-fields?note=Seven%20Martinis%20(TIP)%20%F0%9F%8D%B8', '_blank');
-                                    handleTipDialogClose();
-                                }}
-                            >
-                                Leave a Tip
-                            </Button>
-                        </div>
                     </div>
-                </DialogContent>
-            </Dialog>
-        </>
-    )
-}
+                </div>
+            </div>
+
+            {/* Fixed bottom section */}
+            <div className="p-6 pb-safe bg-white border-t border-border space-y-6 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+                <div className="space-y-3">
+                    <label className="text-sm font-medium text-muted-foreground text-center block uppercase tracking-wider">
+                        Who is this drink for?
+                    </label>
+                    <Input
+                        ref={inputRef}
+                        className="h-16 text-2xl text-center bg-secondary/30 border-border placeholder:text-muted-foreground/30 focus:border-primary focus:ring-primary/20 rounded-xl"
+                        placeholder="Enter your name"
+                        value={customerName}
+                        onChange={(e) => setCustomerName(e.target.value)}
+                        data-1p-ignore
+                        autoComplete="off"
+                        autoCapitalize="words"
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter' && customerName.trim()) {
+                                handlePlaceOrder();
+                            }
+                        }}
+                    />
+                </div>
+
+                <Button
+                    className={cn(
+                        "w-full h-16 text-xl font-semibold transition-all rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0",
+                        customerName.trim()
+                            ? "bg-primary hover:bg-primary/90 text-white"
+                            : "bg-secondary text-muted-foreground shadow-none"
+                    )}
+                    onClick={handlePlaceOrder}
+                    disabled={placingOrder || !customerName.trim()}
+                >
+                    {placingOrder ? (
+                        <>
+                            <Loader2 className="w-6 h-6 mr-3 animate-spin" />
+                            Ordering...
+                        </>
+                    ) : (
+                        <>
+                            <Martini className="w-6 h-6 mr-3" />
+                            Place Order
+                        </>
+                    )}
+                </Button>
+            </div>
+        </div>
+    );
+
+    // Determine which content to show
+    const getContent = () => {
+        if (showSuccess) return <SuccessContent />;
+        if (showTipPrompt) return <TipPromptContent />;
+        return <OrderFormContent />;
+    };
+
+    return (
+        <Sheet open={open} onOpenChange={handleOpenChange}>
+            <SheetTrigger asChild>
+                {children}
+            </SheetTrigger>
+            <SheetContent
+                side="right"
+                className="w-full sm:max-w-md p-0 border-l border-border bg-background"
+            >
+                <div className="h-full flex flex-col">
+                    <SheetHeader className="sr-only">
+                        <SheetTitle>Order {menuItem.name}</SheetTitle>
+                    </SheetHeader>
+                    {getContent()}
+                </div>
+            </SheetContent>
+        </Sheet>
+    );
+};

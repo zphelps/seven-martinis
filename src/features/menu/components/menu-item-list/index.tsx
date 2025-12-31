@@ -1,8 +1,11 @@
+"use client";
+
 import { MenuItem } from "@/types/order";
 import { MenuItemCard } from "./menu-item-card";
 import { ItemTagFilter } from "../item-tag-filter";
 import { useState, useMemo } from "react";
-import { Loader2, Search } from "lucide-react";
+import { Search, Martini } from "lucide-react";
+import { Input } from "@/components/ui/input";
 
 interface MenuListProps {
     menuItems: MenuItem[];
@@ -17,19 +20,18 @@ export function MenuList({ menuItems, loading, error }: MenuListProps) {
     const filteredMenuItems = useMemo(() => {
         let filtered = menuItems;
 
-        // Apply tag filtering
         if (selectedTags.length > 0) {
             filtered = filtered.filter(item =>
                 selectedTags.every(tag => item.tags?.includes(tag))
             );
         }
 
-        // Apply search filtering
         if (searchQuery.trim()) {
             const query = searchQuery.toLowerCase().trim();
             filtered = filtered.filter(item =>
                 item.name.toLowerCase().includes(query) ||
-                item.description?.toLowerCase().includes(query) || item.drink_number?.toString().includes(query)
+                item.description?.toLowerCase().includes(query) ||
+                item.drink_number?.toString().includes(query)
             );
         }
 
@@ -45,38 +47,74 @@ export function MenuList({ menuItems, loading, error }: MenuListProps) {
     };
 
     if (loading) return (
-        <div className="flex justify-center items-center h-screen">
-            <Loader2 className="w-8 h-8 animate-spin" />
+        <div className="flex flex-col items-center justify-center h-full gap-4">
+            <div className="w-16 h-16 rounded-full bg-primary/5 flex items-center justify-center animate-pulse border border-primary/10">
+                <Martini className="w-8 h-8 text-primary" />
+            </div>
+            <p className="text-muted-foreground">Loading menu...</p>
         </div>
     );
-    if (error) return <div>Error: {error}</div>;
+
+    if (error) return (
+        <div className="flex flex-col items-center justify-center h-full gap-4 text-center px-4">
+            <p className="text-destructive">Error loading menu</p>
+            <p className="text-sm text-muted-foreground">{error}</p>
+        </div>
+    );
 
     return (
-        <div className="py-4 px-2 space-y-4">
-            <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                <input
-                    type="text"
-                    placeholder="Search drinks..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full text-normal font-normal pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        <div className="py-6 px-4 space-y-5 pb-20 md:pb-6">
+            {/* Search and filters section */}
+            <div className="space-y-4">
+                {/* Search input */}
+                <div className="relative">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+                    <Input
+                        type="text"
+                        placeholder="Search drinks..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="pl-10 bg-white border-border focus:border-primary h-11"
+                    />
+                </div>
+
+                {/* Tag filters */}
+                <ItemTagFilter
+                    menuItems={menuItems}
+                    selectedTags={selectedTags}
+                    onTagSelect={handleTagSelect}
                 />
             </div>
-            <ItemTagFilter
-                menuItems={menuItems}
-                selectedTags={selectedTags}
-                onTagSelect={handleTagSelect}
-            />
+
+            {/* Results */}
             {filteredMenuItems.length === 0 ? (
-                <div className="text-center py-8 px-2 text-gray-500">
-                    No drinks match the selected filters. Try adjusting your filter selections.
+                <div className="text-center py-16 px-4">
+                    <div className="w-16 h-16 rounded-full bg-secondary mx-auto mb-4 flex items-center justify-center">
+                        <Martini className="w-8 h-8 text-muted-foreground" />
+                    </div>
+                    <p className="text-muted-foreground mb-4">
+                        No drinks match your search
+                    </p>
+                    <button
+                        onClick={() => {
+                            setSearchQuery("");
+                            setSelectedTags([]);
+                        }}
+                        className="text-accent hover:underline text-sm font-medium"
+                    >
+                        Clear filters
+                    </button>
                 </div>
             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
-                    {filteredMenuItems.map((item) => (
-                        <MenuItemCard key={item.id} menuItem={item} />
-                    ))}
+                <div>
+                    <p className="text-sm text-muted-foreground mb-3">
+                        {filteredMenuItems.length} {filteredMenuItems.length === 1 ? 'drink' : 'drinks'}
+                    </p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        {filteredMenuItems.map((item) => (
+                            <MenuItemCard key={item.id} menuItem={item} />
+                        ))}
+                    </div>
                 </div>
             )}
         </div>

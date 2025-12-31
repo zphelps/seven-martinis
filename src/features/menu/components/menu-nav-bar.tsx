@@ -1,19 +1,13 @@
-import { DialogPanel } from "@headlessui/react";
-import { Dialog } from "@headlessui/react";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import { useState, useEffect } from "react";
-import { CreditCard, PlusIcon, MartiniIcon } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
+"use client";
 
-const navigation = [
-    { name: 'Order', href: '#' },
-    { name: 'Full Menu', href: '#' },
-]
+import { useState, useEffect } from "react";
+import { CreditCard, Martini, Receipt } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { config } from "@/config";
+import { cn } from "@/lib/utils";
 
 export default function MenuNavBar() {
-    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [tab, setTab] = useState<string | undefined>(undefined);
     const searchParams = useSearchParams();
     const router = useRouter();
@@ -29,44 +23,62 @@ export default function MenuNavBar() {
     }, [searchParams]);
 
     return (
-        <header className="bg-gray-200 sticky top-0 z-10">
-            <nav aria-label="Global" className="mx-auto flex items-center justify-between max-w-7xl px-2.5">
-                <div className="flex justify-center p-3 lg:mb-0">
-                    <a href="#" className="">
+        <header className="bg-white/90 backdrop-blur-md border-b border-border sticky top-0 z-10">
+            <nav aria-label="Global" className="mx-auto flex items-center justify-center md:justify-between max-w-4xl px-4 py-3 relative">
+                {/* Logo - Centered on mobile, left on desktop */}
+                <div className="flex items-center flex-shrink-0">
+                    <a href="#" className="flex items-center gap-0">
                         <span className="sr-only">Seven Martinis</span>
-                        <img alt="" src="7MPrimaryCropped.png"
-                            className="h-12 max-w-fit" />
+                        <img
+                            alt="Seven Martinis"
+                            src="7MPrimaryCropped.png"
+                            className="h-14 md:h-16 max-w-fit"
+                        />
                     </a>
                 </div>
-                <div className="flex items-center gap-2">
-                    <Tabs value={tab} className="w-full max-w-sm">
-                        <TabsList className="grid w-full grid-cols-2 bg-gray-200">
-                            <TabsTrigger
-                                value="menu"
-                                onClick={() => handleTabChange('menu')}
-                                className="data-[state=active]:bg-white data-[state=active]:text-primary"
-                            >
-                                Menu
-                            </TabsTrigger>
-                            <TabsTrigger
-                                value="orders"
-                                onClick={() => handleTabChange('orders')}
-                                className="data-[state=active]:bg-white data-[state=active]:text-primary"
-                            >
-                                Orders
-                            </TabsTrigger>
-                        </TabsList>
-                    </Tabs>
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        className="flex items-center gap-2"
-                        // #frank-wynne
-                        onClick={() => window.open('https://venmo.com/caylan-fields?note=Seven%20Martinis%20(TIP)%20%F0%9F%8D%B8', '_blank')}
-                    >
-                        <CreditCard className="h-4 w-4" />
-                        Tip
-                    </Button>
+
+                {/* Right side - Tabs + Tip Button - Absolute on mobile, normal on desktop */}
+                <div className="flex items-center gap-3 absolute right-4 md:relative md:right-auto">
+                    {/* Desktop Navigation Tabs */}
+                    <div className="hidden md:flex items-center gap-1 bg-secondary/50 p-1 rounded-lg">
+                        <button
+                            onClick={() => handleTabChange('menu')}
+                            className={cn(
+                                "flex items-center gap-2 px-4 py-2 rounded-md font-medium transition-colors text-sm whitespace-nowrap",
+                                tab === 'menu'
+                                    ? "bg-white text-foreground shadow-sm"
+                                    : "text-muted-foreground hover:text-foreground"
+                            )}
+                        >
+                            <Martini className="w-4 h-4" />
+                            <span>Menu</span>
+                        </button>
+                        <button
+                            onClick={() => handleTabChange('orders')}
+                            className={cn(
+                                "flex items-center gap-2 px-4 py-2 rounded-md font-medium transition-colors text-sm whitespace-nowrap",
+                                tab === 'orders'
+                                    ? "bg-white text-foreground shadow-sm"
+                                    : "text-muted-foreground hover:text-foreground"
+                            )}
+                        >
+                            <Receipt className="w-4 h-4" />
+                            <span>Orders</span>
+                        </button>
+                    </div>
+
+                    {/* Tip Button */}
+                    {config.features.tipping && (
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            className="flex items-center gap-2 border-brand-amber text-brand-amber hover:bg-brand-amber hover:text-white flex-shrink-0"
+                            onClick={() => window.open(config.features.tipUrl, '_blank')}
+                        >
+                            <CreditCard className="h-4 w-4" />
+                            <span className="hidden sm:inline">Tip</span>
+                        </Button>
+                    )}
                 </div>
             </nav>
         </header>

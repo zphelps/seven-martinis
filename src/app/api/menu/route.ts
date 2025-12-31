@@ -7,8 +7,6 @@ export async function GET(request: NextRequest) {
     try {
         const onlyAvailable = request.nextUrl.searchParams.get('onlyAvailable');
 
-        console.log("onlyAvailable", onlyAvailable);
-
         const supabase = createClient();
         let query = supabase
             .from("menu_items")

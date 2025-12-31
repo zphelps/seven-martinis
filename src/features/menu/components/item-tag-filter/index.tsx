@@ -1,11 +1,13 @@
+"use client";
+
 import { Badge } from "@/components/ui/badge";
 import { MenuItem } from "@/types/order";
 import { useMemo } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { X } from "lucide-react";
-// const AVAILABLE_TAGS = ["Vodka", "Gin", "Bourbon", "Tequila", "Rum", "Whiskey", "Beer", "Wine", "Cocktail", "Mocktail"];
-const AVAILABLE_TAGS = ["Winter","New","Vodka", "Gin", "Bourbon", "Tequila", "Rum", "Whiskey", "Wine","Special","Copycats"];
+
+const AVAILABLE_TAGS = ["Winter", "New", "Vodka", "Gin", "Bourbon", "Tequila", "Rum", "Whiskey", "Wine", "Special", "Copycats"];
 
 interface ItemTagFilterProps {
     menuItems: MenuItem[];
@@ -15,7 +17,6 @@ interface ItemTagFilterProps {
 
 export const ItemTagFilter = ({ menuItems, selectedTags, onTagSelect }: ItemTagFilterProps) => {
 
-    // Get tag counts for each tag
     const tagCounts = useMemo(() => {
         const counts: { [key: string]: number } = {};
         menuItems.forEach(item => {
@@ -27,7 +28,7 @@ export const ItemTagFilter = ({ menuItems, selectedTags, onTagSelect }: ItemTagF
     }, [menuItems]);
 
     return (
-        <div className="flex flex-wrap gap-2">
+        <div className="flex overflow-x-auto gap-2 pb-2 -mx-2 px-2 scrollbar-hide">
             {AVAILABLE_TAGS.map((tag) => {
                 const count = tagCounts[tag] || 0;
                 const isSelected = selectedTags.includes(tag);
@@ -35,31 +36,36 @@ export const ItemTagFilter = ({ menuItems, selectedTags, onTagSelect }: ItemTagF
                 return (
                     <Badge
                         key={tag}
-                        variant={"outline"}
+                        variant="outline"
                         className={cn(
-                            "cursor-pointer py-1.5 px-3 border-gray-200 bg-white",
-                            isSelected && "bg-blue-100 hover:bg-blue-100 border-blue-100"
+                            "cursor-pointer py-2 px-3 bg-white border-border hover:border-primary/30 transition-colors flex-shrink-0",
+                            isSelected && "bg-primary text-white border-primary hover:bg-primary/90"
                         )}
                         onClick={() => onTagSelect(tag)}
                     >
                         <Image
                             src={`/${tag.toLowerCase()}.png`}
-                            className="mr-2 h-5 w-auto"
+                            className={cn(
+                                "mr-2 h-4 w-auto",
+                                isSelected ? "brightness-0 invert" : "opacity-80"
+                            )}
                             alt={tag}
                             height={16}
                             width={16}
                             style={{ objectFit: 'contain' }}
                         />
-                        {tag}
+                        <span className="whitespace-nowrap">{tag}</span>
                         {count > 0 && (
-                            <span className="ml-1 text-xs text-gray-500">
-                                ({count})
+                            <span className={cn(
+                                "ml-1.5 text-xs",
+                                isSelected ? "text-white/70" : "text-muted-foreground"
+                            )}>
+                                {count}
                             </span>
                         )}
                         {isSelected && (
-                            <X className="ml-1 h-4 w-4 p-0 m-0 -mr-1 text-gray-500 rounded-full" />
+                            <X className="ml-1.5 h-3 w-3 text-white/80" />
                         )}
-
                     </Badge>
                 );
             })}

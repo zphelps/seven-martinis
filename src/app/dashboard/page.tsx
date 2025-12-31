@@ -16,6 +16,7 @@ import { styled } from '@mui/material'
 import { useSidebar } from "@/components/ui/sidebar";
 import { OrderDetailsCard } from "@/features/menu/components/order-details-card";
 import { useOrder } from "@/features/orders/hooks/use-order";
+
 export default function Dashboard() {
     const { orders, setOrders, loading, error } = useOrders();
     const [isClearingServed, setIsClearingServed] = useState(false);
@@ -46,7 +47,6 @@ export default function Dashboard() {
     const { open, toggleSidebar } = useSidebar();
 
     function handleOrderClick(order: Order) {
-        // If the order is already open on either side, don't open it again
         if (leftOrder?.id === order.id || rightOrder?.id === order.id) {
             return;
         }
@@ -74,7 +74,6 @@ export default function Dashboard() {
                 setRightOrder(null);
             }
         } catch (error) {
-            // Error handling is done in the useOrder hook
             console.error('Error marking order as ready:', error);
         } finally {
             setIsMarkingReady(false);
@@ -92,7 +91,6 @@ export default function Dashboard() {
                 setRightOrder(null);
             }
         } catch (error) {
-            // Error handling is done in the useOrder hook
             console.error('Error starting preparation:', error);
         } finally {
             setIsStartingPreparing(false);
@@ -157,7 +155,6 @@ export default function Dashboard() {
                     throw new Error(`Failed to delete order with id ${order.id}`);
                 }
 
-                // Remove the order from the state
                 setOrders((prevOrders: any) =>
                     prevOrders.filter((o: any) => o.id !== order.id)
                 );
@@ -181,11 +178,9 @@ export default function Dashboard() {
     async function handleCardDragEnd(card: any, source: any, destination: any) {
         const newStatus = board.columns[destination.toColumnId - 1].value;
 
-        // Find the index of the moved order
         const movedOrderIndex = orders.findIndex((order) => order.id === card.id);
         const oldStatus = orders[movedOrderIndex].status;
 
-        // Optimistically update the orders state
         setOrders((prevOrders: any) =>
             prevOrders.map((order: any) =>
                 order.id === card.id ? { ...order, status: newStatus } : order
@@ -193,7 +188,6 @@ export default function Dashboard() {
         );
 
         try {
-            // Update the order status in the backend
             const response = await fetch(`/api/orders/${card.id}`, {
                 method: "PUT",
                 headers: {
@@ -209,7 +203,6 @@ export default function Dashboard() {
                     title: "Order status updated successfully",
                 });
             } else {
-                // Revert the optimistic update on error
                 setOrders((prevOrders: any) =>
                     prevOrders.map((order: any) =>
                         order.id === card.id ? { ...order, status: oldStatus } : order
@@ -221,7 +214,6 @@ export default function Dashboard() {
                 });
             }
         } catch (error: any) {
-            // Revert the optimistic update on error
             setOrders((prevOrders: any) =>
                 prevOrders.map((order: any) =>
                     order.id === card.id ? { ...order, status: oldStatus } : order
@@ -237,19 +229,17 @@ export default function Dashboard() {
     if (loading) {
         return (
             <div className="flex justify-center items-center h-screen">
-                <Loader2 className="w-4 h-4 animate-spin" />
+                <Loader2 className="w-6 h-6 animate-spin text-primary" />
             </div>
         )
     }
-    if (error) return <p>Error fetching orders</p>;
+    if (error) return <p className="text-destructive p-4">Error fetching orders</p>;
 
     return (
         <div className="container-lg mx-0 mb-2.5 space-y-4">
-
-
-            {/* Kanban Board */}
+            {/* Order Details Cards */}
             <div className="flex flex-col justify-center">
-                <div className="sticky top-0 pt-2.5 bg-white">
+                <div className="sticky top-0 pt-2.5 bg-background">
                     <div className="flex justify-center z-1 w-full space-x-2.5">
                         {leftOrder && (
                             <OrderDetailsCard
@@ -274,7 +264,7 @@ export default function Dashboard() {
                     {(leftOrder || rightOrder) && <Separator className="mt-2.5" />}
                 </div>
 
-
+                {/* Kanban Board */}
                 <div className="flex justify-center">
                     <KanbanStyles>
                         <Board
@@ -284,14 +274,9 @@ export default function Dashboard() {
                             renderColumnHeader={(column: any) => {
                                 return (
                                     <div className="w-[290px] flex items-center justify-between">
-                                        <p className=" text-lg font-bold mb-2">
+                                        <p className="text-lg font-semibold mb-2 text-foreground">
                                             {column.title}
                                         </p>
-                                        {/* {column.id === 4 && (
-                                            <Button variant="outline" onClick={handleClearServed} disabled={isClearingServed}>
-                                                {isClearingServed ? <Loader2 className="w-4 h-4 animate-spin" /> : "Clear"}
-                                            </Button>
-                                        )} */}
                                     </div>
                                 );
                             }}
@@ -313,6 +298,7 @@ export default function Dashboard() {
 const KanbanStyles = styled('div')`
   & .react-kanban-column {
     border-radius: 8px;
-    background-color: #f3f4f6;
+    background-color: hsl(var(--secondary));
+    border: 1px solid hsl(var(--border));
   }
 `

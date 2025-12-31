@@ -1,12 +1,14 @@
+"use client";
+
 import { Order } from "@/types/order";
 import { OrderStatusCard } from "./order-status-card";
-import { useUserOrders } from "../hooks/use-user-orders";
-import { useUid } from "../hooks/use-uid";
-import { format, isToday, isYesterday, isThisWeek, isThisMonth } from "date-fns";
+import { isToday, isYesterday, isThisWeek, isThisMonth } from "date-fns";
+import { Martini } from "lucide-react";
+import { Dispatch, SetStateAction } from "react";
 
 interface OrderStatusListProps {
     orders: Order[];
-    setOrders: (orders: Order[]) => void;
+    setOrders: Dispatch<SetStateAction<Order[]>>;
 }
 
 function groupOrdersByDate(orders: Order[]) {
@@ -58,26 +60,34 @@ export function OrderStatusList({ orders, setOrders }: OrderStatusListProps) {
 
     if (orders.length === 0) {
         return (
-            <div className="mx-auto max-w-7xl p-4">
-                <div className="text-center py-12">
-                    <h3 className="text-lg font-semibold text-gray-900">No orders yet</h3>
-                    <p className="mt-2 text-sm text-gray-500">Your order history will appear here once you place an order.</p>
+            <div className="flex flex-col items-center justify-center h-full gap-4 text-center px-4">
+                <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center border border-border shadow-sm">
+                    <Martini className="w-8 h-8 text-primary" />
+                </div>
+                <div>
+                    <h3 className="text-lg font-serif font-medium text-foreground">No orders yet</h3>
+                    <p className="mt-2 text-sm text-muted-foreground">
+                        Your order history will appear here once you place an order.
+                    </p>
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="mx-auto max-w-7xl space-y-6 p-4">
+        <div className="px-4 py-6 space-y-8 pb-20 md:pb-6">
             {Object.entries(groupedOrders).map(([groupKey, groupOrders]) => {
                 if (groupOrders.length === 0) return null;
 
                 return (
                     <div key={groupKey} className="space-y-4">
-                        <h2 className="text-lg font-semibold text-gray-900">
-                            {getDateGroupTitle(groupKey)}
-                        </h2>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div className="flex items-center gap-2">
+                            <h2 className="text-sm font-semibold text-foreground uppercase tracking-wider">
+                                {getDateGroupTitle(groupKey)}
+                            </h2>
+                            <div className="h-px flex-1 bg-border" />
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                             {groupOrders.map((order: Order) => (
                                 <OrderStatusCard
                                     key={order.id}
