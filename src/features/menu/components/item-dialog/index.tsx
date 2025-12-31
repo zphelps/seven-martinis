@@ -177,14 +177,10 @@ export const ItemDialog = ({ menuItem, children }: ItemDialogProps) => {
 
                 {/* Order Form */}
                 {!showSuccess && !showTipPrompt && (
-                    <div className="h-full overflow-y-auto overscroll-contain bg-background">
-                        <div className="flex flex-col min-h-full">
-                            <div className="flex-1 flex flex-col items-center p-6 space-y-8 pt-12">
-                                {/* Drink Icon */}
-                                {/* <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-primary/5 border border-primary/10">
-                                    <Martini className="w-10 h-10 text-primary" />
-                                </div> */}
-
+                    <div className="flex flex-col h-full bg-background">
+                        {/* Scrollable content area */}
+                        <div className="flex-1 overflow-y-auto">
+                            <div className="flex flex-col items-center p-6 space-y-6 pt-12 pb-8">
                                 {/* Drink Info */}
                                 <div className="text-center space-y-4 max-w-md mx-auto">
                                     <Badge variant="outline" className="border-border text-muted-foreground">
@@ -219,55 +215,55 @@ export const ItemDialog = ({ menuItem, children }: ItemDialogProps) => {
                                         </div>
                                     )}
                                 </div>
-
-                                {/* Order Form */}
-                                <div className="w-full max-w-md mx-auto space-y-6 pt-2 pb-8">
-                                    <div className="space-y-3">
-                                        <label className="text-sm font-medium text-muted-foreground text-center block uppercase tracking-wider">
-                                            Who is this drink for?
-                                        </label>
-                                        <Input
-                                            className="h-16 text-2xl text-center bg-white border-border placeholder:text-muted-foreground/30 focus:border-primary focus:ring-primary/20 rounded-xl shadow-sm"
-                                            placeholder="Enter your name"
-                                            value={customerName}
-                                            onChange={(e) => setCustomerName(e.target.value)}
-                                            data-1p-ignore
-                                            autoComplete="off"
-                                            autoCapitalize="words"
-                                            inputMode="text"
-                                            autoFocus
-                                            onKeyDown={(e) => {
-                                                if (e.key === 'Enter' && customerName.trim()) {
-                                                    handlePlaceOrder();
-                                                }
-                                            }}
-                                        />
-                                    </div>
-
-                                    <Button
-                                        className={cn(
-                                            "w-full h-16 text-xl font-semibold transition-all rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0",
-                                            customerName.trim()
-                                                ? "bg-primary hover:bg-primary/90 text-white"
-                                                : "bg-secondary text-muted-foreground shadow-none"
-                                        )}
-                                        onClick={handlePlaceOrder}
-                                        disabled={placingOrder || !customerName.trim()}
-                                    >
-                                        {placingOrder ? (
-                                            <>
-                                                <Loader2 className="w-6 h-6 mr-3 animate-spin" />
-                                                Ordering...
-                                            </>
-                                        ) : (
-                                            <>
-                                                <Martini className="w-6 h-6 mr-3" />
-                                                Place Order
-                                            </>
-                                        )}
-                                    </Button>
-                                </div>
                             </div>
+                        </div>
+
+                        {/* Fixed bottom section */}
+                        <div className="flex-shrink-0 p-6 pb-safe bg-white border-t border-border space-y-4 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+                            <div className="space-y-2">
+                                <label className="text-sm font-medium text-muted-foreground text-center block uppercase tracking-wider">
+                                    Who is this drink for?
+                                </label>
+                                <Input
+                                    className="h-14 text-xl text-center bg-secondary/30 border-border placeholder:text-muted-foreground/30 focus:border-primary focus:ring-primary/20 rounded-xl"
+                                    placeholder="Enter your name"
+                                    value={customerName}
+                                    onChange={(e) => setCustomerName(e.target.value)}
+                                    data-1p-ignore
+                                    autoComplete="off"
+                                    autoCapitalize="words"
+                                    inputMode="text"
+                                    autoFocus
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter' && customerName.trim()) {
+                                            handlePlaceOrder();
+                                        }
+                                    }}
+                                />
+                            </div>
+
+                            <Button
+                                className={cn(
+                                    "w-full h-14 text-lg font-semibold transition-all rounded-xl",
+                                    customerName.trim()
+                                        ? "bg-primary hover:bg-primary/90 text-white shadow-lg"
+                                        : "bg-secondary text-muted-foreground"
+                                )}
+                                onClick={handlePlaceOrder}
+                                disabled={placingOrder || !customerName.trim()}
+                            >
+                                {placingOrder ? (
+                                    <>
+                                        <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                                        Ordering...
+                                    </>
+                                ) : (
+                                    <>
+                                        <Martini className="w-5 h-5 mr-2" />
+                                        Place Order
+                                    </>
+                                )}
+                            </Button>
                         </div>
                     </div>
                 )}
