@@ -178,92 +178,91 @@ export const ItemDialog = ({ menuItem, children }: ItemDialogProps) => {
                 {/* Order Form */}
                 {!showSuccess && !showTipPrompt && (
                     <div className="flex flex-col h-full bg-background">
-                        {/* Scrollable content area */}
-                        <div className="flex-1 overflow-y-auto">
-                            <div className="flex flex-col items-center p-6 space-y-6 pt-12 pb-8">
-                                {/* Drink Info */}
-                                <div className="text-center space-y-4 max-w-md mx-auto">
-                                    <Badge variant="outline" className="border-border text-muted-foreground">
-                                        #{menuItem.drink_number}
-                                    </Badge>
-                                    <h2 className="text-3xl md:text-4xl font-serif font-semibold text-foreground leading-tight">
-                                        {menuItem.name}
-                                    </h2>
-                                    <p className="text-muted-foreground text-lg leading-relaxed">
-                                        {menuItem.description}
-                                    </p>
+                        {/* Fixed drink info section */}
+                        <div className="flex-shrink-0 flex flex-col items-center p-6 space-y-4 pt-12 border-b border-border bg-background">
+                            <div className="text-center space-y-4 max-w-md mx-auto">
+                                <Badge variant="outline" className="border-border text-muted-foreground">
+                                    #{menuItem.drink_number}
+                                </Badge>
+                                <h2 className="text-3xl md:text-4xl font-serif font-semibold text-foreground leading-tight">
+                                    {menuItem.name}
+                                </h2>
+                                <p className="text-muted-foreground text-lg leading-relaxed">
+                                    {menuItem.description}
+                                </p>
 
-                                    {menuItem.tags && menuItem.tags.length > 0 && (
-                                        <div className="flex flex-wrap justify-center gap-2 pt-2">
-                                            {menuItem.tags.map((tag) => (
-                                                <Badge
-                                                    key={tag}
-                                                    variant="secondary"
-                                                    className="py-1.5 px-3 bg-white border border-border text-foreground"
-                                                >
-                                                    <Image
-                                                        src={`/${tag.toLowerCase()}.png`}
-                                                        className="mr-1.5 h-4 w-auto opacity-80"
-                                                        alt={tag}
-                                                        height={16}
-                                                        width={16}
-                                                        style={{ objectFit: 'contain' }}
-                                                    />
-                                                    <span className="text-xs">{tag}</span>
-                                                </Badge>
-                                            ))}
-                                        </div>
-                                    )}
-                                </div>
+                                {menuItem.tags && menuItem.tags.length > 0 && (
+                                    <div className="flex flex-wrap justify-center gap-2 pt-2">
+                                        {menuItem.tags.map((tag) => (
+                                            <Badge
+                                                key={tag}
+                                                variant="secondary"
+                                                className="py-1.5 px-3 bg-white border border-border text-foreground"
+                                            >
+                                                <Image
+                                                    src={`/${tag.toLowerCase()}.png`}
+                                                    className="mr-1.5 h-4 w-auto opacity-80"
+                                                    alt={tag}
+                                                    height={16}
+                                                    width={16}
+                                                    style={{ objectFit: 'contain' }}
+                                                />
+                                                <span className="text-xs">{tag}</span>
+                                            </Badge>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                         </div>
 
-                        {/* Fixed bottom section */}
-                        <div className="flex-shrink-0 p-6 pb-safe bg-white border-t border-border space-y-4 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium text-muted-foreground text-center block uppercase tracking-wider">
-                                    Who is this drink for?
-                                </label>
-                                <Input
-                                    className="h-14 text-xl text-center bg-secondary/30 border-border placeholder:text-muted-foreground/30 focus:border-primary focus:ring-primary/20 rounded-xl"
-                                    placeholder="Enter your name"
-                                    value={customerName}
-                                    onChange={(e) => setCustomerName(e.target.value)}
-                                    data-1p-ignore
-                                    autoComplete="off"
-                                    autoCapitalize="words"
-                                    inputMode="text"
-                                    autoFocus
-                                    onKeyDown={(e) => {
-                                        if (e.key === 'Enter' && customerName.trim()) {
-                                            handlePlaceOrder();
-                                        }
-                                    }}
-                                />
-                            </div>
+                        {/* Scrollable input section */}
+                        <div className="flex-1 overflow-y-auto bg-white">
+                            <div className="p-6 pb-safe space-y-4">
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium text-muted-foreground text-center block uppercase tracking-wider">
+                                        Who is this drink for?
+                                    </label>
+                                    <Input
+                                        className="h-14 text-xl text-center bg-secondary/30 border-border placeholder:text-muted-foreground/30 focus:border-primary focus:ring-primary/20 rounded-xl"
+                                        placeholder="Enter your name"
+                                        value={customerName}
+                                        onChange={(e) => setCustomerName(e.target.value)}
+                                        data-1p-ignore
+                                        autoComplete="off"
+                                        autoCapitalize="words"
+                                        inputMode="text"
+                                        autoFocus
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'Enter' && customerName.trim()) {
+                                                handlePlaceOrder();
+                                            }
+                                        }}
+                                    />
+                                </div>
 
-                            <Button
-                                className={cn(
-                                    "w-full h-14 text-lg font-semibold transition-all rounded-xl",
-                                    customerName.trim()
-                                        ? "bg-primary hover:bg-primary/90 text-white shadow-lg"
-                                        : "bg-secondary text-muted-foreground"
-                                )}
-                                onClick={handlePlaceOrder}
-                                disabled={placingOrder || !customerName.trim()}
-                            >
-                                {placingOrder ? (
-                                    <>
-                                        <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                                        Ordering...
-                                    </>
-                                ) : (
-                                    <>
-                                        <Martini className="w-5 h-5 mr-2" />
-                                        Place Order
-                                    </>
-                                )}
-                            </Button>
+                                <Button
+                                    className={cn(
+                                        "w-full h-14 text-lg font-semibold transition-all rounded-xl",
+                                        customerName.trim()
+                                            ? "bg-primary hover:bg-primary/90 text-white shadow-lg"
+                                            : "bg-secondary text-muted-foreground"
+                                    )}
+                                    onClick={handlePlaceOrder}
+                                    disabled={placingOrder || !customerName.trim()}
+                                >
+                                    {placingOrder ? (
+                                        <>
+                                            <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                                            Ordering...
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Martini className="w-5 h-5 mr-2" />
+                                            Place Order
+                                        </>
+                                    )}
+                                </Button>
+                            </div>
                         </div>
                     </div>
                 )}
