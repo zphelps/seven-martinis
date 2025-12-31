@@ -234,7 +234,7 @@ export const ItemDialog = ({ menuItem, children }: ItemDialogProps) => {
 
                         {/* Fixed input section at bottom */}
                         <div className="flex-shrink-0 bg-white border-t border-border shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
-                            <div className="p-6 pb-safe space-y-4">
+                            <div className="p-6 space-y-4">
                                 <div className="space-y-2">
                                     <label className="text-sm font-medium text-muted-foreground text-center block uppercase tracking-wider">
                                         Who is this drink for?
