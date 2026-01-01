@@ -1,6 +1,6 @@
 "use client";
 
-import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetClose } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { MenuItem } from "@/types/order";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -151,20 +151,25 @@ export const ItemDialog = ({ menuItem, children }: ItemDialogProps) => {
                 </SheetHeader>
 
                 {/* Custom close button that adapts to theme */}
-                <SheetClose className={cn(
-                    "absolute right-4 top-4 z-50 rounded-full p-2 transition-all",
-                    isWinterDrink
-                        ? "bg-white/10 hover:bg-white/20 text-white border border-white/20"
-                        : "bg-secondary hover:bg-secondary/80 text-foreground border border-border"
-                )}>
-                    <X className="h-5 w-5" />
-                    <span className="sr-only">Close</span>
-                </SheetClose>
+                <div className="absolute right-4 top-4 z-[100]">
+                    <button
+                        onClick={() => setOpen(false)}
+                        className={cn(
+                            "rounded-full p-2.5 transition-all",
+                            isWinterDrink
+                                ? "bg-white/20 hover:bg-white/30 text-white border border-white/30"
+                                : "bg-secondary hover:bg-secondary/80 text-foreground border border-border"
+                        )}
+                    >
+                        <X className="h-5 w-5" />
+                        <span className="sr-only">Close</span>
+                    </button>
+                </div>
 
                 {/* Decorative snowflakes for winter drinks */}
                 {isWinterDrink && (
                     <>
-                        <div className="absolute top-8 right-8 opacity-10 pointer-events-none">
+                        <div className="absolute top-20 right-8 opacity-10 pointer-events-none">
                             <Snowflake className="w-16 h-16 text-white" />
                         </div>
                         <div className="absolute bottom-32 left-6 opacity-10 pointer-events-none">
