@@ -5,9 +5,13 @@ import { MenuItemCard } from "./menu-item-card";
 import { ItemTagFilter } from "../item-tag-filter";
 import { ItemDialog } from "../item-dialog";
 import { useState, useMemo } from "react";
-import { Search, Martini, Snowflake } from "lucide-react";
+import { Search, Martini, Snowflake, Sun } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
+import {
+    ACTIVE_SEASONAL_MENU,
+    getActiveSeasonalMenu,
+} from "../../config/seasonal-menu";
 
 interface MenuListProps {
     menuItems: MenuItem[];
@@ -18,19 +22,17 @@ interface MenuListProps {
 export function MenuList({ menuItems, loading, error }: MenuListProps) {
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
     const [searchQuery, setSearchQuery] = useState("");
+    const seasonalMenu = getActiveSeasonalMenu();
 
-    // Winter drinks for the featured section
-    const winterDrinks = useMemo(() => {
-        return menuItems.filter(item => item.tags?.includes("Winter"));
-    }, [menuItems]);
+    const seasonalDrinks = useMemo(() => {
+        return menuItems.filter(item => item.tags?.includes(seasonalMenu.tag));
+    }, [menuItems, seasonalMenu.tag]);
 
-    // Regular menu items (excluding winter drinks when showing featured section)
     const regularMenuItems = useMemo(() => {
-        return menuItems.filter(item => !item.tags?.includes("Winter"));
-    }, [menuItems]);
+        return menuItems.filter(item => !item.tags?.includes(seasonalMenu.tag));
+    }, [menuItems, seasonalMenu.tag]);
 
-    // Check if we should show the featured winter section (only when no filters/search)
-    const showWinterSection = selectedTags.length === 0 && !searchQuery.trim() && winterDrinks.length > 0;
+    const showSeasonalSection = selectedTags.length === 0 && !searchQuery.trim() && seasonalDrinks.length > 0;
 
     const filteredMenuItems = useMemo(() => {
         let filtered = menuItems;
@@ -120,61 +122,77 @@ export function MenuList({ menuItems, loading, error }: MenuListProps) {
                         Clear filters
                     </button>
                 </div>
-            ) : showWinterSection ? (
+            ) : showSeasonalSection ? (
                 <div className="space-y-6">
-                    {/* Winter Featured Section */}
-                    <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900">
-                        {/* Decorative snowflakes */}
-                        <div className="absolute top-4 right-6 opacity-15">
-                            <Snowflake className="w-10 h-10 text-white" />
-                        </div>
-                        <div className="absolute bottom-20 left-4 opacity-10">
-                            <Snowflake className="w-14 h-14 text-white" />
-                        </div>
-                        <div className="absolute top-1/3 right-1/3 opacity-8">
-                            <Snowflake className="w-6 h-6 text-white" />
-                        </div>
+                    {/* Seasonal Featured Section */}
+                    <div className={`relative overflow-hidden rounded-xl ${seasonalMenu.gradient}`}>
+                        {ACTIVE_SEASONAL_MENU === "winter" ? (
+                            <>
+                                <div className="absolute top-4 right-6 opacity-15">
+                                    <Snowflake className="w-10 h-10 text-white" />
+                                </div>
+                                <div className="absolute bottom-20 left-4 opacity-10">
+                                    <Snowflake className="w-14 h-14 text-white" />
+                                </div>
+                                <div className="absolute top-1/3 right-1/3 opacity-8">
+                                    <Snowflake className="w-6 h-6 text-white" />
+                                </div>
+                            </>
+                        ) : (
+                            <>
+                                <div className="absolute top-4 right-6 opacity-15">
+                                    <Sun className="w-10 h-10 text-white" />
+                                </div>
+                                <div className="absolute bottom-20 left-4 opacity-10">
+                                    <Sun className="w-14 h-14 text-white" />
+                                </div>
+                            </>
+                        )}
 
                         {/* Header */}
                         <div className="relative z-10 p-5 pb-3">
                             <div className="flex items-center gap-3">
                                 <div className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center border border-white/20">
-                                    <Image
-                                        src="/winter.png"
-                                        alt="Winter"
-                                        width={24}
-                                        height={24}
-                                        className="opacity-90"
-                                    />
+                                    {seasonalMenu.headerImage ? (
+                                        <Image
+                                            src={seasonalMenu.headerImage}
+                                            alt={seasonalMenu.tag}
+                                            width={24}
+                                            height={24}
+                                            className="opacity-90"
+                                        />
+                                    ) : (
+                                        <Sun className="w-5 h-5 text-white opacity-90" />
+                                    )}
                                 </div>
                                 <div>
                                     <h2 className="text-xl font-serif font-semibold text-white">
-                                        Seven For Winter
+                                        {seasonalMenu.title}
                                     </h2>
-                                    <p className="text-sm text-blue-200/70">
-                                        Seasonal favorites to warm your spirit
+                                    <p className={`text-sm ${seasonalMenu.accentText}`}>
+                                        {seasonalMenu.subtitle}
                                     </p>
                                 </div>
                             </div>
                         </div>
 
-                        {/* Winter drinks list */}
+                        {/* Seasonal drinks list */}
                         <div className="relative z-10 px-4 pb-4 space-y-2">
-                            {winterDrinks.map((item) => (
+                            {seasonalDrinks.map((item) => (
                                 <ItemDialog key={item.id} menuItem={item}>
                                     <div className="cursor-pointer group">
-                                        <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-3.5 transition-all duration-200 hover:bg-white/15 hover:border-white/30">
+                                        <div className={`${seasonalMenu.cardBg} border ${seasonalMenu.cardBorder} rounded-xl p-3.5 transition-all duration-200 ${seasonalMenu.cardHoverBg} ${seasonalMenu.cardHoverBorder}`}>
                                             <div className="flex items-start gap-3">
-                                                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-blue-400/20 border border-blue-300/30 flex items-center justify-center">
-                                                    <span className="text-xs font-mono font-bold text-blue-200">
+                                                <div className={`flex-shrink-0 w-8 h-8 rounded-full ${seasonalMenu.numberBadgeBg} border ${seasonalMenu.numberBadgeBorder} flex items-center justify-center`}>
+                                                    <span className={`text-xs font-mono font-bold ${seasonalMenu.numberBadgeText}`}>
                                                         {item.drink_number}
                                                     </span>
                                                 </div>
                                                 <div className="flex-1 min-w-0">
-                                                    <h3 className="font-serif text-base font-semibold text-white leading-tight truncate">
+                                                    <h3 className={`font-serif text-base font-semibold ${seasonalMenu.drinkNameText} leading-tight truncate`}>
                                                         {item.name}
                                                     </h3>
-                                                    <p className="text-sm text-blue-100/60 mt-0.5 line-clamp-2 leading-relaxed">
+                                                    <p className={`text-sm ${seasonalMenu.drinkDescriptionText} mt-0.5 line-clamp-2 leading-relaxed`}>
                                                         {item.description}
                                                     </p>
                                                 </div>
