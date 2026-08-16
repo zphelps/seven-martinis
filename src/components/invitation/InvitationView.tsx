@@ -27,7 +27,7 @@ export function InvitationView({ event, details }: InvitationViewProps) {
 
                 <div className="flex justify-center">
                     <img
-                        src="7MPrimaryCropped.png"
+                        src="/7MPrimaryCropped.png"
                         alt="Seven Martinis Logo"
                         className="w-44"
                     />
