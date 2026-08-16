@@ -309,6 +309,15 @@ const KanbanStyles = styled('div')`
     height: 100%;
   }
 
+  /* The board only stretches its direct child (the droppable columns
+     wrapper) when align-items would allow it, but react-kanban hardcodes
+     align-items: flex-start inline, so that wrapper never gets a real
+     height on its own — force it here so the columns' height: 100%
+     (also inline, from the library) has something real to resolve against. */
+  & .react-kanban-board > div {
+    height: 100%;
+  }
+
   & .react-kanban-column {
     border-radius: 12px;
     background-color: hsl(var(--secondary));
