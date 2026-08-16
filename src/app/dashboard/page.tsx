@@ -278,7 +278,7 @@ export default function Dashboard() {
                                             {column.title}
                                         </p>
                                         {column.id === 4 && (
-                                            <Button variant="outline" className="-mr-3" onClick={handleClearServed} disabled={isClearingServed}>
+                                            <Button variant="outline" size="sm" onClick={handleClearServed} disabled={isClearingServed}>
                                                 {isClearingServed ? <Loader2 className="w-4 h-4 animate-spin" /> : "Clear"}
                                             </Button>
                                         )}
@@ -323,6 +323,25 @@ const KanbanStyles = styled('div')`
     background-color: hsl(var(--secondary));
     border: 1px solid hsl(var(--border));
     padding: 6px;
+    box-sizing: border-box;
+    /* react-kanban hardcodes this column's own display as inline-block
+       inline, which we override (needs !important to beat the inline
+       style) so the header and the card-droppable zone below it stack
+       in a column instead of both claiming the same inherited height. */
+    display: inline-flex !important;
+    flex-direction: column;
+  }
+
+  /* The card-droppable zone (react-kanban's second, unclassed child of
+     the column) is inline-styled with height: inherit, which copies the
+     column's own 100% and, added on top of the header's height, always
+     overflows the column by exactly the header's height - even with zero
+     cards. Giving it flex-basis 0 ignores that inline height and lets it
+     take only the space left after the header, so it can scroll on its
+     own when cards overflow instead of the column overflowing them both. */
+  & .react-kanban-column > div:last-child {
+    flex: 1 1 0 !important;
+    min-height: 0 !important;
     overflow-y: auto;
   }
 `
