@@ -15,8 +15,9 @@ export default function TagsPage() {
         loading,
         error,
         addTag,
+        untagAllDrinks,
         deleteTag } = useTags()
-    const { menuItems, loading: menuLoading } = useMenu({ onlyAvailable: false })
+    const { menuItems, loading: menuLoading, refetchMenuItems } = useMenu({ onlyAvailable: false })
 
     const tagsWithCounts = useMemo(() => {
         return tags.map((tag) => {
@@ -55,8 +56,10 @@ export default function TagsPage() {
                     data={tagsWithCounts}
                     addTag={addTag} />
                 <TagSidebar
-                    tags={tags}
+                    tags={tagsWithCounts}
                     updateTag={updateTag}
+                    untagAllDrinks={untagAllDrinks}
+                    onUntagAllDone={refetchMenuItems}
                     deleteTag={deleteTag}
                 />
             </div>

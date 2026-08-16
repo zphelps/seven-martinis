@@ -30,8 +30,9 @@ export const ItemDialog = ({ menuItem, children }: ItemDialogProps) => {
     const router = useRouter();
     const scrollPositionRef = useRef(0);
 
-    // Drinks with a featured tag get the highlighted theme
-    const isFeaturedDrink = menuItem.tags?.some((tag) => tag.is_featured);
+    // Drinks with an active, featured tag get the highlighted theme
+    const visibleTags = menuItem.tags?.filter((tag) => tag.is_active);
+    const isFeaturedDrink = visibleTags?.some((tag) => tag.is_featured);
 
     const handlePlaceOrder = async () => {
         if (!customerName.trim()) {
@@ -300,9 +301,9 @@ export const ItemDialog = ({ menuItem, children }: ItemDialogProps) => {
                                         {menuItem.description}
                                     </p>
 
-                                    {menuItem.tags && menuItem.tags.length > 0 && (
+                                    {visibleTags && visibleTags.length > 0 && (
                                         <div className="flex flex-wrap justify-center gap-2 pt-2">
-                                            {menuItem.tags.map((tag) => (
+                                            {visibleTags.map((tag) => (
                                                 <Badge
                                                     key={tag.id}
                                                     variant="secondary"

@@ -116,28 +116,28 @@ const useMenu = ({ onlyAvailable = false }: UseMenuProps) => {
         }
     }
 
-    useEffect(() => {
-        const fetchMenuItems = async () => {
-            try {
-                const response = await fetch(`/api/menu?onlyAvailable=${onlyAvailable}`);
-                const result = await response.json();
+    const fetchMenuItems = async () => {
+        try {
+            const response = await fetch(`/api/menu?onlyAvailable=${onlyAvailable}`);
+            const result = await response.json();
 
-                if (response.ok) {
-                    setMenuItems(result.data);
-                } else {
-                    setError(result.error);
-                }
-            } catch (e: any) {
-                setError(e.message);
-            } finally {
-                setLoading(false);
+            if (response.ok) {
+                setMenuItems(result.data);
+            } else {
+                setError(result.error);
             }
-        };
+        } catch (e: any) {
+            setError(e.message);
+        } finally {
+            setLoading(false);
+        }
+    };
 
+    useEffect(() => {
         fetchMenuItems();
     }, []);
 
-    return { menuItems, loading, error, addMenuItem, updateMenuItem, updateMenuItemTags, deleteMenuItem };
+    return { menuItems, loading, error, addMenuItem, updateMenuItem, updateMenuItemTags, deleteMenuItem, refetchMenuItems: fetchMenuItems };
 };
 
 export default useMenu;

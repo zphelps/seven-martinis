@@ -22,7 +22,7 @@ export function MenuList({ menuItems, loading, error }: MenuListProps) {
     const { tags } = useTags();
 
     // Tags marked as "featured" each get their own highlighted section
-    const featuredTags = useMemo(() => tags.filter(tag => tag.is_featured), [tags]);
+    const featuredTags = useMemo(() => tags.filter(tag => tag.is_featured && tag.is_active), [tags]);
 
     const featuredSections = useMemo(() => {
         return featuredTags

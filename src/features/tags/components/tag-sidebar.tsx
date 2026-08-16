@@ -3,7 +3,6 @@
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarHeader, useSidebar } from "@/components/ui/sidebar";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Tag } from "@/types/order";
 import { XIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,21 +11,26 @@ import { Switch } from "@/components/ui/switch";
 import { toast } from "@/components/ui/use-toast";
 import { UpdateTagProps } from "../hooks/use-tags";
 import { DeleteTagButton } from "./delete-tag-button";
+import { DisableTagButton } from "./disable-tag-button";
+import { UntagAllButton } from "./untag-all-button";
+import { TagWithCounts } from "./columns";
 
 interface TagSidebarProps {
-    tags: Tag[],
+    tags: TagWithCounts[],
     updateTag: (id: string, tag: UpdateTagProps) => Promise<void>,
+    untagAllDrinks: (id: string) => Promise<void>,
+    onUntagAllDone: () => void,
     deleteTag: (id: string) => Promise<void>
 }
 
-export default function TagSidebar({ tags, updateTag, deleteTag }: TagSidebarProps) {
+export default function TagSidebar({ tags, updateTag, untagAllDrinks, onUntagAllDone, deleteTag }: TagSidebarProps) {
     const { toggleSidebar, open } = useSidebar()
     const router = useRouter()
 
     const searchParams = useSearchParams()
     const id = searchParams.get("id")
 
-    const [tag, setTag] = useState<Tag | null>(null)
+    const [tag, setTag] = useState<TagWithCounts | null>(null)
     const [name, setName] = useState("")
 
     useEffect(() => {
@@ -81,7 +85,7 @@ export default function TagSidebar({ tags, updateTag, deleteTag }: TagSidebarPro
                 <SidebarGroup className="px-0 h-full">
                     <SidebarGroupContent className="bg-white h-full">
                         {tag && (
-                            <div className="relative space-y-4 -mt-2 h-full flex flex-col">
+                            <div className="space-y-4 -mt-2 h-full flex flex-col overflow-y-auto pb-4">
                                 {/* Image */}
                                 <div className="w-full h-48 bg-gray-200 flex items-center justify-center">
                                     {tag.image_url ? (
@@ -116,10 +120,29 @@ export default function TagSidebar({ tags, updateTag, deleteTag }: TagSidebarPro
                                         </div>
                                         <Switch checked={tag.is_featured} onCheckedChange={handleFeaturedToggle} />
                                     </div>
+
+                                    {!tag.is_active && (
+                                        <p className="text-xs text-amber-600 bg-amber-50 border border-amber-200 rounded-md p-2">
+                                            This tag is disabled and hidden from the menu. Drinks tagged with it keep their tag.
+                                        </p>
+                                    )}
                                 </div>
 
-                                <div className="absolute -bottom-1.5 left-0 right-0 px-2 mb-2">
-                                    <DeleteTagButton id={tag.id} deleteTag={deleteTag} />
+                                <div className="px-2 mt-auto">
+                                    <div className="rounded-md border border-red-200 bg-red-50 p-3 space-y-2">
+                                        <p className="text-sm font-semibold text-red-700">Danger Zone</p>
+                                        <p className="text-xs text-red-600/80">
+                                            {tag.totalDrinks} drink{tag.totalDrinks === 1 ? "" : "s"} currently tagged.
+                                        </p>
+                                        <DisableTagButton id={tag.id} isActive={tag.is_active} updateTag={updateTag} />
+                                        <UntagAllButton
+                                            id={tag.id}
+                                            drinkCount={tag.totalDrinks}
+                                            untagAllDrinks={untagAllDrinks}
+                                            onDone={onUntagAllDone}
+                                        />
+                                        <DeleteTagButton id={tag.id} deleteTag={deleteTag} />
+                                    </div>
                                 </div>
                             </div>
                         )}

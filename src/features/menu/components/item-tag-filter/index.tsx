@@ -27,9 +27,11 @@ export const ItemTagFilter = ({ menuItems, selectedTags, onTagSelect }: ItemTagF
         return counts;
     }, [menuItems]);
 
+    const activeTags = useMemo(() => tags.filter((tag) => tag.is_active), [tags]);
+
     return (
         <div className="flex overflow-x-auto gap-1 pb-0 -mx-3 px-3 scrollbar-hide">
-            {tags.map((tag) => {
+            {activeTags.map((tag) => {
                 const count = tagCounts[tag.id] || 0;
                 const isSelected = selectedTags.includes(tag.id);
 

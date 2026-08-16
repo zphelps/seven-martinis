@@ -37,6 +37,13 @@ export const columns: ColumnDef<TagWithCounts>[] = [
         }
     },
     {
+        accessorKey: "is_active",
+        header: "Status",
+        cell: ({ row }) => {
+            return row.original.is_active ? null : <Badge variant="destructive">Disabled</Badge>
+        }
+    },
+    {
         accessorKey: "totalDrinks",
         header: "Tagged Drinks",
         cell: ({ row }) => row.original.totalDrinks,
