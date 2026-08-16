@@ -5,6 +5,7 @@ export interface Order {
     customer_name: string;
     status: OrderStatus;
     created_at: string;
+    cleared_at: string | null;
     items: OrderItem[];
     rating: number | null;
 }

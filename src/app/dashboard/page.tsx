@@ -140,19 +140,19 @@ export default function Dashboard() {
             return;
         }
 
-        const deletePromises = servedOrders.map(async (order) => {
+        const clearPromises = servedOrders.map(async (order) => {
             try {
                 setIsClearingServed(true);
-                const response = await fetch(`/api/orders`, {
-                    method: "DELETE",
+                const response = await fetch(`/api/orders/${order.id}`, {
+                    method: "PUT",
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    body: JSON.stringify({ orderId: order.id }),
+                    body: JSON.stringify({ cleared_at: new Date().toISOString() }),
                 });
 
                 if (!response.ok) {
-                    throw new Error(`Failed to delete order with id ${order.id}`);
+                    throw new Error(`Failed to clear order with id ${order.id}`);
                 }
 
                 setOrders((prevOrders: any) =>
@@ -161,7 +161,7 @@ export default function Dashboard() {
 
             } catch (error: any) {
                 toast({
-                    title: `Error deleting order ${order.id}: ${error.message}`,
+                    title: `Error clearing order ${order.id}: ${error.message}`,
                     variant: "destructive",
                 });
             } finally {
@@ -169,7 +169,7 @@ export default function Dashboard() {
             }
         });
 
-        await Promise.all(deletePromises);
+        await Promise.all(clearPromises);
         toast({
             title: "Served orders cleared successfully",
         });
@@ -277,11 +277,11 @@ export default function Dashboard() {
                                         <p className="text-lg font-semibold m-2 text-foreground">
                                             {column.title}
                                         </p>
-                                        {/* {column.id === 4 && (
+                                        {column.id === 4 && (
                                             <Button variant="outline" className="-mr-3" onClick={handleClearServed} disabled={isClearingServed}>
                                                 {isClearingServed ? <Loader2 className="w-4 h-4 animate-spin" /> : "Clear"}
                                             </Button>
-                                        )} */}
+                                        )}
                                     </div>
                                 );
                             }}
