@@ -5,7 +5,7 @@ import { MenuItem } from "@/types/order";
 import { useMemo } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { X } from "lucide-react";
+import { Tag as TagIcon, X } from "lucide-react";
 import useTags from "@/features/tags/hooks/use-tags";
 
 interface ItemTagFilterProps {
@@ -43,16 +43,20 @@ export const ItemTagFilter = ({ menuItems, selectedTags, onTagSelect }: ItemTagF
                         )}
                         onClick={() => onTagSelect(tag.id)}
                     >
-                        <Image
-                            src={tag.image_url}
-                            className={cn(
-                                "mr-2.5 h-5 w-auto opacity-80"
-                            )}
-                            alt={tag.name}
-                            height={20}
-                            width={20}
-                            style={{ objectFit: 'contain' }}
-                        />
+                        {tag.image_url ? (
+                            <Image
+                                src={tag.image_url}
+                                className={cn(
+                                    "mr-2.5 h-5 w-auto opacity-80"
+                                )}
+                                alt={tag.name}
+                                height={20}
+                                width={20}
+                                style={{ objectFit: 'contain' }}
+                            />
+                        ) : (
+                            <TagIcon className="mr-2.5 h-5 w-5 opacity-80" />
+                        )}
                         <span className="whitespace-nowrap text-sm font-medium">{tag.name}</span>
                         {count > 0 && (
                             <span className={cn(

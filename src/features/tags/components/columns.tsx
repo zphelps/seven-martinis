@@ -5,7 +5,12 @@ import { ImageIcon } from "lucide-react"
 import { Tag } from "@/types/order"
 import { Badge } from "@/components/ui/badge"
 
-export const columns: ColumnDef<Tag>[] = [
+export interface TagWithCounts extends Tag {
+    totalDrinks: number
+    availableDrinks: number
+}
+
+export const columns: ColumnDef<TagWithCounts>[] = [
     {
         accessorKey: "image_url",
         header: () => <ImageIcon className="ml-3 w-4 h-4" />,
@@ -30,5 +35,15 @@ export const columns: ColumnDef<Tag>[] = [
         cell: ({ row }) => {
             return row.original.is_featured ? <Badge variant="default">Featured</Badge> : null
         }
+    },
+    {
+        accessorKey: "totalDrinks",
+        header: "Tagged Drinks",
+        cell: ({ row }) => row.original.totalDrinks,
+    },
+    {
+        accessorKey: "availableDrinks",
+        header: "Available Drinks",
+        cell: ({ row }) => row.original.availableDrinks,
     },
 ]

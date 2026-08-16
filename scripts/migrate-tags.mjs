@@ -27,6 +27,14 @@ const KNOWN_TAGS = [
     { name: "New", isFeatured: false },
     { name: "Special", isFeatured: false },
     { name: "Copycats", isFeatured: false },
+    // Referenced by existing menu_items.tags but were never wired into the
+    // old hardcoded frontend lists, so they never showed up in the UI.
+    { name: "Cocktail", isFeatured: false },
+    { name: "Spring", isFeatured: false },
+    { name: "Fall", isFeatured: false },
+    // No matching public/*.png exists for this one - created with no image,
+    // upload one via /dashboard/tags.
+    { name: "Summer", isFeatured: false, noImage: true },
 ]
 
 const BUCKET = "tag_images"
@@ -48,31 +56,36 @@ async function main() {
     const tagIdByName = new Map()
 
     for (const tag of KNOWN_TAGS) {
-        const fileName = `${tag.name.toLowerCase()}.png`
-        const filePath = path.join(process.cwd(), "public", fileName)
-        const fileBuffer = await readFile(filePath)
+        let imageUrl = null
 
-        const storagePath = `${Date.now()}-${fileName}`
-        const { error: uploadError } = await supabase.storage
-            .from(BUCKET)
-            .upload(storagePath, fileBuffer, {
-                contentType: "image/png",
-                upsert: false,
-            })
+        if (!tag.noImage) {
+            const fileName = `${tag.name.toLowerCase()}.png`
+            const filePath = path.join(process.cwd(), "public", fileName)
+            const fileBuffer = await readFile(filePath)
 
-        if (uploadError) {
-            throw new Error(`Failed to upload ${fileName}: ${uploadError.message}`)
+            const storagePath = `${Date.now()}-${fileName}`
+            const { error: uploadError } = await supabase.storage
+                .from(BUCKET)
+                .upload(storagePath, fileBuffer, {
+                    contentType: "image/png",
+                    upsert: false,
+                })
+
+            if (uploadError) {
+                throw new Error(`Failed to upload ${fileName}: ${uploadError.message}`)
+            }
+
+            const { data: publicUrlData } = supabase.storage
+                .from(BUCKET)
+                .getPublicUrl(storagePath)
+            imageUrl = publicUrlData.publicUrl
         }
-
-        const { data: publicUrlData } = supabase.storage
-            .from(BUCKET)
-            .getPublicUrl(storagePath)
 
         const { data: insertedTag, error: insertError } = await supabase
             .from("tags")
             .insert({
                 name: tag.name,
-                image_url: publicUrlData.publicUrl,
+                image_url: imageUrl,
                 is_featured: tag.isFeatured,
             })
             .select("id, name")
@@ -83,7 +96,7 @@ async function main() {
         }
 
         tagIdByName.set(insertedTag.name, insertedTag.id)
-        console.log(`Created tag "${insertedTag.name}" -> ${publicUrlData.publicUrl}`)
+        console.log(`Created tag "${insertedTag.name}" -> ${imageUrl ?? "(no image)"}`)
     }
 
     const { data: menuItems, error: menuItemsError } = await supabase

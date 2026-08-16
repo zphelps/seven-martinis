@@ -4,7 +4,7 @@ import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/co
 import { MenuItem } from "@/types/order";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Loader2, Martini, Heart, CheckCircle2, Sparkles, X } from "lucide-react";
+import { Loader2, Martini, Heart, CheckCircle2, Sparkles, Tag as TagIcon, X } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
 import { useState, useRef } from "react";
@@ -313,17 +313,21 @@ export const ItemDialog = ({ menuItem, children }: ItemDialogProps) => {
                                                             : "bg-white border border-border text-foreground"
                                                     )}
                                                 >
-                                                    <Image
-                                                        src={tag.image_url}
-                                                        className={cn(
-                                                            "mr-1.5 h-4 w-auto",
-                                                            isFeaturedDrink ? "opacity-90" : "opacity-80"
-                                                        )}
-                                                        alt={tag.name}
-                                                        height={16}
-                                                        width={16}
-                                                        style={{ objectFit: 'contain' }}
-                                                    />
+                                                    {tag.image_url ? (
+                                                        <Image
+                                                            src={tag.image_url}
+                                                            className={cn(
+                                                                "mr-1.5 h-4 w-auto",
+                                                                isFeaturedDrink ? "opacity-90" : "opacity-80"
+                                                            )}
+                                                            alt={tag.name}
+                                                            height={16}
+                                                            width={16}
+                                                            style={{ objectFit: 'contain' }}
+                                                        />
+                                                    ) : (
+                                                        <TagIcon className="mr-1.5 h-4 w-4 opacity-80" />
+                                                    )}
                                                     <span className="text-xs">{tag.name}</span>
                                                 </Badge>
                                             ))}
