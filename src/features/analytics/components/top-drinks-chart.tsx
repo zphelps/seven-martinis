@@ -25,7 +25,10 @@ function TopDrinksTooltip({ active, payload }: any) {
 }
 
 export function TopDrinksChart({ drinks, limit = 10 }: TopDrinksChartProps) {
-    const data = drinks.slice(0, limit)
+    const data = [...drinks]
+        .filter((drink) => drink.totalQuantity > 0)
+        .sort((a, b) => b.totalQuantity - a.totalQuantity)
+        .slice(0, limit)
 
     if (data.length === 0) {
         return <p className="text-sm text-muted-foreground py-8 text-center">No drinks ordered in this range yet.</p>

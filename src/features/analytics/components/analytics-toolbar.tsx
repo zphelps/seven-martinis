@@ -1,21 +1,14 @@
 "use client"
 
 import { DateRange } from "react-day-picker"
-import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Tag } from "@/types/order"
-import { Availability, SortKey } from "../lib/compute-stats"
+import { Event } from "@/types/invitation"
+import { MenuItem, Tag } from "@/types/order"
+import { Availability } from "../lib/compute-stats"
 import { DatePreset, DateRangeFilter } from "./date-range-filter"
+import { DrinkSearch } from "./drink-search"
+import { EventFilter } from "./event-filter"
 import { TagFilter } from "./tag-filter"
-
-const SORT_LABELS: Record<SortKey, string> = {
-    "most-ordered": "Most ordered",
-    "least-ordered": "Least ordered",
-    "highest-rated": "Highest rated",
-    "lowest-rated": "Lowest rated",
-    alphabetical: "Alphabetical",
-    "recently-ordered": "Recently ordered",
-}
 
 interface AnalyticsToolbarProps {
     search: string
@@ -25,8 +18,10 @@ interface AnalyticsToolbarProps {
     tags: Tag[]
     selectedTagIds: string[]
     onTagToggle: (tagId: string) => void
-    sortKey: SortKey
-    onSortChange: (value: SortKey) => void
+    menuItems: MenuItem[]
+    events: Event[]
+    selectedEventId: string | null
+    onEventSelect: (eventId: string | null) => void
     datePreset: DatePreset
     customRange: DateRange | undefined
     onDatePresetChange: (preset: DatePreset) => void
@@ -41,8 +36,10 @@ export function AnalyticsToolbar({
     tags,
     selectedTagIds,
     onTagToggle,
-    sortKey,
-    onSortChange,
+    menuItems,
+    events,
+    selectedEventId,
+    onEventSelect,
     datePreset,
     customRange,
     onDatePresetChange,
@@ -57,6 +54,8 @@ export function AnalyticsToolbar({
                 onCustomRangeChange={onCustomRangeChange}
             />
 
+            <EventFilter events={events} selectedEventId={selectedEventId} onSelect={onEventSelect} />
+
             <TagFilter tags={tags} selectedTagIds={selectedTagIds} onToggle={onTagToggle} />
 
             <Select value={availability} onValueChange={(value) => onAvailabilityChange(value as Availability)}>
@@ -70,27 +69,7 @@ export function AnalyticsToolbar({
                 </SelectContent>
             </Select>
 
-            <Input
-                placeholder="Search drinks..."
-                value={search}
-                onChange={(event) => onSearchChange(event.target.value)}
-                className="w-48"
-            />
-
-            <div className="ml-auto">
-                <Select value={sortKey} onValueChange={(value) => onSortChange(value as SortKey)}>
-                    <SelectTrigger className="w-44">
-                        <SelectValue placeholder="Sort by" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        {Object.entries(SORT_LABELS).map(([key, label]) => (
-                            <SelectItem key={key} value={key}>
-                                {label}
-                            </SelectItem>
-                        ))}
-                    </SelectContent>
-                </Select>
-            </div>
+            <DrinkSearch menuItems={menuItems} value={search} onSelect={onSearchChange} />
         </div>
     )
 }

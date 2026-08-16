@@ -3,14 +3,6 @@ import { AnalyticsOrder } from "../hooks/use-order-analytics"
 
 export type Availability = "all" | "available" | "unavailable"
 
-export type SortKey =
-    | "most-ordered"
-    | "least-ordered"
-    | "highest-rated"
-    | "lowest-rated"
-    | "alphabetical"
-    | "recently-ordered"
-
 export interface AnalyticsFilters {
     dateFrom: Date | null
     dateTo: Date | null
@@ -130,34 +122,13 @@ export function computeDrinkStats(orders: AnalyticsOrder[], menuItems: MenuItem[
         }
     }
 
-    for (const stat of byId.values()) {
+    for (const stat of Array.from(byId.values())) {
         if (stat.ratingSampleSize > 0) {
             stat.avgRating = (ratingSums.get(stat.menuItemId) ?? 0) / stat.ratingSampleSize
         }
     }
 
     return Array.from(byId.values())
-}
-
-export function sortDrinkStats(stats: DrinkStat[], sortKey: SortKey): DrinkStat[] {
-    const sorted = [...stats]
-
-    switch (sortKey) {
-        case "most-ordered":
-            return sorted.sort((a, b) => b.totalQuantity - a.totalQuantity)
-        case "least-ordered":
-            return sorted.sort((a, b) => a.totalQuantity - b.totalQuantity)
-        case "highest-rated":
-            return sorted.sort((a, b) => (b.avgRating ?? -1) - (a.avgRating ?? -1))
-        case "lowest-rated":
-            return sorted.sort((a, b) => (a.avgRating ?? 6) - (b.avgRating ?? 6))
-        case "alphabetical":
-            return sorted.sort((a, b) => a.name.localeCompare(b.name))
-        case "recently-ordered":
-            return sorted.sort((a, b) => (b.lastOrderedAt ?? "").localeCompare(a.lastOrderedAt ?? ""))
-        default:
-            return sorted
-    }
 }
 
 export function computeTagStats(drinkStats: DrinkStat[], maxSlots = 6): TagStat[] {
@@ -182,12 +153,13 @@ export function computeTagStats(drinkStats: DrinkStat[], maxSlots = 6): TagStat[
     return [...top, { tagId: "__other__", name: "Other", totalQuantity: otherTotal }]
 }
 
-export function computeTimeSeries(orders: AnalyticsOrder[]): TimeSeriesPoint[] {
+export function computeTimeSeries(orders: AnalyticsOrder[], forceHourly = false): TimeSeriesPoint[] {
     if (orders.length === 0) return []
 
     const timestamps = orders.map((order) => new Date(order.created_at).getTime())
     const spanMs = Math.max(...timestamps) - Math.min(...timestamps)
-    const bucketByHour = spanMs <= 24 * 60 * 60 * 1000
+    const bucketByHour = forceHourly || spanMs <= 24 * 60 * 60 * 1000
+    const spansMultipleYears = spanMs > 330 * 24 * 60 * 60 * 1000
 
     const buckets = new Map<string, TimeSeriesPoint>()
 
@@ -196,7 +168,11 @@ export function computeTimeSeries(orders: AnalyticsOrder[]): TimeSeriesPoint[] {
         const key = bucketByHour ? date.toISOString().slice(0, 13) : date.toISOString().slice(0, 10)
         const label = bucketByHour
             ? date.toLocaleTimeString([], { hour: "numeric" })
-            : date.toLocaleDateString([], { month: "short", day: "numeric" })
+            : date.toLocaleDateString([], {
+                month: "short",
+                day: "numeric",
+                year: spansMultipleYears ? "numeric" : undefined,
+            })
 
         const existing = buckets.get(key) ?? { key, label, orders: 0, items: 0 }
         existing.orders += 1

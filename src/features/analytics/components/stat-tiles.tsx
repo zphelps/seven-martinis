@@ -2,9 +2,8 @@
 
 import { ReactNode } from "react"
 import { Card, CardContent } from "@/components/ui/card"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { AnalyticsSummary } from "../lib/compute-stats"
-import { GlassWater, Info, ListChecks, Star, Users } from "lucide-react"
+import { GlassWater, ListChecks, Star, Users } from "lucide-react"
 
 interface StatTilesProps {
     summary: AnalyticsSummary
@@ -46,7 +45,6 @@ export function StatTiles({ summary }: StatTilesProps) {
                 label="Drinks served"
                 value={formatCompact(summary.totalItemsServed)}
                 icon={<GlassWater className="w-4 h-4" />}
-                caption={`${formatCompact(summary.avgItemsPerOrder)} avg per order`}
             />
             <StatTile
                 label="Total orders"
@@ -62,19 +60,7 @@ export function StatTiles({ summary }: StatTilesProps) {
                 label="Avg rating"
                 value={summary.avgRating ? summary.avgRating.toFixed(1) : "—"}
                 icon={<Star className="w-4 h-4" />}
-                caption={
-                    <TooltipProvider>
-                        <Tooltip>
-                            <TooltipTrigger className="inline-flex items-center gap-1 cursor-default">
-                                {summary.ratingResponses} responses <Info className="w-3 h-3" />
-                            </TooltipTrigger>
-                            <TooltipContent className="max-w-64">
-                                Ratings are submitted per order, not per drink. When an order
-                                has multiple drinks, its rating counts toward each of them.
-                            </TooltipContent>
-                        </Tooltip>
-                    </TooltipProvider>
-                }
+                caption={`${summary.ratingResponses} responses`}
             />
         </div>
     )
