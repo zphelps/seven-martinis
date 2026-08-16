@@ -7,7 +7,10 @@
     "build": "next build",
     "postbuild": "next-sitemap",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "supabase:start": "supabase start",
+    "supabase:stop": "supabase stop",
+    "supabase:status": "supabase status"
   },
   "dependencies": {
     "@caldwell619/react-kanban": "^0.0.11",
@@ -57,6 +60,7 @@
     "react-hook-form": "^7.52.1",
     "react-snowfall": "^2.4.0",
     "react-spinners": "^0.14.1",
+    "recharts": "^3.10.1",
     "tailwind-merge": "^2.4.0",
     "tailwindcss-animate": "^1.0.7",
     "uuid": "^11.0.3",

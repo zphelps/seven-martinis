@@ -10,10 +10,11 @@ import { createClient } from "@/utils/supabase/client";
 
 
 interface ReservationModalProps {
-    date: Date;
+    eventId?: string;
+    eventDate?: string | null;
 }
 
-export function ReservationModal({ date }: ReservationModalProps) {
+export function ReservationModal({ eventId, eventDate }: ReservationModalProps) {
     const [open, setOpen] = useState(false);
     const [guestCount, setGuestCount] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -30,7 +31,6 @@ export function ReservationModal({ date }: ReservationModalProps) {
         const firstTimeAttendee = formData.get("firstTime") === "on";
 
         const guestNum = Number(guestCount) || null;
-        const eventDate = date.toISOString().split("T")[0];
 
         const { error } = await createClient().from("attendees").insert([
             {
@@ -39,6 +39,7 @@ export function ReservationModal({ date }: ReservationModalProps) {
                 email,
                 guestNum,
                 eventDate,
+                eventId,
                 firstTimeAttendee
             },
         ]);

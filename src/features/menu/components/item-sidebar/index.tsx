@@ -22,10 +22,11 @@ import { ChangeDrinkTags } from "@/features/menu/components/item-sidebar/change-
 interface MenuItemSidebarProps {
     menu: MenuItem[],
     updateMenuItem: (id: string, item: UpdateMenuItemProps) => Promise<void>,
+    updateMenuItemTags: (id: string, tagIds: string[]) => Promise<void>,
     deleteMenuItem: (id: string) => Promise<void>
 }
 
-export default function MenuItemSidebar({ menu, updateMenuItem, deleteMenuItem }: MenuItemSidebarProps) {
+export default function MenuItemSidebar({ menu, updateMenuItem, updateMenuItemTags, deleteMenuItem }: MenuItemSidebarProps) {
     const { toggleSidebar, open } = useSidebar()
     const router = useRouter()
 
@@ -99,7 +100,7 @@ export default function MenuItemSidebar({ menu, updateMenuItem, deleteMenuItem }
                                 <div className="px-3">
                                     <ChangeDrinkTags
                                         item={item}
-                                        updateMenuItem={updateMenuItem}
+                                        updateMenuItemTags={updateMenuItemTags}
                                     />
                                 </div>
                                 <Separator />

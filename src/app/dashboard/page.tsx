@@ -140,19 +140,19 @@ export default function Dashboard() {
             return;
         }
 
-        const deletePromises = servedOrders.map(async (order) => {
+        const clearPromises = servedOrders.map(async (order) => {
             try {
                 setIsClearingServed(true);
-                const response = await fetch(`/api/orders`, {
-                    method: "DELETE",
+                const response = await fetch(`/api/orders/${order.id}`, {
+                    method: "PUT",
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    body: JSON.stringify({ orderId: order.id }),
+                    body: JSON.stringify({ cleared_at: new Date().toISOString() }),
                 });
 
                 if (!response.ok) {
-                    throw new Error(`Failed to delete order with id ${order.id}`);
+                    throw new Error(`Failed to clear order with id ${order.id}`);
                 }
 
                 setOrders((prevOrders: any) =>
@@ -161,7 +161,7 @@ export default function Dashboard() {
 
             } catch (error: any) {
                 toast({
-                    title: `Error deleting order ${order.id}: ${error.message}`,
+                    title: `Error clearing order ${order.id}: ${error.message}`,
                     variant: "destructive",
                 });
             } finally {
@@ -169,7 +169,7 @@ export default function Dashboard() {
             }
         });
 
-        await Promise.all(deletePromises);
+        await Promise.all(clearPromises);
         toast({
             title: "Served orders cleared successfully",
         });
@@ -236,10 +236,10 @@ export default function Dashboard() {
     if (error) return <p className="text-destructive p-4">Error fetching orders</p>;
 
     return (
-        <div className="container-lg mx-0 mb-2.5 space-y-4">
+        <div className="container-lg mx-0 mb-2.5 h-screen overflow-hidden flex flex-col">
             {/* Order Details Cards */}
-            <div className="flex flex-col justify-center">
-                <div className="sticky top-0 pt-2.5 bg-background">
+            <div className="flex flex-col flex-1 min-h-0">
+                <div className="shrink-0 pt-2.5 bg-background">
                     <div className="flex justify-center z-1 w-full space-x-2.5">
                         {leftOrder && (
                             <OrderDetailsCard
@@ -265,7 +265,7 @@ export default function Dashboard() {
                 </div>
 
                 {/* Kanban Board */}
-                <div className="flex justify-center">
+                <div className="flex justify-center flex-1 min-h-0 overflow-x-auto">
                     <KanbanStyles>
                         <Board
                             children={board}
@@ -277,11 +277,11 @@ export default function Dashboard() {
                                         <p className="text-lg font-semibold m-2 text-foreground">
                                             {column.title}
                                         </p>
-                                        {/* {column.id === 4 && (
-                                            <Button variant="outline" className="-mr-3" onClick={handleClearServed} disabled={isClearingServed}>
+                                        {column.id === 4 && (
+                                            <Button variant="outline" size="sm" onClick={handleClearServed} disabled={isClearingServed}>
                                                 {isClearingServed ? <Loader2 className="w-4 h-4 animate-spin" /> : "Clear"}
                                             </Button>
-                                        )} */}
+                                        )}
                                     </div>
                                 );
                             }}
@@ -301,10 +301,47 @@ export default function Dashboard() {
 }
 
 const KanbanStyles = styled('div')`
+  display: flex;
+  height: 100%;
+  min-height: 0;
+
+  & .react-kanban-board {
+    height: 100%;
+  }
+
+  /* The board only stretches its direct child (the droppable columns
+     wrapper) when align-items would allow it, but react-kanban hardcodes
+     align-items: flex-start inline, so that wrapper never gets a real
+     height on its own — force it here so the columns' height: 100%
+     (also inline, from the library) has something real to resolve against. */
+  & .react-kanban-board > div {
+    height: 100%;
+  }
+
   & .react-kanban-column {
     border-radius: 12px;
     background-color: hsl(var(--secondary));
     border: 1px solid hsl(var(--border));
     padding: 6px;
+    box-sizing: border-box;
+    /* react-kanban hardcodes this column's own display as inline-block
+       inline, which we override (needs !important to beat the inline
+       style) so the header and the card-droppable zone below it stack
+       in a column instead of both claiming the same inherited height. */
+    display: inline-flex !important;
+    flex-direction: column;
+  }
+
+  /* The card-droppable zone (react-kanban's second, unclassed child of
+     the column) is inline-styled with height: inherit, which copies the
+     column's own 100% and, added on top of the header's height, always
+     overflows the column by exactly the header's height - even with zero
+     cards. Giving it flex-basis 0 ignores that inline height and lets it
+     take only the space left after the header, so it can scroll on its
+     own when cards overflow instead of the column overflowing them both. */
+  & .react-kanban-column > div:last-child {
+    flex: 1 1 0 !important;
+    min-height: 0 !important;
+    overflow-y: auto;
   }
 `

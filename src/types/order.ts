@@ -5,6 +5,7 @@ export interface Order {
     customer_name: string;
     status: OrderStatus;
     created_at: string;
+    cleared_at: string | null;
     items: OrderItem[];
     rating: number | null;
 }
@@ -17,6 +18,17 @@ export interface OrderItem {
     recipe: string;
 }
 
+export interface Tag {
+    id: string;
+    name: string;
+    image_url: string;
+    is_featured: boolean;
+    is_active: boolean;
+    theme: string;
+    icon: string | null;
+    tagline: string | null;
+}
+
 export interface MenuItem {
     id: string;
     name: string;
@@ -26,5 +38,5 @@ export interface MenuItem {
     available: boolean;
     instructions: string;
     description: string;
-    tags: string[];
+    tags: Tag[];
 }

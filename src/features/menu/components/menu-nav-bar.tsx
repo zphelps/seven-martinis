@@ -31,7 +31,7 @@ export default function MenuNavBar() {
                         <span className="sr-only">Seven Martinis</span>
                         <img
                             alt="Seven Martinis"
-                            src="7MPrimaryCropped.png"
+                            src="/7MPrimaryCropped.png"
                             className="h-12 md:h-14 max-w-fit"
                         />
                     </a>

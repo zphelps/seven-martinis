@@ -20,6 +20,7 @@ export function useOrders() {
                         customer_name,
                         status,
                         created_at,
+                        cleared_at,
                         order_items (
                             menu_item_id,
                             quantity,
@@ -32,6 +33,7 @@ export function useOrders() {
                             )
                         )
                     `)
+                    .is('cleared_at', null)
                     .order('created_at', { ascending: false });
 
                 if (error) throw error;
@@ -41,6 +43,7 @@ export function useOrders() {
                     customer_name: order.customer_name,
                     status: order.status,
                     created_at: order.created_at,
+                    cleared_at: order.cleared_at,
                     items: order.order_items.map((item: any) => ({
                         menu_item_id: item.menu_item_id,
                         name: item.menu_items.name,

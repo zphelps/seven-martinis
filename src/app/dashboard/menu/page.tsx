@@ -13,6 +13,7 @@ export default function MenuPage() {
         error,
         addMenuItem,
         updateMenuItem,
+        updateMenuItemTags,
         deleteMenuItem
     } = useMenu({ onlyAvailable: false })
 
@@ -44,6 +45,7 @@ export default function MenuPage() {
                 <MenuItemSidebar
                     menu={menuItems}
                     updateMenuItem={updateMenuItem}
+                    updateMenuItemTags={updateMenuItemTags}
                     deleteMenuItem={deleteMenuItem}
                 />
             </div>
