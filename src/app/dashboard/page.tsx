@@ -236,10 +236,10 @@ export default function Dashboard() {
     if (error) return <p className="text-destructive p-4">Error fetching orders</p>;
 
     return (
-        <div className="container-lg mx-0 mb-2.5 space-y-4">
+        <div className="container-lg mx-0 mb-2.5 h-screen overflow-hidden flex flex-col">
             {/* Order Details Cards */}
-            <div className="flex flex-col justify-center">
-                <div className="sticky top-0 pt-2.5 bg-background">
+            <div className="flex flex-col flex-1 min-h-0">
+                <div className="shrink-0 pt-2.5 bg-background">
                     <div className="flex justify-center z-1 w-full space-x-2.5">
                         {leftOrder && (
                             <OrderDetailsCard
@@ -265,7 +265,7 @@ export default function Dashboard() {
                 </div>
 
                 {/* Kanban Board */}
-                <div className="flex justify-center">
+                <div className="flex justify-center flex-1 min-h-0 overflow-x-auto">
                     <KanbanStyles>
                         <Board
                             children={board}
@@ -301,10 +301,19 @@ export default function Dashboard() {
 }
 
 const KanbanStyles = styled('div')`
+  display: flex;
+  height: 100%;
+  min-height: 0;
+
+  & .react-kanban-board {
+    height: 100%;
+  }
+
   & .react-kanban-column {
     border-radius: 12px;
     background-color: hsl(var(--secondary));
     border: 1px solid hsl(var(--border));
     padding: 6px;
+    overflow-y: auto;
   }
 `

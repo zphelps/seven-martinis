@@ -22,9 +22,11 @@ export default async function InvitationByTokenPage({ params }: InvitationByToke
     }
 
     return (
-        <InvitationView
-            event={payload.event as Event}
-            details={(payload.details ?? []) as EventDetailItem[]}
-        />
+        <div className="h-screen overflow-y-auto">
+            <InvitationView
+                event={payload.event as Event}
+                details={(payload.details ?? []) as EventDetailItem[]}
+            />
+        </div>
     );
 }
