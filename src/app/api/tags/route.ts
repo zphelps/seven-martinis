@@ -39,6 +39,9 @@ export async function POST(request: Request) {
         const name = formData.get("name") as string
         const isFeatured = formData.get("is_featured") === "true"
         const imageFile = formData.get("image") as File | null
+        const theme = (formData.get("theme") as string | null) || "winter"
+        const iconRaw = formData.get("icon") as string | null
+        const taglineRaw = formData.get("tagline") as string | null
 
         let image_url = ""
 
@@ -72,6 +75,9 @@ export async function POST(request: Request) {
                 name,
                 image_url,
                 is_featured: isFeatured,
+                theme,
+                icon: iconRaw || null,
+                tagline: taglineRaw || null,
             })
             .select("*")
 

@@ -4,7 +4,7 @@ import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/co
 import { MenuItem } from "@/types/order";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Loader2, Martini, Heart, CheckCircle2, Sparkles, Tag as TagIcon, X } from "lucide-react";
+import { Loader2, Martini, Heart, CheckCircle2, Tag as TagIcon, X } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
 import { useState, useRef } from "react";
@@ -14,6 +14,7 @@ import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import { config } from "@/config";
 import { cn } from "@/lib/utils";
+import { getFeaturedTheme, resolveFeaturedIcon } from "@/features/tags/lib/featured-themes";
 
 interface ItemDialogProps {
     menuItem: MenuItem;
@@ -30,9 +31,12 @@ export const ItemDialog = ({ menuItem, children }: ItemDialogProps) => {
     const router = useRouter();
     const scrollPositionRef = useRef(0);
 
-    // Drinks with an active, featured tag get the highlighted theme
+    // Drinks with an active, featured tag get that tag's highlighted theme
     const visibleTags = menuItem.tags?.filter((tag) => tag.is_active);
-    const isFeaturedDrink = visibleTags?.some((tag) => tag.is_featured);
+    const featuredTag = visibleTags?.find((tag) => tag.is_featured) ?? null;
+    const isFeaturedDrink = !!featuredTag;
+    const theme = featuredTag ? getFeaturedTheme(featuredTag.theme) : null;
+    const FeaturedIcon = featuredTag ? resolveFeaturedIcon(featuredTag.icon) ?? theme!.defaultIcon : null;
 
     const handlePlaceOrder = async () => {
         if (!customerName.trim()) {
@@ -143,7 +147,7 @@ export const ItemDialog = ({ menuItem, children }: ItemDialogProps) => {
                 className={cn(
                     "w-full sm:max-w-md p-0 border-l [&>button]:hidden",
                     isFeaturedDrink
-                        ? "bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 border-blue-900/50"
+                        ? cn(theme!.panelGradientClassName, theme!.panelBorderClassName)
                         : "bg-background border-border"
                 )}
             >
@@ -167,20 +171,20 @@ export const ItemDialog = ({ menuItem, children }: ItemDialogProps) => {
                     </button>
                 </div>
 
-                {/* Decorative sparkles for featured drinks */}
-                {isFeaturedDrink && (
+                {/* Decorative icon for featured drinks */}
+                {isFeaturedDrink && FeaturedIcon && (
                     <>
                         <div className="absolute top-20 right-8 opacity-10 pointer-events-none">
-                            <Sparkles className="w-16 h-16 text-white" />
+                            <FeaturedIcon className="w-16 h-16 text-white" />
                         </div>
                         <div className="absolute bottom-32 left-6 opacity-10 pointer-events-none">
-                            <Sparkles className="w-20 h-20 text-white" />
+                            <FeaturedIcon className="w-20 h-20 text-white" />
                         </div>
                         <div className="absolute top-1/3 right-1/4 opacity-5 pointer-events-none">
-                            <Sparkles className="w-12 h-12 text-white" />
+                            <FeaturedIcon className="w-12 h-12 text-white" />
                         </div>
                         <div className="absolute top-1/2 left-8 opacity-5 pointer-events-none">
-                            <Sparkles className="w-8 h-8 text-white" />
+                            <FeaturedIcon className="w-8 h-8 text-white" />
                         </div>
                     </>
                 )}
@@ -191,12 +195,12 @@ export const ItemDialog = ({ menuItem, children }: ItemDialogProps) => {
                         <div className={cn(
                             "w-24 h-24 rounded-full flex items-center justify-center border-2",
                             isFeaturedDrink
-                                ? "bg-blue-400/20 border-blue-300/30"
+                                ? theme!.circleIconBoxClassName
                                 : "bg-green-50 border-green-200"
                         )}>
                             <CheckCircle2 className={cn(
                                 "w-14 h-14",
-                                isFeaturedDrink ? "text-blue-300" : "text-green-600"
+                                isFeaturedDrink ? theme!.circleIconTextClassName : "text-green-600"
                             )} />
                         </div>
                         <div className="space-y-2">
@@ -206,7 +210,7 @@ export const ItemDialog = ({ menuItem, children }: ItemDialogProps) => {
                             )}>Order Placed!</h2>
                             <p className={cn(
                                 "text-xl",
-                                isFeaturedDrink ? "text-blue-200/80" : "text-muted-foreground"
+                                isFeaturedDrink ? theme!.subheadingClassName : "text-muted-foreground"
                             )}>
                                 We&apos;re crafting your drink, {customerName}
                             </p>
@@ -220,12 +224,12 @@ export const ItemDialog = ({ menuItem, children }: ItemDialogProps) => {
                         <div className={cn(
                             "w-20 h-20 rounded-full flex items-center justify-center border",
                             isFeaturedDrink
-                                ? "bg-blue-400/20 border-blue-300/30"
+                                ? theme!.circleIconBoxClassName
                                 : "bg-accent/10 border-accent/30"
                         )}>
                             <Heart className={cn(
                                 "w-10 h-10",
-                                isFeaturedDrink ? "text-blue-300" : "text-accent"
+                                isFeaturedDrink ? theme!.circleIconTextClassName : "text-accent"
                             )} />
                         </div>
                         <div className="space-y-3">
@@ -235,7 +239,7 @@ export const ItemDialog = ({ menuItem, children }: ItemDialogProps) => {
                             )}>Support the Bartender</h2>
                             <p className={cn(
                                 "text-lg",
-                                isFeaturedDrink ? "text-blue-200/70" : "text-muted-foreground"
+                                isFeaturedDrink ? theme!.subheadingClassName : "text-muted-foreground"
                             )}>
                                 Your generosity keeps the craft alive
                             </p>
@@ -246,7 +250,7 @@ export const ItemDialog = ({ menuItem, children }: ItemDialogProps) => {
                                 className={cn(
                                     "w-full h-16 text-lg font-medium",
                                     isFeaturedDrink
-                                        ? "bg-blue-500 hover:bg-blue-400 text-white"
+                                        ? cn(theme!.buttonClassName, "text-white")
                                         : "bg-accent hover:bg-accent/90 text-accent-foreground"
                                 )}
                                 onClick={handleTip}
@@ -260,7 +264,7 @@ export const ItemDialog = ({ menuItem, children }: ItemDialogProps) => {
                                 className={cn(
                                     "w-full h-12",
                                     isFeaturedDrink
-                                        ? "text-blue-200/60 hover:text-white hover:bg-white/10"
+                                        ? theme!.skipTextClassName
                                         : "text-muted-foreground hover:text-foreground"
                                 )}
                                 onClick={handleClose}
@@ -282,7 +286,7 @@ export const ItemDialog = ({ menuItem, children }: ItemDialogProps) => {
                                         variant="outline"
                                         className={cn(
                                             isFeaturedDrink
-                                                ? "border-blue-300/30 text-blue-200 bg-blue-400/10"
+                                                ? theme!.numberOutlineBadgeClassName
                                                 : "border-border text-muted-foreground"
                                         )}
                                     >
@@ -296,7 +300,7 @@ export const ItemDialog = ({ menuItem, children }: ItemDialogProps) => {
                                     </h2>
                                     <p className={cn(
                                         "text-lg leading-relaxed",
-                                        isFeaturedDrink ? "text-blue-100/70" : "text-muted-foreground"
+                                        isFeaturedDrink ? theme!.bodyMutedClassName : "text-muted-foreground"
                                     )}>
                                         {menuItem.description}
                                     </p>
@@ -310,7 +314,7 @@ export const ItemDialog = ({ menuItem, children }: ItemDialogProps) => {
                                                     className={cn(
                                                         "py-1.5 px-3",
                                                         isFeaturedDrink
-                                                            ? "bg-white/10 border border-white/20 text-blue-100"
+                                                            ? theme!.tagChipClassName
                                                             : "bg-white border border-border text-foreground"
                                                     )}
                                                 >
@@ -342,14 +346,14 @@ export const ItemDialog = ({ menuItem, children }: ItemDialogProps) => {
                         <div className={cn(
                             "flex-shrink-0 border-t shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]",
                             isFeaturedDrink
-                                ? "bg-slate-900/80 backdrop-blur-sm border-blue-900/50"
+                                ? cn("bg-black/40 backdrop-blur-sm", theme!.panelBorderClassName)
                                 : "bg-white border-border"
                         )}>
                             <div className="p-6 space-y-4">
                                 <div className="space-y-2">
                                     <label className={cn(
                                         "text-sm font-medium text-center block uppercase tracking-wider",
-                                        isFeaturedDrink ? "text-blue-200/70" : "text-muted-foreground"
+                                        isFeaturedDrink ? theme!.subheadingClassName : "text-muted-foreground"
                                     )}>
                                         Who is this drink for?
                                     </label>
@@ -357,7 +361,7 @@ export const ItemDialog = ({ menuItem, children }: ItemDialogProps) => {
                                         className={cn(
                                             "h-14 text-xl text-center rounded-xl",
                                             isFeaturedDrink
-                                                ? "bg-white/10 border-blue-300/30 text-white placeholder:text-blue-200/30 focus:border-blue-400 focus:ring-blue-400/20"
+                                                ? theme!.inputClassName
                                                 : "bg-secondary/30 border-border placeholder:text-muted-foreground/30 focus:border-primary focus:ring-primary/20"
                                         )}
                                         placeholder="Enter your name"
@@ -381,8 +385,8 @@ export const ItemDialog = ({ menuItem, children }: ItemDialogProps) => {
                                         "w-full h-14 text-lg font-semibold transition-all rounded-xl",
                                         isFeaturedDrink
                                             ? customerName.trim()
-                                                ? "bg-blue-500 hover:bg-blue-400 text-white shadow-lg shadow-blue-500/20"
-                                                : "bg-blue-900/50 text-blue-300/50"
+                                                ? cn(theme!.buttonClassName, "text-white shadow-lg")
+                                                : theme!.buttonDisabledClassName
                                             : customerName.trim()
                                                 ? "bg-primary hover:bg-primary/90 text-white shadow-lg"
                                                 : "bg-secondary text-muted-foreground"
@@ -397,8 +401,8 @@ export const ItemDialog = ({ menuItem, children }: ItemDialogProps) => {
                                         </>
                                     ) : (
                                         <>
-                                            {isFeaturedDrink ? (
-                                                <Sparkles className="w-5 h-5 mr-2" />
+                                            {isFeaturedDrink && FeaturedIcon ? (
+                                                <FeaturedIcon className="w-5 h-5 mr-2" />
                                             ) : (
                                                 <Martini className="w-5 h-5 mr-2" />
                                             )}

@@ -19,11 +19,15 @@ import { toast } from "@/components/ui/use-toast"
 import { Tag } from "@/types/order"
 import { AddTagProps } from "../hooks/use-tags"
 import { Loader2 } from "lucide-react"
+import { FeaturedStylePicker } from "./featured-style-picker"
 
 const formSchema = z.object({
     name: z.string().nonempty("Name is required"),
     is_featured: z.boolean().default(false),
     image: z.any().optional(),
+    theme: z.string().default("winter"),
+    icon: z.string().nullable().default(null),
+    tagline: z.string().nullable().default(null),
 })
 
 type FormValues = z.infer<typeof formSchema>
@@ -41,6 +45,9 @@ export default function AddTagDialog({ addTag, children }: AddTagDialogProps) {
         defaultValues: {
             name: "",
             is_featured: false,
+            theme: "winter",
+            icon: null,
+            tagline: null,
         },
     })
     const router = useRouter()
@@ -53,6 +60,9 @@ export default function AddTagDialog({ addTag, children }: AddTagDialogProps) {
                 name: values.name,
                 is_featured: values.is_featured,
                 image: values.image?.[0] || null,
+                theme: values.theme,
+                icon: values.icon,
+                tagline: values.tagline,
             }
 
             const tag = await addTag(newTag)
@@ -157,6 +167,17 @@ export default function AddTagDialog({ addTag, children }: AddTagDialogProps) {
                                 </FormItem>
                             )}
                         />
+
+                        {watch("is_featured") && (
+                            <FeaturedStylePicker
+                                theme={watch("theme")}
+                                icon={watch("icon")}
+                                tagline={watch("tagline")}
+                                onThemeChange={(theme) => setValue("theme", theme)}
+                                onIconChange={(icon) => setValue("icon", icon)}
+                                onTaglineChange={(tagline) => setValue("tagline", tagline)}
+                            />
+                        )}
 
                         <Button type="submit" disabled={submitting}>
                             {submitting ? <Loader2 className="animate-spin" /> : "Add Tag"}

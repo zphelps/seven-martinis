@@ -5,10 +5,11 @@ import { MenuItemCard } from "./menu-item-card";
 import { ItemTagFilter } from "../item-tag-filter";
 import { ItemDialog } from "../item-dialog";
 import { useState, useMemo } from "react";
-import { Search, Martini, Sparkles } from "lucide-react";
+import { Search, Martini } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
 import useTags from "@/features/tags/hooks/use-tags";
+import { getFeaturedTheme, resolveFeaturedIcon } from "@/features/tags/lib/featured-themes";
 
 interface MenuListProps {
     menuItems: MenuItem[];
@@ -136,24 +137,30 @@ export function MenuList({ menuItems, loading, error }: MenuListProps) {
             ) : showFeaturedSections ? (
                 <div className="space-y-6">
                     {/* Featured Sections */}
-                    {featuredSections.map(({ tag, drinks }) => (
-                        <div key={tag.id} className="relative overflow-hidden rounded-xl bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900">
-                            {/* Decorative sparkles */}
+                    {featuredSections.map(({ tag, drinks }) => {
+                        const theme = getFeaturedTheme(tag.theme);
+                        const FeaturedIcon = resolveFeaturedIcon(tag.icon) ?? theme.defaultIcon;
+                        const showTagImage = !tag.icon && !!tag.image_url;
+                        const tagline = tag.tagline || theme.defaultTagline;
+
+                        return (
+                        <div key={tag.id} className={`relative overflow-hidden rounded-xl ${theme.panelGradientClassName}`}>
+                            {/* Decorative icon */}
                             <div className="absolute top-4 right-6 opacity-15">
-                                <Sparkles className="w-10 h-10 text-white" />
+                                <FeaturedIcon className="w-10 h-10 text-white" />
                             </div>
                             <div className="absolute bottom-20 left-4 opacity-10">
-                                <Sparkles className="w-14 h-14 text-white" />
+                                <FeaturedIcon className="w-14 h-14 text-white" />
                             </div>
                             <div className="absolute top-1/3 right-1/3 opacity-8">
-                                <Sparkles className="w-6 h-6 text-white" />
+                                <FeaturedIcon className="w-6 h-6 text-white" />
                             </div>
 
                             {/* Header */}
                             <div className="relative z-10 p-5 pb-3">
                                 <div className="flex items-center gap-3">
                                     <div className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center border border-white/20">
-                                        {tag.image_url ? (
+                                        {showTagImage ? (
                                             <Image
                                                 src={tag.image_url}
                                                 alt={tag.name}
@@ -162,15 +169,15 @@ export function MenuList({ menuItems, loading, error }: MenuListProps) {
                                                 className="opacity-90"
                                             />
                                         ) : (
-                                            <Sparkles className="w-5 h-5 text-white opacity-90" />
+                                            <FeaturedIcon className="w-5 h-5 text-white opacity-90" />
                                         )}
                                     </div>
                                     <div>
                                         <h2 className="text-xl font-serif font-semibold text-white">
                                             Seven For {tag.name}
                                         </h2>
-                                        <p className="text-sm text-blue-200/70">
-                                            Seasonal favorites to warm your spirit
+                                        <p className={`text-sm ${theme.subheadingClassName}`}>
+                                            {tagline}
                                         </p>
                                     </div>
                                 </div>
@@ -183,8 +190,8 @@ export function MenuList({ menuItems, loading, error }: MenuListProps) {
                                         <div className="cursor-pointer group">
                                             <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-3.5 transition-all duration-200 hover:bg-white/15 hover:border-white/30">
                                                 <div className="flex items-start gap-3">
-                                                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-blue-400/20 border border-blue-300/30 flex items-center justify-center">
-                                                        <span className="text-xs font-mono font-bold text-blue-200">
+                                                    <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${theme.numberBadgeBoxClassName}`}>
+                                                        <span className={`text-xs font-mono font-bold ${theme.numberBadgeTextClassName}`}>
                                                             {item.drink_number}
                                                         </span>
                                                     </div>
@@ -192,7 +199,7 @@ export function MenuList({ menuItems, loading, error }: MenuListProps) {
                                                         <h3 className="font-serif text-base font-semibold text-white leading-tight truncate">
                                                             {item.name}
                                                         </h3>
-                                                        <p className="text-sm text-blue-100/60 mt-0.5 line-clamp-2 leading-relaxed">
+                                                        <p className={`text-sm mt-0.5 line-clamp-2 leading-relaxed ${theme.bodyMutedClassName}`}>
                                                             {item.description}
                                                         </p>
                                                     </div>
@@ -203,7 +210,8 @@ export function MenuList({ menuItems, loading, error }: MenuListProps) {
                                 ))}
                             </div>
                         </div>
-                    ))}
+                        );
+                    })}
 
                     {/* Regular Menu Section */}
                     {regularMenuItems.length > 0 && (

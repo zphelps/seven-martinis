@@ -5,6 +5,9 @@ export interface AddTagProps {
     name: string
     is_featured: boolean
     image: File | null
+    theme: string
+    icon: string | null
+    tagline: string | null
 }
 
 export interface UpdateTagProps {
@@ -12,6 +15,9 @@ export interface UpdateTagProps {
     is_featured?: boolean
     is_active?: boolean
     image?: File | null
+    theme?: string
+    icon?: string | null
+    tagline?: string | null
 }
 
 const useTags = () => {
@@ -40,6 +46,9 @@ const useTags = () => {
         const formData = new FormData()
         formData.append("name", tag.name)
         formData.append("is_featured", String(tag.is_featured))
+        formData.append("theme", tag.theme)
+        formData.append("icon", tag.icon ?? "")
+        formData.append("tagline", tag.tagline ?? "")
         if (tag.image) {
             formData.append("image", tag.image)
         }
@@ -70,6 +79,9 @@ const useTags = () => {
         if (tag.name !== undefined) formData.append("name", tag.name)
         if (tag.is_featured !== undefined) formData.append("is_featured", String(tag.is_featured))
         if (tag.is_active !== undefined) formData.append("is_active", String(tag.is_active))
+        if (tag.theme !== undefined) formData.append("theme", tag.theme)
+        if (tag.icon !== undefined) formData.append("icon", tag.icon ?? "")
+        if (tag.tagline !== undefined) formData.append("tagline", tag.tagline ?? "")
         if (tag.image) formData.append("image", tag.image)
 
         try {

@@ -14,6 +14,7 @@ import { DeleteTagButton } from "./delete-tag-button";
 import { DisableTagButton } from "./disable-tag-button";
 import { UntagAllButton } from "./untag-all-button";
 import { TagWithCounts } from "./columns";
+import { FeaturedStylePicker } from "./featured-style-picker";
 
 interface TagSidebarProps {
     tags: TagWithCounts[],
@@ -32,6 +33,7 @@ export default function TagSidebar({ tags, updateTag, untagAllDrinks, onUntagAll
 
     const [tag, setTag] = useState<TagWithCounts | null>(null)
     const [name, setName] = useState("")
+    const [tagline, setTagline] = useState<string | null>(null)
 
     useEffect(() => {
         if (id && !open) {
@@ -49,6 +51,7 @@ export default function TagSidebar({ tags, updateTag, untagAllDrinks, onUntagAll
 
     useEffect(() => {
         setName(tag?.name || "")
+        setTagline(tag?.tagline ?? null)
     }, [tag])
 
     const handleRename = async () => {
@@ -61,6 +64,21 @@ export default function TagSidebar({ tags, updateTag, untagAllDrinks, onUntagAll
         if (!tag) return
         await updateTag(tag.id, { is_featured: checked })
         toast({ title: checked ? "Tag marked as featured" : "Tag removed from featured" })
+    }
+
+    const handleThemeChange = async (theme: string) => {
+        if (!tag) return
+        await updateTag(tag.id, { theme })
+    }
+
+    const handleIconChange = async (icon: string | null) => {
+        if (!tag) return
+        await updateTag(tag.id, { icon })
+    }
+
+    const handleTaglineBlur = async () => {
+        if (!tag || tagline === (tag.tagline ?? null)) return
+        await updateTag(tag.id, { tagline: tagline || null })
     }
 
     const handleImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -120,6 +138,18 @@ export default function TagSidebar({ tags, updateTag, untagAllDrinks, onUntagAll
                                         </div>
                                         <Switch checked={tag.is_featured} onCheckedChange={handleFeaturedToggle} />
                                     </div>
+
+                                    {tag.is_featured && (
+                                        <FeaturedStylePicker
+                                            theme={tag.theme}
+                                            icon={tag.icon}
+                                            tagline={tagline}
+                                            onThemeChange={handleThemeChange}
+                                            onIconChange={handleIconChange}
+                                            onTaglineChange={setTagline}
+                                            onTaglineBlur={handleTaglineBlur}
+                                        />
+                                    )}
 
                                     {!tag.is_active && (
                                         <p className="text-xs text-amber-600 bg-amber-50 border border-amber-200 rounded-md p-2">

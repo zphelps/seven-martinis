@@ -23,6 +23,9 @@ export interface Tag {
     image_url: string;
     is_featured: boolean;
     is_active: boolean;
+    theme: string;
+    icon: string | null;
+    tagline: string | null;
 }
 
 export interface MenuItem {
