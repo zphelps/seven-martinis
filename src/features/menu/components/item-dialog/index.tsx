@@ -4,7 +4,7 @@ import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/co
 import { MenuItem } from "@/types/order";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Loader2, Martini, Heart, CheckCircle2, Snowflake, X } from "lucide-react";
+import { Loader2, Martini, Heart, CheckCircle2, Sparkles, X } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
 import { useState, useRef } from "react";
@@ -30,8 +30,8 @@ export const ItemDialog = ({ menuItem, children }: ItemDialogProps) => {
     const router = useRouter();
     const scrollPositionRef = useRef(0);
 
-    // Check if this is a winter drink
-    const isWinterDrink = menuItem.tags?.includes("Winter");
+    // Drinks with a featured tag get the highlighted theme
+    const isFeaturedDrink = menuItem.tags?.some((tag) => tag.is_featured);
 
     const handlePlaceOrder = async () => {
         if (!customerName.trim()) {
@@ -141,7 +141,7 @@ export const ItemDialog = ({ menuItem, children }: ItemDialogProps) => {
                 side="right"
                 className={cn(
                     "w-full sm:max-w-md p-0 border-l [&>button]:hidden",
-                    isWinterDrink
+                    isFeaturedDrink
                         ? "bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 border-blue-900/50"
                         : "bg-background border-border"
                 )}
@@ -156,7 +156,7 @@ export const ItemDialog = ({ menuItem, children }: ItemDialogProps) => {
                         onClick={() => setOpen(false)}
                         className={cn(
                             "rounded-full p-2.5 transition-all",
-                            isWinterDrink
+                            isFeaturedDrink
                                 ? "bg-white/20 hover:bg-white/30 text-white border border-white/30"
                                 : "bg-secondary hover:bg-secondary/80 text-foreground border border-border"
                         )}
@@ -166,20 +166,20 @@ export const ItemDialog = ({ menuItem, children }: ItemDialogProps) => {
                     </button>
                 </div>
 
-                {/* Decorative snowflakes for winter drinks */}
-                {isWinterDrink && (
+                {/* Decorative sparkles for featured drinks */}
+                {isFeaturedDrink && (
                     <>
                         <div className="absolute top-20 right-8 opacity-10 pointer-events-none">
-                            <Snowflake className="w-16 h-16 text-white" />
+                            <Sparkles className="w-16 h-16 text-white" />
                         </div>
                         <div className="absolute bottom-32 left-6 opacity-10 pointer-events-none">
-                            <Snowflake className="w-20 h-20 text-white" />
+                            <Sparkles className="w-20 h-20 text-white" />
                         </div>
                         <div className="absolute top-1/3 right-1/4 opacity-5 pointer-events-none">
-                            <Snowflake className="w-12 h-12 text-white" />
+                            <Sparkles className="w-12 h-12 text-white" />
                         </div>
                         <div className="absolute top-1/2 left-8 opacity-5 pointer-events-none">
-                            <Snowflake className="w-8 h-8 text-white" />
+                            <Sparkles className="w-8 h-8 text-white" />
                         </div>
                     </>
                 )}
@@ -189,23 +189,23 @@ export const ItemDialog = ({ menuItem, children }: ItemDialogProps) => {
                     <div className="flex flex-col items-center justify-center h-full px-8 text-center space-y-6 animate-fade-in pb-20 relative z-10">
                         <div className={cn(
                             "w-24 h-24 rounded-full flex items-center justify-center border-2",
-                            isWinterDrink
+                            isFeaturedDrink
                                 ? "bg-blue-400/20 border-blue-300/30"
                                 : "bg-green-50 border-green-200"
                         )}>
                             <CheckCircle2 className={cn(
                                 "w-14 h-14",
-                                isWinterDrink ? "text-blue-300" : "text-green-600"
+                                isFeaturedDrink ? "text-blue-300" : "text-green-600"
                             )} />
                         </div>
                         <div className="space-y-2">
                             <h2 className={cn(
                                 "text-3xl font-serif font-semibold",
-                                isWinterDrink ? "text-white" : "text-foreground"
+                                isFeaturedDrink ? "text-white" : "text-foreground"
                             )}>Order Placed!</h2>
                             <p className={cn(
                                 "text-xl",
-                                isWinterDrink ? "text-blue-200/80" : "text-muted-foreground"
+                                isFeaturedDrink ? "text-blue-200/80" : "text-muted-foreground"
                             )}>
                                 We&apos;re crafting your drink, {customerName}
                             </p>
@@ -218,23 +218,23 @@ export const ItemDialog = ({ menuItem, children }: ItemDialogProps) => {
                     <div className="flex flex-col items-center justify-center h-full px-8 text-center space-y-8 animate-fade-in pb-20 relative z-10">
                         <div className={cn(
                             "w-20 h-20 rounded-full flex items-center justify-center border",
-                            isWinterDrink
+                            isFeaturedDrink
                                 ? "bg-blue-400/20 border-blue-300/30"
                                 : "bg-accent/10 border-accent/30"
                         )}>
                             <Heart className={cn(
                                 "w-10 h-10",
-                                isWinterDrink ? "text-blue-300" : "text-accent"
+                                isFeaturedDrink ? "text-blue-300" : "text-accent"
                             )} />
                         </div>
                         <div className="space-y-3">
                             <h2 className={cn(
                                 "text-2xl font-serif font-semibold",
-                                isWinterDrink ? "text-white" : "text-foreground"
+                                isFeaturedDrink ? "text-white" : "text-foreground"
                             )}>Support the Bartender</h2>
                             <p className={cn(
                                 "text-lg",
-                                isWinterDrink ? "text-blue-200/70" : "text-muted-foreground"
+                                isFeaturedDrink ? "text-blue-200/70" : "text-muted-foreground"
                             )}>
                                 Your generosity keeps the craft alive
                             </p>
@@ -244,7 +244,7 @@ export const ItemDialog = ({ menuItem, children }: ItemDialogProps) => {
                                 size="lg"
                                 className={cn(
                                     "w-full h-16 text-lg font-medium",
-                                    isWinterDrink
+                                    isFeaturedDrink
                                         ? "bg-blue-500 hover:bg-blue-400 text-white"
                                         : "bg-accent hover:bg-accent/90 text-accent-foreground"
                                 )}
@@ -258,7 +258,7 @@ export const ItemDialog = ({ menuItem, children }: ItemDialogProps) => {
                                 size="lg"
                                 className={cn(
                                     "w-full h-12",
-                                    isWinterDrink
+                                    isFeaturedDrink
                                         ? "text-blue-200/60 hover:text-white hover:bg-white/10"
                                         : "text-muted-foreground hover:text-foreground"
                                 )}
@@ -280,7 +280,7 @@ export const ItemDialog = ({ menuItem, children }: ItemDialogProps) => {
                                     <Badge
                                         variant="outline"
                                         className={cn(
-                                            isWinterDrink
+                                            isFeaturedDrink
                                                 ? "border-blue-300/30 text-blue-200 bg-blue-400/10"
                                                 : "border-border text-muted-foreground"
                                         )}
@@ -289,13 +289,13 @@ export const ItemDialog = ({ menuItem, children }: ItemDialogProps) => {
                                     </Badge>
                                     <h2 className={cn(
                                         "text-3xl md:text-4xl font-serif font-semibold leading-tight",
-                                        isWinterDrink ? "text-white" : "text-foreground"
+                                        isFeaturedDrink ? "text-white" : "text-foreground"
                                     )}>
                                         {menuItem.name}
                                     </h2>
                                     <p className={cn(
                                         "text-lg leading-relaxed",
-                                        isWinterDrink ? "text-blue-100/70" : "text-muted-foreground"
+                                        isFeaturedDrink ? "text-blue-100/70" : "text-muted-foreground"
                                     )}>
                                         {menuItem.description}
                                     </p>
@@ -304,27 +304,27 @@ export const ItemDialog = ({ menuItem, children }: ItemDialogProps) => {
                                         <div className="flex flex-wrap justify-center gap-2 pt-2">
                                             {menuItem.tags.map((tag) => (
                                                 <Badge
-                                                    key={tag}
+                                                    key={tag.id}
                                                     variant="secondary"
                                                     className={cn(
                                                         "py-1.5 px-3",
-                                                        isWinterDrink
+                                                        isFeaturedDrink
                                                             ? "bg-white/10 border border-white/20 text-blue-100"
                                                             : "bg-white border border-border text-foreground"
                                                     )}
                                                 >
                                                     <Image
-                                                        src={`/${tag.toLowerCase()}.png`}
+                                                        src={tag.image_url}
                                                         className={cn(
                                                             "mr-1.5 h-4 w-auto",
-                                                            isWinterDrink ? "opacity-90" : "opacity-80"
+                                                            isFeaturedDrink ? "opacity-90" : "opacity-80"
                                                         )}
-                                                        alt={tag}
+                                                        alt={tag.name}
                                                         height={16}
                                                         width={16}
                                                         style={{ objectFit: 'contain' }}
                                                     />
-                                                    <span className="text-xs">{tag}</span>
+                                                    <span className="text-xs">{tag.name}</span>
                                                 </Badge>
                                             ))}
                                         </div>
@@ -336,7 +336,7 @@ export const ItemDialog = ({ menuItem, children }: ItemDialogProps) => {
                         {/* Fixed input section at bottom */}
                         <div className={cn(
                             "flex-shrink-0 border-t shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]",
-                            isWinterDrink
+                            isFeaturedDrink
                                 ? "bg-slate-900/80 backdrop-blur-sm border-blue-900/50"
                                 : "bg-white border-border"
                         )}>
@@ -344,14 +344,14 @@ export const ItemDialog = ({ menuItem, children }: ItemDialogProps) => {
                                 <div className="space-y-2">
                                     <label className={cn(
                                         "text-sm font-medium text-center block uppercase tracking-wider",
-                                        isWinterDrink ? "text-blue-200/70" : "text-muted-foreground"
+                                        isFeaturedDrink ? "text-blue-200/70" : "text-muted-foreground"
                                     )}>
                                         Who is this drink for?
                                     </label>
                                     <Input
                                         className={cn(
                                             "h-14 text-xl text-center rounded-xl",
-                                            isWinterDrink
+                                            isFeaturedDrink
                                                 ? "bg-white/10 border-blue-300/30 text-white placeholder:text-blue-200/30 focus:border-blue-400 focus:ring-blue-400/20"
                                                 : "bg-secondary/30 border-border placeholder:text-muted-foreground/30 focus:border-primary focus:ring-primary/20"
                                         )}
@@ -374,7 +374,7 @@ export const ItemDialog = ({ menuItem, children }: ItemDialogProps) => {
                                 <Button
                                     className={cn(
                                         "w-full h-14 text-lg font-semibold transition-all rounded-xl",
-                                        isWinterDrink
+                                        isFeaturedDrink
                                             ? customerName.trim()
                                                 ? "bg-blue-500 hover:bg-blue-400 text-white shadow-lg shadow-blue-500/20"
                                                 : "bg-blue-900/50 text-blue-300/50"
@@ -392,8 +392,8 @@ export const ItemDialog = ({ menuItem, children }: ItemDialogProps) => {
                                         </>
                                     ) : (
                                         <>
-                                            {isWinterDrink ? (
-                                                <Snowflake className="w-5 h-5 mr-2" />
+                                            {isFeaturedDrink ? (
+                                                <Sparkles className="w-5 h-5 mr-2" />
                                             ) : (
                                                 <Martini className="w-5 h-5 mr-2" />
                                             )}

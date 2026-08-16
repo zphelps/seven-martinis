@@ -16,7 +16,6 @@ export interface UpdateMenuItemProps {
     description?: string;
     available?: boolean;
     instructions?: string;
-    tags?: string[];
 }
 
 interface UseMenuProps {
@@ -91,6 +90,32 @@ const useMenu = ({ onlyAvailable = false }: UseMenuProps) => {
         }
     }
 
+    const updateMenuItemTags = async (id: string, tagIds: string[]) => {
+        const previousMenuItems = [...menuItems]
+
+        try {
+            const response = await fetch(`/api/menu/${id}/tags`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ tagIds }),
+            })
+
+            if (!response.ok) {
+                throw new Error("Failed to update menu item tags")
+            }
+
+            const { data } = await response.json();
+            setMenuItems((prevMenuItems) =>
+                prevMenuItems.map((menuItem) => (menuItem.id === id ? data : menuItem))
+            )
+        } catch (e: any) {
+            setError(e.message)
+            setMenuItems(previousMenuItems)
+        }
+    }
+
     useEffect(() => {
         const fetchMenuItems = async () => {
             try {
@@ -112,7 +137,7 @@ const useMenu = ({ onlyAvailable = false }: UseMenuProps) => {
         fetchMenuItems();
     }, []);
 
-    return { menuItems, loading, error, addMenuItem, updateMenuItem, deleteMenuItem };
+    return { menuItems, loading, error, addMenuItem, updateMenuItem, updateMenuItemTags, deleteMenuItem };
 };
 
 export default useMenu;

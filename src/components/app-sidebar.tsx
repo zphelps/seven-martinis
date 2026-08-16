@@ -1,6 +1,6 @@
 "use client"
 
-import { Calendar, CircleUser, Container, Home, Inbox, ListTodo, Martini, Search, Settings } from "lucide-react"
+import { Calendar, CircleUser, Container, Home, Inbox, ListTodo, Mail, Martini, Search, Settings, Tag } from "lucide-react"
 
 import {
     Sidebar,
@@ -35,6 +35,16 @@ const items = [
         title: "Attendees",
         url: "/dashboard/attendees",
         icon: CircleUser
+    },
+    {
+        title: "Tags",
+        url: "/dashboard/tags",
+        icon: Tag
+    },
+    {
+        title: "Invitations",
+        url: "/dashboard/invitations",
+        icon: Mail
     }
 ]
 

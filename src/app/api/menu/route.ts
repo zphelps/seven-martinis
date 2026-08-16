@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
         const supabase = createClient();
         let query = supabase
             .from("menu_items")
-            .select("*")
+            .select("*, menu_item_tags(tags(*))")
             .order('drink_number', { ascending: true });
 
         if (onlyAvailable === 'true') {
@@ -27,8 +27,13 @@ export async function GET(request: NextRequest) {
             }, { status: 400 })
         }
 
+        const menuItems = data.map(({ menu_item_tags, ...item }) => ({
+            ...item,
+            tags: menu_item_tags.map((join: { tags: unknown }) => join.tags),
+        }));
+
         return NextResponse.json({
-            data: data,
+            data: menuItems,
             success: true,
         }, { status: 200 })
     } catch (e) {

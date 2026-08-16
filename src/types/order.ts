@@ -17,6 +17,13 @@ export interface OrderItem {
     recipe: string;
 }
 
+export interface Tag {
+    id: string;
+    name: string;
+    image_url: string;
+    is_featured: boolean;
+}
+
 export interface MenuItem {
     id: string;
     name: string;
@@ -26,5 +33,5 @@ export interface MenuItem {
     available: boolean;
     instructions: string;
     description: string;
-    tags: string[];
+    tags: Tag[];
 }

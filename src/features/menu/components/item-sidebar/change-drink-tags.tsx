@@ -4,24 +4,23 @@ import { MenuItem } from "@/types/order";
 import { Plus, X } from "lucide-react";
 import { useState } from "react";
 import { toast } from "@/components/ui/use-toast";
-import { UpdateMenuItemProps } from "@/features/menu/hooks/use-menu";
-
-const AVAILABLE_TAGS = ["Winter","Vodka", "Gin", "Bourbon", "Tequila", "Rum", "Whiskey", "Wine","New","Special","Copycats"];
+import useTags from "@/features/tags/hooks/use-tags";
 
 interface ChangeDrinkTagsProps {
     item: MenuItem | null;
-    updateMenuItem: (id: string, item: UpdateMenuItemProps) => Promise<void>;
+    updateMenuItemTags: (id: string, tagIds: string[]) => Promise<void>;
 }
 
-export function ChangeDrinkTags({ item, updateMenuItem }: ChangeDrinkTagsProps) {
+export function ChangeDrinkTags({ item, updateMenuItemTags }: ChangeDrinkTagsProps) {
     const [isAddingTag, setIsAddingTag] = useState(false);
+    const { tags: availableTags } = useTags();
 
-    const handleAddTag = async (tag: string) => {
-        if (!item || !tag || item.tags?.includes(tag)) return;
+    const handleAddTag = async (tagId: string) => {
+        if (!item || item.tags?.some((tag) => tag.id === tagId)) return;
 
         try {
-            const updatedTags = [...(item.tags || []), tag];
-            await updateMenuItem(item.id, { tags: updatedTags });
+            const updatedTagIds = [...(item.tags || []).map((tag) => tag.id), tagId];
+            await updateMenuItemTags(item.id, updatedTagIds);
             toast({
                 title: "Tag added successfully",
             });
@@ -35,12 +34,14 @@ export function ChangeDrinkTags({ item, updateMenuItem }: ChangeDrinkTagsProps) 
         }
     };
 
-    const handleRemoveTag = async (tagToRemove: string) => {
+    const handleRemoveTag = async (tagIdToRemove: string) => {
         if (!item) return;
 
         try {
-            const updatedTags = (item.tags || []).filter(tag => tag !== tagToRemove);
-            await updateMenuItem(item.id, { tags: updatedTags });
+            const updatedTagIds = (item.tags || [])
+                .filter((tag) => tag.id !== tagIdToRemove)
+                .map((tag) => tag.id);
+            await updateMenuItemTags(item.id, updatedTagIds);
             toast({
                 title: "Tag removed successfully",
             });
@@ -78,30 +79,32 @@ export function ChangeDrinkTags({ item, updateMenuItem }: ChangeDrinkTagsProps) 
             <div className="flex flex-wrap gap-2">
                 {item.tags?.map((tag) => (
                     <Badge
-                        key={tag}
+                        key={tag.id}
                         variant="secondary"
                         className="cursor-pointer hover:bg-red-100"
-                        onClick={() => handleRemoveTag(tag)}
+                        onClick={() => handleRemoveTag(tag.id)}
                     >
-                        {tag}
+                        {tag.name}
                         <X className="w-3 h-3 ml-1" />
                     </Badge>
                 ))}
             </div>
             {isAddingTag && (
                 <div className="flex flex-wrap gap-2 mt-2 border-t pt-2 border-gray-200">
-                    {AVAILABLE_TAGS.filter(tag => !item.tags?.includes(tag)).map((tag) => (
-                        <Badge
-                            key={tag}
-                            variant="outline"
-                            className="cursor-pointer hover:bg-blue-100"
-                            onClick={() => handleAddTag(tag)}
-                        >
-                            {tag}
-                        </Badge>
-                    ))}
+                    {availableTags
+                        .filter((tag) => !item.tags?.some((itemTag) => itemTag.id === tag.id))
+                        .map((tag) => (
+                            <Badge
+                                key={tag.id}
+                                variant="outline"
+                                className="cursor-pointer hover:bg-blue-100"
+                                onClick={() => handleAddTag(tag.id)}
+                            >
+                                {tag.name}
+                            </Badge>
+                        ))}
                 </div>
             )}
         </div>
     );
-} 
+}
