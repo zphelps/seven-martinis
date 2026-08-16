@@ -22,6 +22,7 @@ export interface Tag {
     name: string;
     image_url: string;
     is_featured: boolean;
+    is_active: boolean;
 }
 
 export interface MenuItem {

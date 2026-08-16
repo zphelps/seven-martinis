@@ -56,11 +56,17 @@ function tempId() {
     return `temp-${tempIdCounter}`;
 }
 
+const DEFAULT_GREETING =
+    "You are cordially invited to an evening of refined indulgence and clandestine revelry during an exclusive and intoxicatingly elegant event at";
+
+const DEFAULT_FOOTNOTE =
+    "Access to Seven Martinis is by invitation only and may be obtained through a concealed entrance on the lower level of the Phelps Residence. Those in the know will find their way...seek where the wood whispers and the panels part.";
+
 const DEFAULT_DETAILS: DraftDetailItem[] = [
-    { id: tempId(), key: "Location", value: "" },
-    { id: tempId(), key: "Access", value: "" },
-    { id: tempId(), key: "Attire", value: "" },
-    { id: tempId(), key: "Selection", value: "" },
+    { id: tempId(), key: "Location", value: "Lower level of the Phelps Residence\n10895 Holliday Farms Blvd., Zionsville, IN 46077" },
+    { id: tempId(), key: "Access", value: "Upon arrival to the Holliday Farms neighborhood, stop at the gate house and mention you are here for the “Phelps Residence.” Remember, Seven Martinis is a secret." },
+    { id: tempId(), key: "Attire", value: "Cocktail attire is often spotted, but it is certainly not required. Dress like you are here for a good drink and an even better story. We’ve seen suits and denim at the same party — both ordered a second round." },
+    { id: tempId(), key: "Selection", value: "The Seven Martinis mixologists will serve its Spring Seven menu, featuring exquisite seasonal flavors and craft cocktails, as well as old favorites and new specials." },
 ];
 
 export function InvitationEditor({ initialEvent, initialDetails = [], onSave, saving = false }: InvitationEditorProps) {
@@ -69,9 +75,9 @@ export function InvitationEditor({ initialEvent, initialDetails = [], onSave, sa
     const [title, setTitle] = useState(initialEvent?.title ?? "");
     const [eventDate, setEventDate] = useState(initialEvent?.event_date ?? "");
     const [eventTimeLabel, setEventTimeLabel] = useState(initialEvent?.event_time_label ?? "");
-    const [greeting, setGreeting] = useState(initialEvent?.greeting ?? "");
+    const [greeting, setGreeting] = useState(initialEvent ? (initialEvent.greeting ?? "") : DEFAULT_GREETING);
     const [secretNote, setSecretNote] = useState(initialEvent?.secret_note ?? "");
-    const [footnote, setFootnote] = useState(initialEvent?.footnote ?? "");
+    const [footnote, setFootnote] = useState(initialEvent ? (initialEvent.footnote ?? "") : DEFAULT_FOOTNOTE);
     const [status, setStatus] = useState<EventStatus>(initialEvent?.status ?? "draft");
     const [details, setDetails] = useState<DraftDetailItem[]>(
         initialDetails.length > 0
@@ -297,7 +303,7 @@ export function InvitationEditor({ initialEvent, initialDetails = [], onSave, sa
                 </div>
 
                 <div className="space-y-2">
-                    <Label>Footnote</Label>
+                    <Label>Footnote (N.B.)</Label>
                     <Textarea rows={2} value={footnote ?? ""} onChange={(e) => setFootnote(e.target.value)} />
                 </div>
 

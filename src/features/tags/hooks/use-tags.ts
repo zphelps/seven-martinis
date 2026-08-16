@@ -10,6 +10,7 @@ export interface AddTagProps {
 export interface UpdateTagProps {
     name?: string
     is_featured?: boolean
+    is_active?: boolean
     image?: File | null
 }
 
@@ -68,6 +69,7 @@ const useTags = () => {
         const formData = new FormData()
         if (tag.name !== undefined) formData.append("name", tag.name)
         if (tag.is_featured !== undefined) formData.append("is_featured", String(tag.is_featured))
+        if (tag.is_active !== undefined) formData.append("is_active", String(tag.is_active))
         if (tag.image) formData.append("image", tag.image)
 
         try {
@@ -88,6 +90,13 @@ const useTags = () => {
         }
     }
 
+    const untagAllDrinks = async (id: string) => {
+        const response = await fetch(`/api/tags/${id}/untag-all`, { method: "POST" })
+        if (!response.ok) {
+            throw new Error("Failed to untag drinks")
+        }
+    }
+
     const deleteTag = async (id: string) => {
         try {
             const response = await fetch(`/api/tags/${id}`, { method: "DELETE" })
@@ -105,7 +114,7 @@ const useTags = () => {
         getTags()
     }, [])
 
-    return { tags, loading, error, addTag, updateTag, deleteTag }
+    return { tags, loading, error, addTag, updateTag, untagAllDrinks, deleteTag }
 }
 
 export default useTags

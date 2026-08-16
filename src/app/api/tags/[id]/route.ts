@@ -9,12 +9,14 @@ export async function PUT(request: Request, { params }: { params: { id: string }
 
         const name = formData.get("name") as string | null
         const isFeatured = formData.get("is_featured")
+        const isActive = formData.get("is_active")
         const imageFile = formData.get("image") as File | null
 
-        const update: { name?: string; is_featured?: boolean; image_url?: string } = {}
+        const update: { name?: string; is_featured?: boolean; is_active?: boolean; image_url?: string } = {}
 
         if (name) update.name = name
         if (isFeatured !== null) update.is_featured = isFeatured === "true"
+        if (isActive !== null) update.is_active = isActive === "true"
 
         if (imageFile && imageFile.size > 0) {
             const fileName = `${Date.now()}-${name ?? id}.${imageFile.type}`

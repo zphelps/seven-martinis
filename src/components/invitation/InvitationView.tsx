@@ -72,7 +72,7 @@ export function InvitationView({ event, details }: InvitationViewProps) {
 
                 {event.footnote && (
                     <div className="text-sm leading-relaxed text-neutral-800 mt-6">
-                        {event.footnote}
+                        <span className="italic font-semibold whitespace-pre-line">N.B.</span> {event.footnote}
                     </div>
                 )}
             </div>
